@@ -1,6 +1,33 @@
 {
   "menu": [
     {
+      "url": "/",
+      "name": "Dashboard",
+      "slug": "dashboard",
+      "class": "waves-effect waves-cyan",
+      "icon": "dashboard"
+    },
+    {
+      "url": "#",
+      "name": "Users",
+      "i18n": "Users",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "users_menu",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "/user-teacher",
+          "name": "Teachers",
+          "slug": "teachers_page"
+        },
+        {
+          "url": "/user-student",
+          "name": "Students",
+          "slug": "teachers-page"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Pages",
       "i18n": "Pages",
@@ -9,7 +36,7 @@
       "icon": "pages",
       "submenu": [
         {
-          "url": "/",
+          "url": "/m",
           "name": "Page Blank",
           "i18n": "Page Blank",
           "slug": "page-blank"

@@ -14,3 +14,8 @@
 </footer>
 
 <!-- END: Footer-->
+
+{{-- page script --}}
+@section('page-script')
+<script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
+@endsection

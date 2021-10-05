@@ -1,6 +1,6 @@
 @if($configData['mainLayoutType'] === 'vertical-modern-menu')
 {{-- vertical-modern-menu breadcrumb --}}
-<div class="breadcrumbs-dark pb-0 pt-4" id="breadcrumbs-wrapper">
+<div class="breadcrumbs-dark pb-0 pt-1" id="breadcrumbs-wrapper">
   <!-- Search for small screen-->
   <div class="container">
     <div class="row">
@@ -18,7 +18,7 @@
         </ol>
         @endif
       </div>
-      <div class="col s2 m6 l6">
+      {{-- <div class="col s2 m6 l6">
         <a class="btn dropdown-settings waves-effect waves-light breadcrumbs-btn right" href="#!"
           data-target="dropdown1">
           <i class="material-icons hide-on-med-and-up">settings</i>
@@ -33,7 +33,7 @@
           <li class="divider" tabindex="-1"></li>
           <li tabindex="0"><a class="grey-text text-darken-2" href="{{asset('user-login')}}">Logout</a></li>
         </ul>
-      </div>
+      </div> --}}
     </div>
   </div>
 </div>

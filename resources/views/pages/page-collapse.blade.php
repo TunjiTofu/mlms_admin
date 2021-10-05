@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','Page Collapse')
+@section('title','Home')
 
 {{-- page content --}}
 @section('content')
@@ -17,7 +17,7 @@
         language that combines the classic principles of successful design along with innovation and
         technology.
       </p>
-    </div>
+    </div> 
   </div>
 </div>
 @endsection
