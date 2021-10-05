@@ -28,6 +28,8 @@
       @endif
       @endif
 
+      @include('panels.error')
+
 
       @if($configData["pageHeader"] === true && isset($breadcrumbs))
       {{--  breadcrumb --}}

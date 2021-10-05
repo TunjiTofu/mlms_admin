@@ -6,17 +6,28 @@
 
 // 1. Colors
 // ==========================================================================
-$primary-color: color("indigo", "base");
-$primary-color-light: lighten($primary-color, 15%);
-$primary-color-dark: darken($primary-color, 15%);
+// $primary-color: color("#fff", "base");
+// $primary-color-light: lighten($primary-color, 15%);
+// $primary-color-dark: darken($primary-color, 15%);
 
-$secondary-color: color("pink", "accent-2");
-$success-color: color("teal", "accent-4");
-$error-color: color("red", "accent-2");
-$link-color: color("indigo", "darken-1");
+// $secondary-color: color("pink", "accent-2");
+// $success-color: color("teal", "accent-4");
+// $error-color: color("red", "accent-2");
+// $link-color: color("indigo", "darken-1");
+
+$primary-color: color("materialize-red", "lighten-2") !default;
+$primary-color-light: lighten($primary-color, 15%) !default;
+$primary-color-dark: darken($primary-color, 15%) !default;
+
+$secondary-color: color("blue", "darken-2") !default;
+$success-color: color("green", "base") !default;
+$error-color: color("red", "base") !default;
+$link-color: color("light-blue", "darken-1") !default;
+
 
 // 3. Buttons
 // ==========================================================================
+// $button-border: solid red 1px !default;
 $button-font-size: 1rem;
 $button-padding: 0 2rem;
 $button-radius: 4px;
