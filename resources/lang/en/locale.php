@@ -134,7 +134,7 @@ return [
     "Child 2"=> "Child 2",
     "Page Collapse"=> "Page Collapse",
     "Users"=>"Users",
-    "Teachers"=>"Teachers",
-    "Students"=>"Students",
+    "View Users"=>"View Users",
+    "Create User"=>"Create User",
 ];
 ?>

@@ -5,6 +5,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\LanguageController;
 
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,13 @@ Route::get('/logout', [IndexController::class, 'logout'])->name('logout');
 Route::get('/register', [IndexController::class, 'register'])->name('register');
 
 Route::get('/', [IndexController::class, 'dashboard'])->name('dashboard');
+
+Route::prefix('users')->as('users')->group(function () {
+    Route::get('/', [UsersController::class, 'index'])->name('');
+    Route::get('/create', [UsersController::class, 'create'])->name('-add');
+    Route::post('/store', [UsersController::class, 'store'])->name('-store');
+    // Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
+    // Route::patch('/update/{id}', [UsersController::class, 'update'])->name('-update');
+    // Route::get('/delete/{id}', [UsersController::class, 'destroy'])->name('-delete');
+});
 
