@@ -16,13 +16,13 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "/user-teacher",
-          "name": "Teachers",
-          "slug": "teachers_page"
+          "url": "/users",
+          "name": "View Users",
+          "slug": "users"
         },
         {
-          "url": "/user-student",
-          "name": "Students",
+          "url": "/users/create",
+          "name": "Create User",
           "slug": "teachers-page"
         }
       ]
