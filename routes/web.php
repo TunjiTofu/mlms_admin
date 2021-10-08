@@ -41,6 +41,7 @@ Route::prefix('users')->as('users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('');
     Route::get('/create', [UsersController::class, 'create'])->name('-add');
     Route::post('/store', [UsersController::class, 'store'])->name('-store');
+    Route::get('/view/{id}', [UsersController::class, 'show'])->name('-view');
     // Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
     // Route::patch('/update/{id}', [UsersController::class, 'update'])->name('-update');
     // Route::get('/delete/{id}', [UsersController::class, 'destroy'])->name('-delete');

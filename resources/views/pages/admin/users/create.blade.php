@@ -25,32 +25,32 @@
                     <div class="row">
                         <div class="col s12">
                             <form class="row" method="POST" action="{{ route('users-store') }}">
-                                @csrf
+                                {{ csrf_field() }}
                                 <div class="col s12">
                                     <div class="input-field col s6">
-                                        <input id="uname" type="text" name="uname" class="validate">
+                                        <input id="uname" type="text" name="uname" class="validate" required min="4" max="6" value="{{ old('uname') }}">
                                         <label for="uname">Username</label>
                                     </div>
                                     <div class="input-field col s6">
-                                        <input id="email3" type="email" name="email" class="validate">
+                                        <input id="email3" type="email" name="email" class="validate" required value="{{ old('email') }}">
                                         <label for="email3">Email</label>
                                     </div>
                                 </div>
                                 <div class="col s12">
                                     <div class="input-field col s6">
-                                        <input id="last_name" name="sname" type="text">
+                                        <input id="last_name" name="sname" type="text" required>
                                         <label for="last_name">Surname</label>
                                     </div>
                                     <div class="input-field col s6">
-                                        <input id="first_name" name="fname" type="text" class="validate">
-                                        <label for="first_name">First Name</label>
+                                        <input id="first_name" name="oname" type="text" class="validate" required>
+                                        <label for="first_name">Other Names</label>
                                     </div>
                                 </div>
 
                                 <div class="col s12">
                                     <div class="input-field col s6">
                                         <select name="role">
-                                            <option value="" disabled selected>Choose a Role</option>
+                                            <option value="0" disabled selected>Choose a Role</option>
                                             <option value="ADM">Admin</option>
                                             <option value="TEA">Teacher</option>
                                             <option value="STD">Student</option>
@@ -71,7 +71,7 @@
 
                                 <div class="col s12">
                                     <div class="input-field col s6">
-                                        <input id="phone" type="text" name="phone" class="validate">
+                                        <input id="phone" type="text" name="phone" class="validate" required max="11">
                                         <label for="phone">Phone Number</label>
                                     </div>
                                 </div>
@@ -79,12 +79,12 @@
                                 <div class="col s12">
                                     <div class="input-field col s6">
                                         <input id="password" type="password" name="pword" class="validate"
-                                            placeholder="Provide a default password for this user">
+                                            placeholder="Provide a default password for this user" required>
                                         <label for="password">Default Password</label>
                                     </div>
                                     <div class="input-field col s6">
-                                      <input id="conf_password" type="password" name="conf_pword" class="validate"
-                                          placeholder="Confirm default password for this user">
+                                      <input id="conf_password" type="password" name="pword_confirmation" class="validate"
+                                          placeholder="Confirm default password for this user" required>
                                       <label for="conf_password">Confirm Default Password</label>
                                   </div>
                                 </div>

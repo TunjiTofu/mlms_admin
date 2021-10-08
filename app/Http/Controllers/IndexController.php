@@ -33,7 +33,7 @@ class IndexController extends Controller
         if($validator->fails())
         {
             // dd($validator->errors());
-            return back()->withErrors($validator->errors());
+            return back()->withErrors($validator->errors()); 
         }
 
 
