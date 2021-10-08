@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\SignUpClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -15,19 +16,20 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view('pages.admin.users.index');
-        // $id_token = session()->get('id_Token');
-        // $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/users");
-        // // dd($response);
-        // if ($response->status() == 200 && $response->ok() == true) {
+        // return view('pages.admin.users.index');
+        $id_token = session()->get('id_Token');
+        $apiKey = config('firebase.api_key');
+        // dd($id_token);
+        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/users");
+        // $response = Http::withToken($id_token)->POST('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key='.$apiKey);
+        // dd($response);
+        if ($response->status() == 200 && $response->ok() == true) {
 
-        //     return view('pages.admin.users.index', compact(['response']));
-        // }
-        // if ($response->status() == 403) {
-
-        //     return redirect('/login')->with('error', 'Please login');
-
-        // }
+            return view('pages.admin.users.index', compact(['response']));
+        }
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Please login');
+        }
     }
 
     /**
@@ -48,16 +50,69 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $uname = $request->uname;
+        $rules = [
+            'uname' => 'required|min:4|max:6',
+            'email' => 'required|email',
+            'sname' => 'required|min:2|max:255',
+            'oname' => 'required|min:2|max:255',
+            'role' => 'required|in:ADM,TEA,STD',
+            'status' => 'required|in:active,pending,banned',
+            'phone' => 'required|size:11',
+            'pword' => 'required|min:6|confirmed',
+        ];
+
+        $custom_messages = [
+            'uname.required' => 'Username is required',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email field must contain a valid email address',
+            'sname.required' => 'Surname is required',
+            'oname.required' => 'Othernames is required',
+            'role.required' => 'Role is required',
+            'status.required' => 'Status is required',
+            'phone.required' => 'Phone is required',
+            'phone.size' => 'Phone number must be 11 digits',
+            'pword.required' => 'Your password is required',
+            'pword.confirmed' => 'Your password must match',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $custom_messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+        // dd('Stop');
+        $id_token = session()->get('id_Token');
         $email = $request->email;
-        $sname = $request->sname;
-        $fname = $request->fname;
-        $role = $request->role;
-        $status = $request->status;
-        $phone = $request->phone;
-        $pword = $request->pword;
-        $conf_pword = $request->conf_pword;
-        dd($request);
+        $password = $request->pword;
+        $apiKey = config('firebase.api_key');
+
+        $auth = new SignUpClass($apiKey);
+        $result = $auth->signup($email, $password);
+
+        if ($result['success']) {
+            $data = [
+                'uname' => $request->uname,
+                // 'email' => $request->email,
+                'sname' => $request->sname,
+                'oname' => $request->oname,
+                'role' => $request->role,
+                'status' => $request->status,
+                'phone' => $request->phone,
+                // 'password' => $request->pword,
+                // $conf_pword = $request->pword_confirmation,
+                'user_id' => $result['localId'],
+
+            ];
+            //  dd($data);
+            $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/users', $data);
+            if ($response->status() == 201 && $response->successful() == true) {
+                return redirect('/users')->with('success', "User with email - $email has been added");
+            }
+            if ($response->status() == 403) {
+                return redirect('/login')->with('error', 'Please login');
+            }
+        }
+
+        // dd($request);
     }
 
     /**

@@ -178,11 +178,8 @@ $email = session()->get('user_email');
                             <table id="users-list-datatable" class="table">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th>id</th>
                                         <th>username</th>
                                         <th>name</th>
-                                        <th>last activity</th>
                                         <th>verified</th>
                                         <th>role</th>
                                         <th>status</th>
@@ -191,15 +188,14 @@ $email = session()->get('user_email');
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach (json_decode($response) as $user)
                                     <tr>
-                                        <td></td>
-                                        <td>300</td>
-                                        <td><a href="{{ asset('page-users-view') }}">dean3004</a>
+                                        <td>{{ $user->uname }}</td>
+                                        <td><a href="{{ asset('page-users-view') }}">{{ strtoupper($user->sname) }}, {{ ucfirst($user->oname) }}</a>
                                         </td>
-                                        <td>Dean Stanley</td>
-                                        <td>30/04/2019</td>
                                         <td>No</td>
-                                        <td>Staff</td>
+                                        <td>
+                                            {{  $user->role }}</td>
                                         <td><span class="chip green lighten-5">
                                                 <span class="green-text">Active</span>
                                             </span>
@@ -209,50 +205,13 @@ $email = session()->get('user_email');
                                         <td><a href="{{ asset('page-users-view') }}"><i
                                                     class="material-icons">remove_red_eye</i></a></td>
                                     </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>301</td>
-                                        <td><a href="{{ asset('page-users-view') }}">zena0604</a>
-                                        </td>
-                                        <td>Zena Buckley</td>
-                                        <td>06/04/2020</td>
-                                        <td>Yes</td>
-                                        <td>User </td>
-                                        <td><span class="chip green lighten-5">
-                                                <span class="green-text">Active</span>
-                                            </span>
-                                        </td>
-                                        <td><a href="{{ asset('page-users-edit') }}"><i class="material-icons">edit</i></a>
-                                        </td>
-                                        <td><a href="{{ asset('page-users-view') }}"><i
-                                                    class="material-icons">remove_red_eye</i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>302</td>
-                                        <td><a href="{{ asset('page-users-view') }}">delilah0301</a>
-                                        </td>
-                                        <td>Delilah Moon</td>
-                                        <td>03/01/2020</td>
-                                        <td>Yes</td>
-                                        <td>User </td>
-                                        <td><span class="chip green lighten-5">
-                                                <span class="green-text">Active</span>
-                                            </span>
-                                        </td>
-                                        <td><a href="{{ asset('page-users-edit') }}"><i class="material-icons">edit</i></a>
-                                        </td>
-                                        <td><a href="{{ asset('page-users-view') }}"><i
-                                                    class="material-icons">remove_red_eye</i></a></td>
-                                    </tr>
+                                    @endforeach
+                                    
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th></th>
-                                        <th>id</th>
                                         <th>username</th>
                                         <th>name</th>
-                                        <th>last activity</th>
                                         <th>verified</th>
                                         <th>role</th>
                                         <th>status</th>
