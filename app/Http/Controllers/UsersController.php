@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Classes\SignUpClass;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+
+// use Vinkla\Hashids\Facades\Hashids;
 
 class UsersController extends Controller
 {
@@ -17,14 +20,16 @@ class UsersController extends Controller
     public function index()
     {
         // return view('pages.admin.users.index');
+        // $hashid = Hashids::encode(123);
+        // dd($hashid);
         $id_token = session()->get('id_Token');
         $apiKey = config('firebase.api_key');
         // dd($id_token);
         $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/users");
         // $response = Http::withToken($id_token)->POST('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key='.$apiKey);
-        // dd($response);
+        // dd($response->body());
         if ($response->status() == 200 && $response->ok() == true) {
-
+            $hashid = new Hashids();
             return view('pages.admin.users.index', compact(['response']));
         }
         if ($response->status() == 403) {
@@ -123,7 +128,14 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $id);
+        // dd($response->body());
+        if ($response->status() == 200 && $response->ok() == true) {
+            $user = json_decode($response);
+            // dd($person);
+            return view('pages.admin.users.view', compact(['user']));
+        }
     }
 
     /**
