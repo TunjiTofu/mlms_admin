@@ -34,10 +34,10 @@
                     </div>
                 </div>
                 <div class="col s12 m5 quick-action-btns display-flex justify-content-end align-items-center pt-2">
-                    <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
-                            class="material-icons">mail_outline</i></a>
-                    <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">Profile</a>
-                    <a href="{{ asset('page-users-edit') }}" class="btn-small indigo">Edit</a>
+                    {{-- <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
+                            class="material-icons">mail_outline</i></a> --}}
+                    {{-- <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">Profile</a> --}}
+                    <a href="{{ route('users-edit', ['id' => $user->id]) }}" class="btn-small indigo">Edit</a>
                 </div>
             </div>
         </div>
@@ -54,8 +54,8 @@
                                     <td>01/01/2019</td>
                                 </tr>
                                 <tr>
-                                    <td>Latest Activity:</td>
-                                    <td class="users-view-latest-activity">30/04/2019</td>
+                                    <td>LPhone Number:</td>
+                                    <td class="users-view-latest-activity">{{ $user->phone }}</td>
                                 </tr>
                                 <tr>
                                     <td>Verified:</td>
@@ -141,7 +141,7 @@
         <!-- users view card data ends -->
 
         <!-- users view card details start -->
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-content">
                 <div class="row indigo lighten-5 border-radius-4 mb-2">
                     <div class="col s12 m4 users-view-timeline">
@@ -219,7 +219,7 @@
                 </div>
                 <!-- </div> -->
             </div>
-        </div>
+        </div> --}}
         <!-- users view card details ends -->
 
     </div>
