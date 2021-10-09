@@ -42,7 +42,12 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.users.create');
+        $breadcrumbs = [
+            ['link' => "/users", 'name' => "Users"],
+            ['link' => "/users/create", 'name' => "Create"],
+        ];
+        $pageConfigs = ['pageHeader' => true];
+        return view('pages.admin.users.create', compact(['breadcrumbs','pageConfigs']));
     }
 
     /**
