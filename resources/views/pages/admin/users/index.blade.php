@@ -66,12 +66,18 @@
         <div class="users-list-table">
             <div class="card">
                 <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 m6 l3">
+                            <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#new-user">Create New
+                                User</a>
+                        </div>
+                    </div>
                     <!-- datatable start -->
                     <div class="responsive-table">
                         <table id="users-list-datatable" class="table">
                             <thead>
                                 <tr>
-                                    
+
                                     <th>username</th>
                                     <th>name</th>
                                     <th>verified</th>
@@ -87,7 +93,7 @@
                             <tbody>
                                 @foreach (json_decode($response) as $user)
                                     <tr>
-                                        
+
                                         <td><a href="{{ asset('page-users-view') }}">{{ $user->uname }}</a>
                                         </td>
                                         <td>{{ strtoupper($user->sname) }}, {{ ucfirst($user->oname) }}</td>
@@ -121,16 +127,38 @@
                                             @endif
 
                                         </td>
-                                        <td><a href="{{ asset('page-users-edit') }}"><i
+                                        <td><a href="{{ route('users-edit', ['id' => $user->id]) }}"><i
                                                     class="material-icons">edit</i></a>
                                         </td>
                                         {{-- <td><a href="{{ route('users-view',['id'=>$hashid->encode($user->id)])) }}"><i --}}
-                                           
-                                        <td><a href="{{ route('users-view',['id'=>$user->id]) }}"><i
+
+                                        <td><a href="{{ route('users-view', ['id' => $user->id]) }}"><i
                                                     class="material-icons">remove_red_eye</i></a></td>
-                                        <td><a href="{{ asset('page-users-view') }}"><i
-                                                    class="material-icons">delete</i></a></td>
-                                                    <td></td>
+                                        <td>
+                                            <a href="#{{ $user->id }}" class=" modal-trigger"><i
+                                                    class="material-icons">delete</i></a>
+
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div id="{{ $user->id }}" class="modal">
+                                                        <div class="modal-content">
+                                                            <h6>Delete User</h6>
+                                                            <p>Are you sure you want to delete <b>{{ strtoupper($user->sname) }}, {{ ucfirst($user->oname) }}</b>?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="#"
+                                                                class="modal-action modal-close waves-effect waves-red btn-flat ">No,
+                                                                Cancel</a>
+                                                            <a href="{{ route('users-delete', ['id' => $user->id]) }}"
+                                                                class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
+                                                                Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td></td>
                                     </tr>
                                 @endforeach
@@ -141,8 +169,98 @@
                 </div>
             </div>
         </div>
+
+        <div id="new-user" class="modal">
+            <div class="modal-content">
+                <h6>Create a New User</h6>
+                <form class="row" method="POST" action="{{ route('users-store') }}">
+                    {{ csrf_field() }}
+                    <div class="col s12">
+                        <div class="input-field col s6">
+                            <input id="uname" type="text" name="uname" class="validate" required min="4" max="6"
+                                value="{{ old('uname') }}">
+                            <label for="uname">Username</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="email3" type="email" name="email" class="validate" required
+                                value="{{ old('email') }}">
+                            <label for="email3">Email</label>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="input-field col s6">
+                            <input id="last_name" name="sname" type="text" required>
+                            <label for="last_name">Surname</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="first_name" name="oname" type="text" class="validate" required>
+                            <label for="first_name">Other Names</label>
+                        </div>
+                    </div>
+
+                    <div class="col s12">
+                        <div class="input-field col s6">
+                            <select name="role">
+                                <option value="0" disabled selected>Choose a Role</option>
+                                <option value="ADM">Admin</option>
+                                <option value="TEA">Teacher</option>
+                                <option value="STD">Student</option>
+                            </select>
+                            <label>Role</label>
+                        </div>
+
+                        <div class="input-field col s6">
+                            <select name="status">
+                                <option value="" disabled selected>Choose a Status</option>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="banned">Banned</option>
+                            </select>
+                            <label>Status</label>
+                        </div>
+                    </div>
+
+                    <div class="col s12">
+                        <div class="input-field col s6">
+                            <input id="phone" type="text" name="phone" class="validate" required max="11">
+                            <label for="phone">Phone Number</label>
+                        </div>
+                    </div>
+
+                    <div class="col s12">
+                        <div class="input-field col s6">
+                            <input id="password" type="password" name="pword" class="validate"
+                                placeholder="Provide a default password for this user" required>
+                            <label for="password">Default Password</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="conf_password" type="password" name="pword_confirmation" class="validate"
+                                placeholder="Confirm default password for this user" required>
+                            <label for="conf_password">Confirm Default Password</label>
+                        </div>
+                    </div>
+
+                    <div class="col s12">
+                        <div class="input-field col s12">
+                            <button class="btn border-round col s12">Create User</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </section>
     <!-- users list ends -->
+
+
+
+    <script>
+        function myFunction() {
+            // if(!confirm("Are You Sure to delete this"))
+            // event.preventDefault();
+
+        }
+    </script>
 @endsection
 
 {{-- vendor scripts --}}
@@ -154,4 +272,5 @@
 {{-- page script --}}
 @section('page-script')
     <script src="{{ asset('js/scripts/page-users.js') }}"></script>
+    <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
 @endsection
