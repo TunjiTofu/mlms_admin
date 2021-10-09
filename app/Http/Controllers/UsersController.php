@@ -19,18 +19,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        // return view('pages.admin.users.index');
-        // $hashid = Hashids::encode(123);
-        // dd($hashid);
         $id_token = session()->get('id_Token');
         $apiKey = config('firebase.api_key');
-        // dd($id_token);
         $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/users");
-        // $response = Http::withToken($id_token)->POST('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key='.$apiKey);
         // dd($response->body());
         if ($response->status() == 200 && $response->ok() == true) {
-            $hashid = new Hashids();
-            return view('pages.admin.users.index', compact(['response']));
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.index', compact(['response','breadcrumbs','pageConfigs']));
         }
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -96,14 +94,11 @@ class UsersController extends Controller
         if ($result['success']) {
             $data = [
                 'uname' => $request->uname,
-                // 'email' => $request->email,
                 'sname' => $request->sname,
                 'oname' => $request->oname,
                 'role' => $request->role,
                 'status' => $request->status,
                 'phone' => $request->phone,
-                // 'password' => $request->pword,
-                // $conf_pword = $request->pword_confirmation,
                 'user_id' => $result['localId'],
 
             ];
@@ -116,8 +111,6 @@ class UsersController extends Controller
                 return redirect('/login')->with('error', 'Unauthorized - Please login');
             }
         }
-
-        // dd($request);
     }
 
     /**
@@ -134,7 +127,12 @@ class UsersController extends Controller
         if ($response->status() == 200 && $response->ok() == true) {
             $user = json_decode($response);
             // dd($person);
-            return view('pages.admin.users.view', compact(['user']));
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/view/$id", 'name' => "View User"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.view', compact(['user','breadcrumbs','pageConfigs']));
         }
     }
 
@@ -152,7 +150,12 @@ class UsersController extends Controller
         if ($response->status() == 200 && $response->ok() == true) {
             $user = json_decode($response);
             // dd($person);
-            return view('pages.admin.users.edit', compact(['user']));
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/edit/$id", 'name' => "Edit User"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.edit', compact(['user','breadcrumbs','pageConfigs']));
         }
     }
 
