@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\SignUpClass;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -19,22 +17,32 @@ class UsersController extends Controller
      */
     public function index()
     {
-        // return view('pages.admin.users.index');
-        // $hashid = Hashids::encode(123);
-        // dd($hashid);
         $id_token = session()->get('id_Token');
         $apiKey = config('firebase.api_key');
-        // dd($id_token);
-        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/users");
-        // $response = Http::withToken($id_token)->POST('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key='.$apiKey);
-        // dd($response->body());
-        if ($response->status() == 200 && $response->ok() == true) {
-            $hashid = new Hashids();
-            return view('pages.admin.users.index', compact(['response']));
-        }
-        if ($response->status() == 403) {
+        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userauths");
+        $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
+        $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
+
+        // dd($response->json());
+        if ($response->status() == 403 || $responsePriv->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->json() != null && $response->status() == 200 && $responsePriv->json() != null && $responsePriv->status() == 200 && $responseUserStatus->json() != null && $responseUserStatus->status() == 200) {
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.index', compact(['response', 'responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+
+        
     }
 
     /**
@@ -44,7 +52,17 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.users.create');
+        $id_token = session()->get('id_Token');
+        $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
+        $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
+        if ($responsePriv->status() == 200 && $responseUserStatus->status() == 200) {
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/create", 'name' => "Create"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.create', compact(['responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**
@@ -56,11 +74,11 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'uname' => 'required|min:4|max:6',
+            'uname' => 'required|max:8',
             'email' => 'required|email',
             'sname' => 'required|min:2|max:255',
             'oname' => 'required|min:2|max:255',
-            'role' => 'required|in:ADM,TEA,STD',
+            'role' => 'required|in:SDM,ADM,TEA,STD',
             'status' => 'required|in:active,pending,banned',
             'phone' => 'required|size:11',
             'pword' => 'required|min:6|confirmed',
@@ -84,40 +102,49 @@ class UsersController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator->errors());
         }
-        // dd('Stop');
+
+        $data = [
+            'email' => $request->email,
+            'displayName' => $request->uname,
+            'sname' => $request->sname,
+            'oname' => $request->oname,
+            'role' => $request->role,
+            'status' => $request->status,
+            'phoneNumber' => $request->phone,
+            'password' => $request->pword,
+
+        ];
+        // dd($data);
+        // $id_token = session()->get('id_Token');
+        // $email = $request->email;
+        // $password = $request->pword;
+        // $apiKey = config('firebase.api_key');
+
+        // $auth = new SignUpClass($apiKey);
+        // $result = $auth->signup($email, $password);
+
+        // if ($result['success']) {
+        //     $data = [
+        //         'uname' => $request->uname,
+        //         'sname' => $request->sname,
+        //         'oname' => $request->oname,
+        //         'role' => $request->role,
+        //         'status' => $request->status,
+        //         'phone' => $request->phone,
+        //         'user_id' => $result['localId'],
+
+        //     ];
+        //  dd($data);
         $id_token = session()->get('id_Token');
-        $email = $request->email;
-        $password = $request->pword;
-        $apiKey = config('firebase.api_key');
-
-        $auth = new SignUpClass($apiKey);
-        $result = $auth->signup($email, $password);
-
-        if ($result['success']) {
-            $data = [
-                'uname' => $request->uname,
-                // 'email' => $request->email,
-                'sname' => $request->sname,
-                'oname' => $request->oname,
-                'role' => $request->role,
-                'status' => $request->status,
-                'phone' => $request->phone,
-                // 'password' => $request->pword,
-                // $conf_pword = $request->pword_confirmation,
-                'user_id' => $result['localId'],
-
-            ];
-            //  dd($data);
-            $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/users', $data);
-            if ($response->status() == 201 && $response->successful() == true) {
-                return redirect('/users')->with('success', "User with email - $email has been added");
-            }
-            if ($response->status() == 403) {
-                return redirect('/login')->with('error', 'Unauthorized - Please login');
-            }
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/users', $data);
+        //  dd($response->status());
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/users')->with('success', "User has been added");
         }
-
-        // dd($request);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        // }
     }
 
     /**
@@ -129,13 +156,43 @@ class UsersController extends Controller
     public function show($id)
     {
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $id);
-        // dd($response->body());
-        if ($response->status() == 200 && $response->ok() == true) {
-            $user = json_decode($response);
-            // dd($person);
-            return view('pages.admin.users.view', compact(['user']));
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/'.$id);
+        $responseAuth = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'.$id);
+        // dd($responseAuth->body());
+        // dd($response->json());
+
+        if ($response->status() == 403 || $responseAuth->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->json() != null && $response->status() == 200  && $responseAuth->json() != null && $responseAuth->status() == 200) {
+            $user = json_decode($response);
+            $userAuth = json_decode($responseAuth);
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/view/$id", 'name' => "View User"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.view', compact(['user', 'userAuth', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+
+
+        // if ($response->status() == 200 && $response->ok() == true) {
+        //     $user = json_decode($response);
+        //     // dd($person);
+        //     $breadcrumbs = [
+        //         ['link' => "/users", 'name' => "Users"],
+        //         ['link' => "/users/view/$id", 'name' => "View User"],
+        //     ];
+        //     $pageConfigs = ['pageHeader' => true];
+        //     return view('pages.admin.users.view', compact(['user', 'breadcrumbs', 'pageConfigs']));
+        // }
     }
 
     /**
@@ -146,14 +203,48 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
+        
         $id_token = session()->get('id_Token');
+        $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
+        $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $id);
+        $responseAuth = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'.$id);
         // dd($response->body());
-        if ($response->status() == 200 && $response->ok() == true) {
-            $user = json_decode($response);
-            // dd($person);
-            return view('pages.admin.users.edit', compact(['user']));
+
+        if ($response->status() == 403 || $responsePriv->status() == 403 || $responseUserStatus->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->json() != null && $response->status() == 200 && $responseAuth->json() != null && $responseAuth->status() == 200) {
+            $user = json_decode($response);
+            $userAuth = json_decode($responseAuth);
+
+            // dd($person);
+            $breadcrumbs = [
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/edit/$id", 'name' => "Edit User"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.users.edit', compact(['user', 'userAuth', 'responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+
+
+        // $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
+        // $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
+        // if ($responsePriv->status() == 200 && $responseUserStatus->status() == 200) {
+        //     $breadcrumbs = [
+        //         ['link' => "/users", 'name' => "Users"],
+        //         ['link' => "/users/create", 'name' => "Create"],
+        //     ];
+        //     $pageConfigs = ['pageHeader' => true];
+        //     return view('pages.admin.users.create', compact(['responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
+        // }
     }
 
     /**
@@ -165,15 +256,17 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($id);
+        // dd($request);
 
         $rules = [
             'uname' => 'required|min:4|max:6',
             'sname' => 'required|min:2|max:255',
             'oname' => 'required|min:2|max:255',
-            'role' => 'required|in:ADM,TEA,STD',
+            'role' => 'required|in:SDM,ADM,TEA,STD',
             'status' => 'required|in:active,pending,banned',
-            'phone' => 'required|size:11',
+            'emailVerified' => 'required|in:true,false',
+            'disabled' => 'required|in:true,false',
+            'phoneNumber' => 'required|size:11',
         ];
 
         $custom_messages = [
@@ -182,8 +275,10 @@ class UsersController extends Controller
             'oname.required' => 'Othernames is required',
             'role.required' => 'Role is required',
             'status.required' => 'Status is required',
-            'phone.required' => 'Phone is required',
-            'phone.size' => 'Phone number must be 11 digits',
+            'emailVerified.required' => 'Email Verifed is required',
+            'disabled.required' => 'Account Disable is required',
+            'phoneNumber.required' => 'Phone is required',
+            'phoneNumber.size' => 'Phone number must be 11 digits',
         ];
 
         $validator = Validator::make($request->all(), $rules, $custom_messages);
@@ -194,16 +289,18 @@ class UsersController extends Controller
         $id_token = session()->get('id_Token');
 
         $data = [
-            'uname' => $request->uname,
+            'displayName' => $request->uname,
             'sname' => $request->sname,
             'oname' => $request->oname,
             'role' => $request->role,
             'status' => $request->status,
-            'phone' => $request->phone,
+            'phoneNumber' => $request->phoneNumber,
+            'emailVerified' => $request->emailVerified,
+            'disabled' => $request->disabled,
 
         ];
-        //  dd($data);
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/users/'.$id, $data);
+         dd($data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $id, $data);
         // dd($response);
         if ($response->status() == 201 && $response->successful() == true) {
             return redirect('/users')->with('success', "User successfully updated");
@@ -223,7 +320,7 @@ class UsersController extends Controller
     {
         // dd($id);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/users/'.$id);
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'.$id);
         // dd($response);
         if ($response->status() == 200 && $response->successful() == true) {
             return redirect('/users')->with('success', "User successfully deleted");

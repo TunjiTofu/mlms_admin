@@ -6,6 +6,8 @@ use App\Http\Controllers\LanguageController;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PrivilegesController;
+use App\Http\Controllers\UserstatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,26 @@ Route::get('/register', [IndexController::class, 'register'])->name('register');
 
 Route::get('/', [IndexController::class, 'dashboard'])->name('dashboard');
 
+Route::prefix('privileges')->as('privileges')->group(function () {
+    Route::get('/', [PrivilegesController::class, 'index'])->name('');
+    // Route::get('/create', [UsersController::class, 'create'])->name('-add');
+    Route::post('/store', [PrivilegesController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [UsersController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [PrivilegesController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [PrivilegesController::class, 'destroy'])->name('-delete');
+});
+
+Route::prefix('userstatus')->as('userstatus')->group(function () {
+    Route::get('/', [UserstatusController::class, 'index'])->name('');
+    // Route::get('/create', [UsersController::class, 'create'])->name('-add');
+    Route::post('/store', [UserstatusController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [UsersController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [UserstatusController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [UserstatusController::class, 'destroy'])->name('-delete');
+});
+
 Route::prefix('users')->as('users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('');
     Route::get('/create', [UsersController::class, 'create'])->name('-add');
@@ -46,4 +68,5 @@ Route::prefix('users')->as('users')->group(function () {
     Route::patch('/update/{id}', [UsersController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [UsersController::class, 'destroy'])->name('-delete');
 });
+
 

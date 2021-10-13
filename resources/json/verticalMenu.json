@@ -8,6 +8,20 @@
       "icon": "dashboard"
     },
     {
+      "url": "/privileges",
+      "name": "Privileges",
+      "slug": "privileges",
+      "class": "waves-effect waves-cyan",
+      "icon": "assignment_ind"
+    },
+    {
+      "url": "/userstatus",
+      "name": "User Status",
+      "slug": "user-status",
+      "class": "waves-effect waves-cyan",
+      "icon": "swap_horiz"
+    },
+    {
       "url": "#",
       "name": "Users",
       "i18n": "Users",

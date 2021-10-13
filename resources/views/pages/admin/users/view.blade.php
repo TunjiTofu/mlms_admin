@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title', 'Users View')
+@section('title', 'View User')
 
 {{-- page style --}}
 @section('page-style')
@@ -24,12 +24,12 @@
                         </a>
                         <div class="media-body">
                             <h6 class="media-heading">
-                                <span class="users-view-name">{{ $user->sname }}, {{ $user->oname }} </span>
-                                <span class="grey-text">@</span>
-                                <span class="users-view-username grey-text">{{ $user->uname }}</span>
+                                {{-- <span class="users-view-name">{{ $user->sname }}, {{ $user->oname }} </span>
+                                <span class="grey-text">@</span> --}}
+                                <span class="users-view-username grey-text">{{ '$userAuth->displayName' }}</span>
                             </h6>
                             <span>ID:</span>
-                            <span class="users-view-id">{{ $user->id }}</span>
+                            <span class="users-view-id">{{ $userAuth->uid }}</span>
                         </div>
                     </div>
                 </div>
@@ -37,63 +37,113 @@
                     {{-- <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
                             class="material-icons">mail_outline</i></a> --}}
                     {{-- <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">Profile</a> --}}
-                    <a href="{{ route('users-edit', ['id' => $user->id]) }}" class="btn-small indigo">Edit</a>
+                    <a href="{{ route('users-edit', ['id' => '$user->id']) }}" class="btn-small indigo">Edit</a>
                 </div>
             </div>
         </div>
         <!-- users view media object ends -->
+        {{-- Card Personal Info --}}
+        <div class="card">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12">
+                        <h6 class="mb-2 mt-2"><i class="material-icons">person_outline</i> Personal Info</h6>
+                        <table class="striped">
+                            <tbody>
+                                <tr>
+                                    <td>Name:</td>
+                                    <td class="users-view-name">{{ $user->sname }}, {{ $user->oname }}</td>
+                                </tr>
+                                <tr>
+                                    <td>E-mail:</td>
+                                    <td class="users-view-email">{{ $userAuth->email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone Number:</td>
+                                    <td class="users-view-latest-activity">{{ '$userAuth->phone' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- End Card Personal Info --}}
+
         <!-- users view card data start -->
         <div class="card">
             <div class="card-content">
                 <div class="row">
                     <div class="col s12 m4">
+                        <h6 class="mb-2 mt-2"><i class="material-icons">error_outline</i> System Info</h6>
                         <table class="striped">
                             <tbody>
                                 <tr>
                                     <td>Registeration:</td>
-                                    <td>01/01/2019</td>
+                                    <td>{{ $userAuth->metadata->creationTime }}</td>
                                 </tr>
                                 <tr>
-                                    <td>LPhone Number:</td>
-                                    <td class="users-view-latest-activity">{{ $user->phone }}</td>
+                                    <td>Last Activity:</td>
+                                    <td>{{ $userAuth->metadata->lastSignInTime }}</td>
                                 </tr>
                                 <tr>
                                     <td>Verified:</td>
-                                    <td class="users-view-verified">Yes</td>
+                                    <td class="users-view-verified">
+                                        @if ($userAuth->emailVerified == false)
+                                            <span class="chip red lighten-5">
+                                                <span class="red-text">No</span>
+                                            </span>
+                                        @endif
+                                        @if ($userAuth->emailVerified == true)
+                                            <span class="chip green lighten-5">
+                                                <span class="green-text">Yes</span>
+                                            </span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Role:</td>
                                     <td class="users-view-role">
-                                        @if ($user->role == 'ADM')
-                                            Admin
+                                        @if ($userAuth->customClaims->role == 'SDM')
+                                            <span class="chip purple lighten-5">
+                                                <span class="purple-text">Super Administrator</span>
+                                            </span>
                                         @endif
-                                        @if ($user->role == 'TEA')
-                                            Teacher
+                                        @if ($userAuth->customClaims->role == 'ADM')
+                                            <span class="chip pink lighten-5">
+                                                <span class="pink-text">Administrator</span>
+                                            </span>
                                         @endif
-                                        @if ($user->role == 'STD')
-                                            Student
+                                        @if ($userAuth->customClaims->role == 'TEA')
+                                            <span class="chip teal lighten-5">
+                                                <span class="teal-text">Teacher</span>
+                                            </span>
+                                        @endif
+                                        @if ($userAuth->customClaims->role == 'STD')
+                                            <span class="chip indigo lighten-5">
+                                                <span class="indigo-text">Student</span>
+                                            </span>
                                         @endif
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Status:</td>
                                     <td>
-                                        @if ($user->status == 'active')
+                                        @if ($userAuth->customClaims->status == 'active')
                                             <span class="chip green lighten-5">
                                                 <span class="green-text">Active</span>
                                             </span>
                                         @endif
-                                        @if ($user->status == 'pending')
+                                        @if ($userAuth->customClaims->status == 'pending')
                                             <span class="chip orange lighten-5">
                                                 <span class="orange-text">Pending</span>
                                             </span>
                                         @endif
-                                        @if ($user->status == 'banned')
+                                        @if ($userAuth->customClaims->status == 'banned')
                                             <span class="chip red lighten-5">
                                                 <span class="red-text">Banned</span>
                                             </span>
                                         @endif
-
                                     </td>
                                 </tr>
                             </tbody>
@@ -139,6 +189,7 @@
             </div>
         </div>
         <!-- users view card data ends -->
+
 
         <!-- users view card details start -->
         {{-- <div class="card">

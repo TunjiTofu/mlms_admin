@@ -136,5 +136,7 @@ return [
     "Users"=>"Users",
     "View Users"=>"View Users",
     "Create User"=>"Create User",
+    "Privileges"=>"Privileges",
+    "User Status"=>"User Status",
 ];
 ?>

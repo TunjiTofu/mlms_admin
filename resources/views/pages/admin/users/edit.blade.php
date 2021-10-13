@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title', 'Users edit')
+@section('title', 'Edit User')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -53,26 +53,34 @@
                         </div>
                         <!-- users edit media object ends -->
                         <!-- users edit account form start -->
-                        <form id="accountForm" method="POST" action="{{ route('users-update', ['id' => $user->id]) }}">
+                        <form id="accountForm" method="POST" action="{{ route('users-update', ['id' => $userAuth->uid]) }}">
                             @csrf
                             {{ method_field('PATCH') }}
                             <div class="row">
-                                <div class="col s12 m6">
+                                <div class="col s12">
                                     <div class="row">
-                                        <div class="col s12 input-field">
+                                        <div class="col s6 input-field">
                                             <input id="username" name="uname" type="text" class="validate"
-                                                value="{{ $user->uname }}" data-error=".errorTxt1">
+                                                value="{{ $user->displayName }}" data-error=".errorTxt1">
                                             <label for="username">Username</label>
                                             <small class="errorTxt1"></small>
                                         </div>
-                                        <div class="col s12 input-field">
+                                        <div class="col s6 input-field">
+                                            <input id="name" name="phoneNumber" type="text" class="validate" size="11"
+                                                value="{{ $user->phoneNumber }}" data-error=".errorTxt2">
+                                            <label for="name">Phone Number</label>
+                                            <small class="errorTxt2"></small>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s6 input-field">
                                             <input id="name" name="sname" type="text" class="validate"
                                                 value="{{ $user->sname }}" data-error=".errorTxt2">
                                             <label for="name">Surname</label>
                                             <small class="errorTxt2"></small>
                                         </div>
 
-                                        <div class="col s12 input-field">
+                                        <div class="col s6 input-field">
                                             <input id="name" name="oname" type="text" class="validate"
                                                 value="{{ $user->oname }}" data-error=".errorTxt2">
                                             <label for="name">Other Names</label>
@@ -87,46 +95,59 @@
                   </div> --}}
                                     </div>
                                 </div>
-                                <div class="col s12 m6">
+                                <div class="col s12">
                                     <div class="row">
-                                        <div class="col s12 input-field">
+                                        <div class="col s6 input-field">
                                             <select name="role">
                                                 <option value="0" disabled selected>Choose a Role</option>
-                                                <option value="ADM"
-                                                    {{ $user->role == 'ADM' ? 'selected = "selected"' : '' }}>Admin
-                                                </option>
-                                                <option value="TEA"
-                                                    {{ $user->role == 'TEA' ? 'selected = "selected"' : '' }}>Teacher
-                                                </option>
-                                                <option value="STD"
-                                                    {{ $user->role == 'STD' ? 'selected = "selected"' : '' }}>Student
-                                                </option>
+                                                @foreach (json_decode($responsePriv) as $privilege)
+                                                    <option value="{{ $privilege->id }}"
+                                                        {{ $userAuth->customClaims->role == $privilege->id ? 'selected = "selected"' : '' }}>{{ $privilege->title }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                             <label>Role</label>
                                         </div>
-                                        <div class="col s12 input-field">
+                                        <div class="col s6 input-field">
                                             <select name="status">
                                                 <option value="" disabled selected>Choose a Status</option>
-                                                <option value="active"
-                                                    {{ $user->status == 'active' ? 'selected = "selected"' : '' }}>Active
-                                                </option>
-                                                <option value="pending"
-                                                    {{ $user->status == 'pending' ? 'selected = "selected"' : '' }}>Pending </option>
-                                                <option value="banned"
-                                                    {{ $user->status == 'banned' ? 'selected = "selected"' : '' }}>Banned
-                                                </option>
+                                                @foreach (json_decode($responseUserStatus) as $userStatus)
+                                                    <option value="{{ $userStatus->id }}"
+                                                        {{ $userAuth->customClaims->status == $userStatus->id ? 'selected = "selected"' : '' }}>{{ $userStatus->status }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                             <label>Status</label>
                                         </div>
-                                        <div class="col s12 input-field">
-                                            <input id="name" name="phone" type="text" class="validate"
-                                                value="{{ $user->phone }}" data-error=".errorTxt2">
-                                            <label for="name">Phone Number</label>
-                                            <small class="errorTxt2"></small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s6 input-field">
+                                            <select name="emailVerified">
+                                                <option value="0" disabled selected>Email Verified ?</option>
+                                                <option value="true"
+                                                    {{ $userAuth->emailVerified == true ? 'selected = "selected"' : '' }}>Yes
+                                                </option>
+                                                <option value="false"
+                                                    {{ $userAuth->emailVerified == false ? 'selected = "selected"' : '' }}>No
+                                                </option>
+                                            </select>
+                                            <label>Email Verified ?</label>
+                                        </div>
+                                        <div class="col s6 input-field">
+                                            <select name="disabled">
+                                                <option value="0" disabled selected>Account Disabled?</option>
+                                                <option value="true"
+                                                    {{ $userAuth->disabled == true ? 'selected = "selected"' : '' }}>Yes
+                                                </option>
+                                                <option value="false"
+                                                    {{ $userAuth->disabled == false ? 'selected = "selected"' : '' }}>No
+                                                </option>
+                                            </select>
+                                            <label>Account Disabled?</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col s12">
+                                {{-- <div class="col s12">
                                     <table class="mt-1">
                                         <thead>
                                             <tr>
@@ -222,7 +243,7 @@
                                         </tbody>
                                     </table>
                                     <!-- </div> -->
-                                </div>
+                                </div> --}}
                                 <div class="col s12 display-flex justify-content-end mt-3">
                                     <button type="submit" class="btn indigo">
                                         Save changes</button>
