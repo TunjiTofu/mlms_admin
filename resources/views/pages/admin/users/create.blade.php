@@ -28,11 +28,13 @@
                                 {{ csrf_field() }}
                                 <div class="col s12">
                                     <div class="input-field col s6">
-                                        <input id="uname" type="text" name="uname" class="validate" required min="4" max="6" value="{{ old('uname') }}">
+                                        <input id="uname" type="text" name="uname" class="validate" required size="6"
+                                            maxlength="6" style="text-transform:uppercase">
                                         <label for="uname">Username</label>
                                     </div>
                                     <div class="input-field col s6">
-                                        <input id="email3" type="email" name="email" class="validate" required value="{{ old('email') }}">
+                                        <input id="email3" type="email" name="email" class="validate" required
+                                            value="{{ old('email') }}">
                                         <label for="email3">Email</label>
                                     </div>
                                 </div>
@@ -51,9 +53,9 @@
                                     <div class="input-field col s6">
                                         <select name="role">
                                             <option value="0" disabled selected>Choose a Role</option>
-                                            <option value="ADM">Admin</option>
-                                            <option value="TEA">Teacher</option>
-                                            <option value="STD">Student</option>
+                                            @foreach (json_decode($responsePriv) as $privilege)
+                                                <option value="{{ $privilege->id }}">{{ $privilege->title }}</option>
+                                            @endforeach
                                         </select>
                                         <label>Role</label>
                                     </div>
@@ -61,9 +63,9 @@
                                     <div class="input-field col s6">
                                         <select name="status">
                                             <option value="" disabled selected>Choose a Status</option>
-                                            <option value="active">Active</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="banned">Banned</option>
+                                            @foreach (json_decode($responseUserStatus) as $userStatus)
+                                                <option value="{{ $userStatus->id }}">{{ $userStatus->status }}</option>
+                                            @endforeach
                                         </select>
                                         <label>Status</label>
                                     </div>
@@ -83,17 +85,18 @@
                                         <label for="password">Default Password</label>
                                     </div>
                                     <div class="input-field col s6">
-                                      <input id="conf_password" type="password" name="pword_confirmation" class="validate"
-                                          placeholder="Confirm default password for this user" required>
-                                      <label for="conf_password">Confirm Default Password</label>
-                                  </div>
+                                        <input id="conf_password" type="password" name="pword_confirmation"
+                                            class="validate" placeholder="Confirm default password for this user"
+                                            required>
+                                        <label for="conf_password">Confirm Default Password</label>
+                                    </div>
                                 </div>
 
                                 <div class="col s12">
-                                  <div class="input-field col s12">
-                                      <button class="btn border-round col s12">Create User</button>
-                                  </div>
-                              </div>
+                                    <div class="input-field col s12">
+                                        <button class="btn border-round col s12">Create User</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
