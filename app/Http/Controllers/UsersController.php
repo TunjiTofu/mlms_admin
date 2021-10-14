@@ -35,11 +35,12 @@ class UsersController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.users.index', compact(['response', 'responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
         } else {
+            $response="You do not have permission for this action";
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+            return view('pages.error.page404', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
 
         
@@ -55,6 +56,11 @@ class UsersController extends Controller
         $id_token = session()->get('id_Token');
         $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
         $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
+        
+        if ($responsePriv->status() == 403 || $responseUserStatus->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
         if ($responsePriv->status() == 200 && $responseUserStatus->status() == 200) {
             $breadcrumbs = [
                 ['link' => "/users", 'name' => "Users"],
@@ -62,6 +68,13 @@ class UsersController extends Controller
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.users.create', compact(['responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
+        }else {
+            $response="You do not have permission for this action";
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
     }
 
@@ -115,36 +128,22 @@ class UsersController extends Controller
 
         ];
         // dd($data);
-        // $id_token = session()->get('id_Token');
-        // $email = $request->email;
-        // $password = $request->pword;
-        // $apiKey = config('firebase.api_key');
-
-        // $auth = new SignUpClass($apiKey);
-        // $result = $auth->signup($email, $password);
-
-        // if ($result['success']) {
-        //     $data = [
-        //         'uname' => $request->uname,
-        //         'sname' => $request->sname,
-        //         'oname' => $request->oname,
-        //         'role' => $request->role,
-        //         'status' => $request->status,
-        //         'phone' => $request->phone,
-        //         'user_id' => $result['localId'],
-
-        //     ];
-        //  dd($data);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/users', $data);
-        //  dd($response->status());
-        if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/users')->with('success', "User has been added");
-        }
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths', $data);
+        //  dd($response->body());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
-        // }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/users')->with('success', "User has been added");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**
@@ -231,7 +230,7 @@ class UsersController extends Controller
                 ['link' => "/", 'name' => "Dashboard"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
 
 
@@ -259,6 +258,7 @@ class UsersController extends Controller
         // dd($request);
 
         $rules = [
+            'email' => 'required|email',
             'uname' => 'required|min:4|max:6',
             'sname' => 'required|min:2|max:255',
             'oname' => 'required|min:2|max:255',
@@ -271,6 +271,8 @@ class UsersController extends Controller
 
         $custom_messages = [
             'uname.required' => 'Username is required',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email field must contain a valid email address',
             'sname.required' => 'Surname is required',
             'oname.required' => 'Othernames is required',
             'role.required' => 'Role is required',
@@ -288,26 +290,48 @@ class UsersController extends Controller
         // dd('Stop');
         $id_token = session()->get('id_Token');
 
+        if($request->emailVerified == "true"){
+            $emailVerified = true;
+        }else{
+            $emailVerified = false;
+        }
+
+        if($request->disabled == "true"){
+            $disabled = true;
+        }else{
+            $disabled = false;
+        }
+
         $data = [
+            'email' => $request->email,
             'displayName' => $request->uname,
-            'sname' => $request->sname,
+            'sname' => $request->sname, 
             'oname' => $request->oname,
             'role' => $request->role,
             'status' => $request->status,
             'phoneNumber' => $request->phoneNumber,
-            'emailVerified' => $request->emailVerified,
-            'disabled' => $request->disabled,
+            'emailVerified' => $emailVerified,
+            'disabled' => $disabled,
 
         ];
-         dd($data);
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $id, $data);
-        // dd($response);
-        if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/users')->with('success', "User successfully updated");
-        }
+        //  dd($data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'. $id, $data);
+        // dd($response->status());
+        // dd($response->body));
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/users')->with('success', "User successfully updated");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+        
     }
 
     /**
@@ -322,11 +346,19 @@ class UsersController extends Controller
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'.$id);
         // dd($response);
-        if ($response->status() == 200 && $response->successful() == true) {
-            return redirect('/users')->with('success', "User successfully deleted");
-        }
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->status() == 200 && $response->successful() == true) {
+            return redirect('/users')->with('success', "User successfully deleted");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+        
     }
 }
