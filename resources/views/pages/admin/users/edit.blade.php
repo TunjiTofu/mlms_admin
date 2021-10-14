@@ -59,13 +59,19 @@
                             <div class="row">
                                 <div class="col s12">
                                     <div class="row">
-                                        <div class="col s6 input-field">
+                                        <div class="col s12  m4 input-field">
                                             <input id="username" name="uname" type="text" class="validate"
                                                 value="{{ $user->displayName }}" data-error=".errorTxt1">
                                             <label for="username">Username</label>
                                             <small class="errorTxt1"></small>
                                         </div>
-                                        <div class="col s6 input-field">
+                                        <div class="col s12  m4 input-field">
+                                            <input id="username" name="email" type="text" class="validate"
+                                                value="{{ $userAuth->email }}" data-error=".errorTxt1">
+                                            <label for="username">Email</label>
+                                            <small class="errorTxt1"></small>
+                                        </div>
+                                        <div class="col s12  m4 input-field">
                                             <input id="name" name="phoneNumber" type="text" class="validate" size="11"
                                                 value="{{ $user->phoneNumber }}" data-error=".errorTxt2">
                                             <label for="name">Phone Number</label>
@@ -73,14 +79,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col s6 input-field">
+                                        <div class="col s12 m6 input-field">
                                             <input id="name" name="sname" type="text" class="validate"
                                                 value="{{ $user->sname }}" data-error=".errorTxt2">
                                             <label for="name">Surname</label>
                                             <small class="errorTxt2"></small>
                                         </div>
 
-                                        <div class="col s6 input-field">
+                                        <div class="col s12 m6 input-field">
                                             <input id="name" name="oname" type="text" class="validate"
                                                 value="{{ $user->oname }}" data-error=".errorTxt2">
                                             <label for="name">Other Names</label>

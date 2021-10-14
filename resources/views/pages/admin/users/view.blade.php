@@ -26,7 +26,7 @@
                             <h6 class="media-heading">
                                 {{-- <span class="users-view-name">{{ $user->sname }}, {{ $user->oname }} </span>
                                 <span class="grey-text">@</span> --}}
-                                <span class="users-view-username grey-text">{{ '$userAuth->displayName' }}</span>
+                                <span class="users-view-username grey-text">{{ $user->displayName }}</span>
                             </h6>
                             <span>ID:</span>
                             <span class="users-view-id">{{ $userAuth->uid }}</span>
@@ -37,7 +37,7 @@
                     {{-- <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
                             class="material-icons">mail_outline</i></a> --}}
                     {{-- <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">Profile</a> --}}
-                    <a href="{{ route('users-edit', ['id' => '$user->id']) }}" class="btn-small indigo">Edit</a>
+                    <a href="{{ route('users-edit', ['id' => $user->id]) }}" class="btn-small indigo">Edit</a>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                                 </tr>
                                 <tr>
                                     <td>Phone Number:</td>
-                                    <td class="users-view-latest-activity">{{ '$userAuth->phone' }}</td>
+                                    <td class="users-view-latest-activity">{{ $user->phoneNumber }}</td>
                                 </tr>
                             </tbody>
                         </table>

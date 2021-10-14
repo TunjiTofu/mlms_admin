@@ -18,16 +18,24 @@ class PrivilegesController extends Controller
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges');
         // dd($response->json());
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
         if ($response->status() == 200 && $response->ok() == true) {
             $breadcrumbs = [
                 ['link' => "/privileges", 'name' => "Privileges"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.privileges.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-        if ($response->status() == 403) {
-            return redirect('/login')->with('error', 'Unauthorized - Please login');
-        }
+
     }
 
     /**
@@ -73,12 +81,20 @@ class PrivilegesController extends Controller
         //  dd($data);
         $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges', $data);
         // dd($response->status());
-        if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/privileges')->with('success', 'User Privilege Created');
-        }
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/privileges')->with('success', 'User Privilege Created');
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+
     }
 
     /**
@@ -131,14 +147,22 @@ class PrivilegesController extends Controller
             'title' => $request->title,
         ];
         //  dd($data);
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges/'.$id, $data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges/' . $id, $data);
         // dd($response->status());
-        if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/privileges')->with('success', 'User Privilege Updated');
-        }
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/privileges')->with('success', 'User Privilege Updated');
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+
     }
 
     /**
@@ -150,14 +174,22 @@ class PrivilegesController extends Controller
     public function destroy($id)
     {
         //  dd($id);
-         $id_token = session()->get('id_Token');
-         $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges/'.$id);
-         // dd($response);
-         if ($response->status() == 200 && $response->successful() == true) {
-             return redirect('/privileges')->with('success', "User Privilege Deleted");
-         }
-         if ($response->status() == 403) {
-             return redirect('/login')->with('error', 'Unauthorized - Please login');
-         }
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/privileges/' . $id);
+        // dd($response);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->status() == 200 && $response->successful() == true) {
+            return redirect('/privileges')->with('success', "User Privilege Deleted");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+
     }
 }
