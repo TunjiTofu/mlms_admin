@@ -280,4 +280,5 @@
 {{-- page script --}}
 @section('page-script')
     <script src="{{ asset('js/scripts/page-users.js') }}"></script>
+    <script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
 @endsection

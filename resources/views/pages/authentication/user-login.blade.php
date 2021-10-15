@@ -134,3 +134,7 @@
         </div>
     </div>
 @endsection
+
+@section('page-script')
+    <script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
+@endsection

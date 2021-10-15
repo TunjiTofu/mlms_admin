@@ -15,16 +15,48 @@
       "icon": "assignment_ind"
     },
     {
-      "url": "/userstatus",
-      "name": "User Status",
-      "slug": "user-status",
-      "class": "waves-effect waves-cyan",
-      "icon": "swap_horiz"
+      "url": "#",
+      "name": "Configurations",
+      "i18n": "Configurations", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "config",
+      "icon": "settings_applications",
+      "submenu": [
+        {
+          "url": "/defaultstatus",
+          "name": "Default Status",
+          "slug": "default-status",
+          "class": "waves-effect waves-cyan",
+          "icon": "swap_horiz"
+        },
+        {
+          "url": "/userstatus",
+          "name": "User Status",
+          "slug": "user-status",
+          "class": "waves-effect waves-cyan",
+          "icon": "swap_horiz"
+        },
+        {
+          "url": "/resourcetype",
+          "name": "Resource Types",
+          "slug": "resource-type",
+          "class": "waves-effect waves-cyan",
+          "icon": "swap_horiz"
+        },
+        {
+          "url": "/quiztype",
+          "name": "Quiz Types",
+          "slug": "quiz-type",
+          "class": "waves-effect waves-cyan",
+          "icon": "swap_horiz"
+        }
+        
+      ]
     },
     {
       "url": "#",
       "name": "Users",
-      "i18n": "Users",
+      "i18n": "Users", 
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "users_menu",
       "icon": "person_outline",

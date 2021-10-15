@@ -138,5 +138,9 @@ return [
     "Create User"=>"Create User",
     "Privileges"=>"Privileges",
     "User Status"=>"User Status",
+    "Configurations"=>"Configurations",
+    "Default Status"=>"Default Status",
+    "Resource Types"=>"Resource Types",
+    "Quiz Types"=>"Quiz Types",
 ];
 ?>

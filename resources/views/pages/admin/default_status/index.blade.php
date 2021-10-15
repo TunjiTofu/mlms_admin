@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title', 'Users\' Status List')
+@section('title', 'Default Status List')
 
 {{-- vendors styles --}}
 @section('vendor-style')
@@ -30,11 +30,11 @@
                             <div class="col s12 m6 l3">
                                 <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#new-user">
                                     <i class="material-icons left">add_circle_outline</i>
-                                    Create New User Status
+                                    Create New Status
                                 </a>
                             </div>
                         </div>
-                        <h4 class="card-title">All User Status</h4>
+                        <h4 class="card-title">All Default Status</h4>
                         <div class="row">
                             <div class="col s12">
                                 <table id="page-length-option" class="display">
@@ -47,37 +47,37 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (json_decode($response) as $userStatus)
+                                        @foreach (json_decode($response) as $defaultStatus)
                                             <tr>
-                                                <td>{{ $userStatus->id }}</td>
-                                                <td>{{ $userStatus->status }}</td>
+                                                <td>{{ $defaultStatus->id }}</td>
+                                                <td>{{ $defaultStatus->status }}</td>
                                                 <td>
-                                                    <a href="#e{{ $userStatus->id }}" class="modal-trigger mr-5">
+                                                    <a href="#e{{ $defaultStatus->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                     {{-- <a href="{{ route('users-view', ['id' => '123']) }}"
                                                     class="mr-5">
                                                     <i class="material-icons">remove_red_eye</i>
                                                 </a> --}}
-                                                    <a href="#{{ $userStatus->id }}" class="modal-trigger mr-5">
+                                                    <a href="#{{ $defaultStatus->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">delete</i>
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="e{{ $userStatus->id }}" class="modal">
+                                                            <div id="e{{ $defaultStatus->id }}" class="modal">
                                                                 <div class="modal-content">
-                                                                    <h6>Edit User Status</h6>
+                                                                    <h6>Edit Status</h6>
                                                                     <form class="row" method="POST"
-                                                                        action="{{ route('userstatus-update', ['id' => $userStatus->id]) }}">
+                                                                        action="{{ route('defaultstatus-update', ['id' => $defaultStatus->id]) }}">
                                                                         @csrf
                                                                         {{ method_field('PATCH') }}
                                                                         <div class="col s12">
                                                                             <div class="input-field col s12">
                                                                                 <input id="status" type="text" name="status"
                                                                                     class="validate" required
-                                                                                    value="{{ $userStatus->status }}">
+                                                                                    value="{{ $defaultStatus->status }}">
                                                                                 <label for="status">Status Title</label>
                                                                             </div>
                                                                         </div>
@@ -86,7 +86,7 @@
                                                                             <div class="input-field col s12">
                                                                                 <button
                                                                                     class="btn border-round col s12">Update
-                                                                                    User Status</button>
+                                                                                    Status</button>
                                                                             </div>
                                                                         </div>
                                                                     </form>
@@ -96,17 +96,17 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="{{ $userStatus->id }}" class="modal">
+                                                            <div id="{{ $defaultStatus->id }}" class="modal">
                                                                 <div class="modal-content">
-                                                                    <h6>Delete User Status</h6>
+                                                                    <h6>Delete Status</h6>
                                                                     <p>Are you sure you want to delete
-                                                                        <b>{{ $userStatus->id }}</b> from the User Status list?</p>
+                                                                        <b>{{ $defaultStatus->status }}</b> from the Status list?</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <a href="#"
                                                                         class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                         Cancel</a>
-                                                                    <a href="{{ route('userstatus-delete', ['id' => $userStatus->id]) }}"
+                                                                    <a href="{{ route('defaultstatus-delete', ['id' => $defaultStatus->id]) }}"
                                                                         class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                         Delete</a>
                                                                 </div>
@@ -140,8 +140,8 @@
 
     <div id="new-user" class="modal">
         <div class="modal-content">
-            <h6>Create a New User Status</h6>
-            <form class="row" method="POST" action="{{ route('userstatus-store') }}">
+            <h6>Create a New Default Status</h6>
+            <form class="row" method="POST" action="{{ route('defaultstatus-store') }}">
                 {{ csrf_field() }}
                 <div class="col s12">
                     <div class="input-field col s12 m6">
@@ -156,7 +156,7 @@
 
                 <div class="col s12">
                     <div class="input-field col s12">
-                        <button class="btn border-round col s12">Create User Status</button>
+                        <button class="btn border-round col s12">Create Status</button>
                     </div>
                 </div>
             </form>
@@ -175,4 +175,5 @@
 @section('page-script')
     <script src="{{ asset('js/scripts/data-tables.js') }}"></script>
     <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
+    <script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
 @endsection
