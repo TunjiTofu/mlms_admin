@@ -34,7 +34,7 @@
                                 </a>
                             </div>
                         </div>
-                        <h4 class="card-title">Page Length Options</h4>
+                        <h4 class="card-title">All Privileges</h4>
                         <div class="row">
                             <div class="col s12">
                                 <table id="page-length-option" class="display">
@@ -143,12 +143,12 @@
             <form class="row" method="POST" action="{{ route('privileges-store') }}">
                 {{ csrf_field() }}
                 <div class="col s12">
-                    <div class="input-field col s6">
+                    <div class="input-field col s12 m6">
                         <input id="code" type="text" name="code" class="validate" required size="3" maxlength="3"
                             style="text-transform:uppercase">
                         <label for="code">Privilege Code</label>
                     </div>
-                    <div class="input-field col s6">
+                    <div class="input-field col s12 m6">
                         <input id="title" type="text" name="title" class="validate" required>
                         <label for="title">Privilege Title</label>
                     </div>
@@ -175,4 +175,5 @@
 @section('page-script')
     <script src="{{ asset('js/scripts/data-tables.js') }}"></script>
     <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
+    <script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
 @endsection

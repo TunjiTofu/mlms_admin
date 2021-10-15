@@ -315,4 +315,5 @@
 @section('page-script')
     <script src="{{ asset('js/scripts/page-users.js') }}"></script>
     <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
+    <script src="{{asset('js/scripts/ui-alerts.js')}}"></script>
 @endsection

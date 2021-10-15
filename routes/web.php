@@ -8,6 +8,10 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PrivilegesController;
 use App\Http\Controllers\UserstatusController;
+use App\Http\Controllers\DefaultstatusController;
+use App\Http\Controllers\ResourcetypeController;
+use App\Http\Controllers\QuiztypeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +62,37 @@ Route::prefix('userstatus')->as('userstatus')->group(function () {
     Route::patch('/update/{id}', [UserstatusController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [UserstatusController::class, 'destroy'])->name('-delete');
 });
+
+Route::prefix('defaultstatus')->as('defaultstatus')->group(function () {
+    Route::get('/', [DefaultstatusController::class, 'index'])->name('');
+    // Route::get('/create', [UsersController::class, 'create'])->name('-add');
+    Route::post('/store', [DefaultstatusController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [UsersController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [DefaultstatusController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [DefaultstatusController::class, 'destroy'])->name('-delete');
+});
+
+Route::prefix('resourcetype')->as('resourcetype')->group(function () {
+    Route::get('/', [ResourcetypeController::class, 'index'])->name('');
+    // Route::get('/create', [ResourcetypeController::class, 'create'])->name('-add');
+    Route::post('/store', [ResourcetypeController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [ResourcetypeController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [ResourcetypeController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [ResourcetypeController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [ResourcetypeController::class, 'destroy'])->name('-delete');
+});
+
+Route::prefix('quiztype')->as('quiztype')->group(function () {
+    Route::get('/', [QuiztypeController::class, 'index'])->name('');
+    // Route::get('/create', [QuiztypeController::class, 'create'])->name('-add');
+    Route::post('/store', [QuiztypeController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [QuiztypeController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [QuiztypeController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [QuiztypeController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [QuiztypeController::class, 'destroy'])->name('-delete');
+});
+
 
 Route::prefix('users')->as('users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('');

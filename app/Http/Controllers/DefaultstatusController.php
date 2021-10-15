@@ -6,17 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
-class UserstatusController extends Controller
+class DefaultstatusController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response 
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-       $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus');
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus');
         // dd($response->json());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -24,19 +24,18 @@ class UserstatusController extends Controller
 
         if ($response->status() == 200 && $response->ok() == true) {
             $breadcrumbs = [
-                ['link' => "#", 'name' => "All Status"],
-                ['link' => "/userstatus", 'name' => "User Status"],
+            ['link' => "#", 'name' => "All Status"], 
+            ['link' => "/defaultstatus", 'name' => "User Status"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.users_status.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
-        }else {
+            return view('pages.admin.default_status.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-        
     }
 
     /**
@@ -57,16 +56,16 @@ class UserstatusController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-        $rules = [
+         // dd($request);
+         $rules = [
             'id' => 'required|string|min:2',
             'status' => 'required|string|min:3|max:255',
         ];
 
         $custom_messages = [
-            'id.required' => 'User status ID is required',
-            'id.string' => 'User status ID must be a text value',
-            'id.min' => 'User status ID must be a minimum of 2 characters',
+            'id.required' => 'status ID is required',
+            'id.string' => 'status ID must be a text value',
+            'id.min' => 'Status ID must be a minimum of 2 characters',
             'status.required' => 'Status Title is required',
             'status.string' => 'Status Title must be a text value',
             'status.min' => 'Status Title must be a minimum of 3 characters',
@@ -84,14 +83,14 @@ class UserstatusController extends Controller
             'status' => $request->status,
         ];
         //  dd($data);
-        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus', $data);
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus', $data);
         // dd($response->status());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/userstatus')->with('success', 'User Status Created');
+            return redirect('/defaultstatus')->with('success', 'Status Created');
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -99,7 +98,6 @@ class UserstatusController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-        
     }
 
     /**
@@ -155,14 +153,14 @@ class UserstatusController extends Controller
             'status' => $request->status,
         ];
         //  dd($data);
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus/'.$id, $data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/'.$id, $data);
         // dd($response->status());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/userstatus')->with('success', 'User Status Updated');
+            return redirect('/defaultstatus')->with('success', 'Default Status Updated');
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -170,7 +168,6 @@ class UserstatusController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-        
     }
 
     /**
@@ -183,14 +180,14 @@ class UserstatusController extends Controller
     {
         //  dd($id);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus/'.$id);
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/'.$id);
         // dd($response);
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 200 && $response->successful() == true) {
-            return redirect('/userstatus')->with('success', "User Status Deleted");
+            return redirect('/defaultstatus')->with('success', "Default Status Deleted");
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -198,6 +195,5 @@ class UserstatusController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-        
     }
 }
