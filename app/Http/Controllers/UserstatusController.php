@@ -24,7 +24,7 @@ class UserstatusController extends Controller
 
         if ($response->status() == 200 && $response->ok() == true) {
             $breadcrumbs = [
-                ['link' => "#", 'name' => "All Status"],
+                ['link' => "#", 'name' => "Configuration"],
                 ['link' => "/userstatus", 'name' => "User Status"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -32,6 +32,9 @@ class UserstatusController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/userstatus", 'name' => "User Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -95,6 +98,9 @@ class UserstatusController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/userstatus", 'name' => "User Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -166,6 +172,9 @@ class UserstatusController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/userstatus", 'name' => "User Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -194,6 +203,9 @@ class UserstatusController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/userstatus", 'name' => "User Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));

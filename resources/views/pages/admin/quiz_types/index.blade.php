@@ -47,38 +47,38 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach (json_decode($response) as $userStatus) --}}
+                                        @foreach (json_decode($response) as $quizType)
                                             <tr>
-                                                <td>{{ '$userStatus->id' }}</td>
-                                                <td>{{ '$userStatus->status' }}</td>
+                                                <td>{{ $quizType->id }}</td>
+                                                <td>{{ $quizType->type }}</td>
                                                 <td>
-                                                    <a href="#e{{ '$userStatus->id' }}" class="modal-trigger mr-5">
+                                                    <a href="#e{{ $quizType->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                     {{-- <a href="{{ route('users-view', ['id' => '123']) }}"
                                                     class="mr-5">
                                                     <i class="material-icons">remove_red_eye</i>
                                                 </a> --}}
-                                                    <a href="#{{ '$userStatus->id' }}" class="modal-trigger mr-5">
+                                                    <a href="#{{ $quizType->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">delete</i>
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="e{{ '$userStatus->id' }}" class="modal">
+                                                            <div id="e{{ $quizType->id }}" class="modal">
                                                                 <div class="modal-content">
                                                                     <h6>Edit Quiz Type</h6>
                                                                     <form class="row" method="POST"
-                                                                        action="{{ route('defaultstatus-update', ['id' => '$userStatus->id']) }}">
+                                                                        action="{{ route('quiztype-update', ['id' => $quizType->id]) }}">
                                                                         @csrf
                                                                         {{ method_field('PATCH') }}
                                                                         <div class="col s12">
                                                                             <div class="input-field col s12">
-                                                                                <input id="status" type="text" name="status"
+                                                                                <input id="type" type="text" name="type"
                                                                                     class="validate" required
-                                                                                    value="{{ '$userStatus->status' }}">
-                                                                                <label for="status">Quiz Type</label>
+                                                                                    value="{{ $quizType->type }}">
+                                                                                <label for="type">Quiz Type</label>
                                                                             </div>
                                                                         </div>
 
@@ -96,17 +96,17 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="{{ '$userStatus->id' }}" class="modal">
+                                                            <div id="{{ $quizType->id }}" class="modal">
                                                                 <div class="modal-content">
                                                                     <h6>Delete Quiz Type</h6>
                                                                     <p>Are you sure you want to delete
-                                                                        <b>{{ '$userStatus->id' }}</b> from the Quiz Type list?</p>
+                                                                        <b>{{ $quizType->id }}</b> from the Quiz Type list?</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <a href="#"
                                                                         class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                         Cancel</a>
-                                                                    <a href="{{ route('defaultstatus-delete', ['id' => '$userStatus->id']) }}"
+                                                                    <a href="{{ route('quiztype-delete', ['id' => $quizType->id]) }}"
                                                                         class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                         Delete</a>
                                                                 </div>
@@ -116,7 +116,7 @@
                                                 </td>
                                                 {{-- <td><a href="{{ route('users-view',['id'=>$hashid->encode($user->id)])) }}"><i --}}
                                             </tr>
-                                        {{-- @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -141,7 +141,7 @@
     <div id="new-user" class="modal">
         <div class="modal-content">
             <h6>Create a New Quiz Type</h6>
-            <form class="row" method="POST" action="{{ route('defaultstatus-store') }}">
+            <form class="row" method="POST" action="{{ route('quiztype-store') }}">
                 {{ csrf_field() }}
                 <div class="col s12">
                     <div class="input-field col s12 m6">
@@ -149,8 +149,8 @@
                         <label for="id">Id</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <input id="status" type="text" name="status" class="validate" required>
-                        <label for="status">Quiz Type</label>
+                        <input id="type" type="text" name="type" class="validate" required>
+                        <label for="type">Quiz Type</label>
                     </div>
                 </div>
 

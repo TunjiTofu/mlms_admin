@@ -38,6 +38,8 @@ class UsersController extends Controller
             $response="You do not have permission for this action";
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.page404', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -72,6 +74,9 @@ class UsersController extends Controller
             $response="You do not have permission for this action";
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/create", 'name' => "Create"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -140,6 +145,8 @@ class UsersController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -176,6 +183,9 @@ class UsersController extends Controller
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/view/$id", 'name' => "View User"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
@@ -221,13 +231,16 @@ class UsersController extends Controller
             // dd($person);
             $breadcrumbs = [
                 ['link' => "/users", 'name' => "Users"],
-                ['link' => "/users/edit/$id", 'name' => "Edit User"],
+                ['link' => "/users/edit/$id", 'name' => "Edit User"], 
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.users.edit', compact(['user', 'userAuth', 'responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "/users/edit/$id", 'name' => "Edit User"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -327,6 +340,8 @@ class UsersController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -355,6 +370,8 @@ class UsersController extends Controller
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/users", 'name' => "Users"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
