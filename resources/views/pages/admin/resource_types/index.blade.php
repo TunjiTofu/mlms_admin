@@ -47,38 +47,38 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach (json_decode($response) as $userStatus) --}}
+                                        @foreach (json_decode($response) as $resourceType)
                                             <tr>
-                                                <td>{{ '$userStatus->id' }}</td>
-                                                <td>{{ '$userStatus->status' }}</td>
+                                                <td>{{ $resourceType->id }}</td>
+                                                <td>{{ $resourceType->type }}</td>
                                                 <td>
-                                                    <a href="#e{{ '$userStatus->id' }}" class="modal-trigger mr-5">
+                                                    <a href="#e{{ $resourceType->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                     {{-- <a href="{{ route('users-view', ['id' => '123']) }}"
                                                     class="mr-5">
                                                     <i class="material-icons">remove_red_eye</i>
                                                 </a> --}}
-                                                    <a href="#{{ '$userStatus->id' }}" class="modal-trigger mr-5">
+                                                    <a href="#{{ $resourceType->id }}" class="modal-trigger mr-5">
                                                         <i class="material-icons">delete</i>
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="e{{ '$userStatus->id' }}" class="modal">
+                                                            <div id="e{{ $resourceType->id }}" class="modal">
                                                                 <div class="modal-content">
                                                                     <h6>Edit Status</h6>
                                                                     <form class="row" method="POST"
-                                                                        action="{{ route('defaultstatus-update', ['id' => '$userStatus->id']) }}">
+                                                                        action="{{ route('resourcetype-update', ['id' => $resourceType->id]) }}">
                                                                         @csrf
                                                                         {{ method_field('PATCH') }}
                                                                         <div class="col s12">
                                                                             <div class="input-field col s12">
-                                                                                <input id="status" type="text" name="status"
+                                                                                <input id="type" type="text" name="type"
                                                                                     class="validate" required
-                                                                                    value="{{ '$userStatus->status' }}">
-                                                                                <label for="status">Resource Type</label>
+                                                                                    value="{{ $resourceType->type }}">
+                                                                                <label for="type">Resource Type</label>
                                                                             </div>
                                                                         </div>
 
@@ -96,17 +96,17 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col s12">
-                                                            <div id="{{ '$userStatus->id' }}" class="modal">
+                                                            <div id="{{ $resourceType->id }}" class="modal">
                                                                 <div class="modal-content">
                                                                     <h6>Delete Resource Type</h6>
                                                                     <p>Are you sure you want to delete
-                                                                        <b>{{ '$userStatus->id' }}</b> from the Resource Type list?</p>
+                                                                        <b>{{ $resourceType->type }}</b> from the Resource Type list?</p>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <a href="#"
                                                                         class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                         Cancel</a>
-                                                                    <a href="{{ route('defaultstatus-delete', ['id' => '$userStatus->id']) }}"
+                                                                    <a href="{{ route('resourcetype-delete', ['id' => $resourceType->id]) }}"
                                                                         class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                         Delete</a>
                                                                 </div>
@@ -116,7 +116,7 @@
                                                 </td>
                                                 {{-- <td><a href="{{ route('users-view',['id'=>$hashid->encode($user->id)])) }}"><i --}}
                                             </tr>
-                                        {{-- @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -141,7 +141,7 @@
     <div id="new-user" class="modal">
         <div class="modal-content">
             <h6>Create a New Resource Type</h6>
-            <form class="row" method="POST" action="{{ route('defaultstatus-store') }}">
+            <form class="row" method="POST" action="{{ route('resourcetype-store') }}">
                 {{ csrf_field() }}
                 <div class="col s12">
                     <div class="input-field col s12 m6">
@@ -149,8 +149,8 @@
                         <label for="id">Resource Id</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <input id="status" type="text" name="status" class="validate" required>
-                        <label for="status">Resource Type</label>
+                        <input id="type" type="text" name="type" class="validate" required>
+                        <label for="type">Resource Type</label>
                     </div>
                 </div>
 

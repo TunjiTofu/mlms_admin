@@ -24,14 +24,17 @@ class DefaultstatusController extends Controller
 
         if ($response->status() == 200 && $response->ok() == true) {
             $breadcrumbs = [
-            ['link' => "#", 'name' => "All Status"], 
-            ['link' => "/defaultstatus", 'name' => "User Status"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/defaultstatus", 'name' => "User Status"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.default_status.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/defaultstatus", 'name' => "Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -56,8 +59,8 @@ class DefaultstatusController extends Controller
      */
     public function store(Request $request)
     {
-         // dd($request);
-         $rules = [
+        // dd($request);
+        $rules = [
             'id' => 'required|string|min:2',
             'status' => 'required|string|min:3|max:255',
         ];
@@ -91,9 +94,12 @@ class DefaultstatusController extends Controller
 
         if ($response->status() == 201 && $response->successful() == true) {
             return redirect('/defaultstatus')->with('success', 'Status Created');
-        }else {
+        } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/defaultstatus", 'name' => "Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -153,7 +159,7 @@ class DefaultstatusController extends Controller
             'status' => $request->status,
         ];
         //  dd($data);
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/'.$id, $data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/' . $id, $data);
         // dd($response->status());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -161,9 +167,12 @@ class DefaultstatusController extends Controller
 
         if ($response->status() == 201 && $response->successful() == true) {
             return redirect('/defaultstatus')->with('success', 'Default Status Updated');
-        }else {
+        } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/defaultstatus", 'name' => "Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -180,7 +189,7 @@ class DefaultstatusController extends Controller
     {
         //  dd($id);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/'.$id);
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus/' . $id);
         // dd($response);
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -188,9 +197,12 @@ class DefaultstatusController extends Controller
 
         if ($response->status() == 200 && $response->successful() == true) {
             return redirect('/defaultstatus')->with('success', "Default Status Deleted");
-        }else {
+        } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "#", 'name' => "Configuration"],
+                ['link' => "/defaultstatus", 'name' => "Status"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));

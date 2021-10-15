@@ -74,6 +74,26 @@
       ]
     },
     {
+      "url": "#",
+      "name": "Classes",
+      "i18n": "Classes", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "classes_menu",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "/classes",
+          "name": "View Classes",
+          "slug": "users"
+        },
+        {
+          "url": "/classes/create",
+          "name": "Create Class",
+          "slug": "teachers-page"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Pages",
       "i18n": "Pages",

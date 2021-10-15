@@ -30,7 +30,8 @@ class PrivilegesController extends Controller
             return view('pages.admin.privileges.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
-                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/privileges", 'name' => "Privileges"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -89,7 +90,8 @@ class PrivilegesController extends Controller
             return redirect('/privileges')->with('success', 'User Privilege Created');
         }else {
             $breadcrumbs = [
-                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/privileges", 'name' => "Privileges"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -157,7 +159,8 @@ class PrivilegesController extends Controller
             return redirect('/privileges')->with('success', 'User Privilege Updated');
         }else {
             $breadcrumbs = [
-                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/privileges", 'name' => "Privileges"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
@@ -185,7 +188,8 @@ class PrivilegesController extends Controller
             return redirect('/privileges')->with('success', "User Privilege Deleted");
         }else {
             $breadcrumbs = [
-                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/privileges", 'name' => "Privileges"],
+                ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));

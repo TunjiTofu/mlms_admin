@@ -11,7 +11,7 @@ use App\Http\Controllers\UserstatusController;
 use App\Http\Controllers\DefaultstatusController;
 use App\Http\Controllers\ResourcetypeController;
 use App\Http\Controllers\QuiztypeController;
-
+use App\Http\Controllers\ClassesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +102,16 @@ Route::prefix('users')->as('users')->group(function () {
     Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('-edit');
     Route::patch('/update/{id}', [UsersController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [UsersController::class, 'destroy'])->name('-delete');
+});
+
+Route::prefix('classes')->as('classes')->group(function () {
+    Route::get('/', [ClassesController::class, 'index'])->name('');
+    Route::get('/create', [ClassesController::class, 'create'])->name('-add');
+    Route::post('/store', [ClassesController::class, 'store'])->name('-store');
+    Route::get('/view/{id}', [ClassesController::class, 'show'])->name('-view');
+    Route::get('/edit/{id}', [ClassesController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [ClassesController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [ClassesController::class, 'destroy'])->name('-delete');
 });
 
 
