@@ -43,6 +43,7 @@ Route::get('/register', [IndexController::class, 'register'])->name('register');
 
 Route::get('/', [IndexController::class, 'dashboard'])->name('dashboard');
 
+// PRIVILEGES ROUTES
 Route::prefix('privileges')->as('privileges')->group(function () {
     Route::get('/', [PrivilegesController::class, 'index'])->name('');
     // Route::get('/create', [UsersController::class, 'create'])->name('-add');
@@ -53,6 +54,7 @@ Route::prefix('privileges')->as('privileges')->group(function () {
     Route::get('/delete/{id}', [PrivilegesController::class, 'destroy'])->name('-delete');
 });
 
+// USER STATUS ROUTES
 Route::prefix('userstatus')->as('userstatus')->group(function () {
     Route::get('/', [UserstatusController::class, 'index'])->name('');
     // Route::get('/create', [UsersController::class, 'create'])->name('-add');
@@ -63,6 +65,7 @@ Route::prefix('userstatus')->as('userstatus')->group(function () {
     Route::get('/delete/{id}', [UserstatusController::class, 'destroy'])->name('-delete');
 });
 
+// DEFAULT STATUS ROUTES
 Route::prefix('defaultstatus')->as('defaultstatus')->group(function () {
     Route::get('/', [DefaultstatusController::class, 'index'])->name('');
     // Route::get('/create', [UsersController::class, 'create'])->name('-add');
@@ -73,6 +76,7 @@ Route::prefix('defaultstatus')->as('defaultstatus')->group(function () {
     Route::get('/delete/{id}', [DefaultstatusController::class, 'destroy'])->name('-delete');
 });
 
+// RESOURCE TYPES ROUTES
 Route::prefix('resourcetype')->as('resourcetype')->group(function () {
     Route::get('/', [ResourcetypeController::class, 'index'])->name('');
     // Route::get('/create', [ResourcetypeController::class, 'create'])->name('-add');
@@ -83,6 +87,7 @@ Route::prefix('resourcetype')->as('resourcetype')->group(function () {
     Route::get('/delete/{id}', [ResourcetypeController::class, 'destroy'])->name('-delete');
 });
 
+// QUIZ TPES ROUTES
 Route::prefix('quiztype')->as('quiztype')->group(function () {
     Route::get('/', [QuiztypeController::class, 'index'])->name('');
     // Route::get('/create', [QuiztypeController::class, 'create'])->name('-add');
@@ -93,7 +98,7 @@ Route::prefix('quiztype')->as('quiztype')->group(function () {
     Route::get('/delete/{id}', [QuiztypeController::class, 'destroy'])->name('-delete');
 });
 
-
+// USERS ROUTES
 Route::prefix('users')->as('users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('');
     Route::get('/create', [UsersController::class, 'create'])->name('-add');
@@ -104,6 +109,7 @@ Route::prefix('users')->as('users')->group(function () {
     Route::get('/delete/{id}', [UsersController::class, 'destroy'])->name('-delete');
 });
 
+// CLASSES ROUTES
 Route::prefix('classes')->as('classes')->group(function () {
     Route::get('/', [ClassesController::class, 'index'])->name('');
     Route::get('/create', [ClassesController::class, 'create'])->name('-add');

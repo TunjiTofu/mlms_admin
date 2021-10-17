@@ -3,7 +3,7 @@
 
 {{-- page title --}}
 @section('title')
-    Create User
+    Create Class
 @endsection
 
 {{-- vendor styles --}}
@@ -24,77 +24,61 @@
                 <div id="view-input-fields">
                     <div class="row">
                         <div class="col s12">
-                            <form class="row" method="POST" action="{{ route('users-store') }}">
+                            <form class="row" method="POST" action="{{ route('classes-store') }}">
                                 {{ csrf_field() }}
                                 <div class="col s12">
-                                    <div class="input-field col s6">
-                                        <input id="uname" type="text" name="uname" class="validate" required size="6"
-                                            maxlength="6" style="text-transform:uppercase">
-                                        <label for="uname">Username</label>
+                                    <div class="input-field col s12 m6">
+                                        <input id="name" type="text" name="name" class="validate" required>
+                                        <label for="name">Name Your Class</label>
                                     </div>
-                                    <div class="input-field col s6">
-                                        <input id="email3" type="email" name="email" class="validate" required
-                                            value="{{ old('email') }}">
-                                        <label for="email3">Email</label>
-                                    </div>
-                                </div>
-                                <div class="col s12">
-                                    <div class="input-field col s6">
-                                        <input id="last_name" name="sname" type="text" required>
-                                        <label for="last_name">Surname</label>
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <input id="first_name" name="oname" type="text" class="validate" required>
-                                        <label for="first_name">Other Names</label>
-                                    </div>
-                                </div>
-
-                                <div class="col s12">
-                                    <div class="input-field col s6">
-                                        <select name="role">
-                                            <option value="0" disabled selected>Choose a Role</option>
-                                            {{-- @foreach (json_decode($responsePriv) as $privilege)
-                                                <option value="{{ $privilege->id }}">{{ $privilege->title }}</option>
-                                            @endforeach --}}
+                                    <div class="input-field col s12 m6">
+                                        <select name="teacher">
+                                            <option value="0" disabled selected>Select Teacher</option>
+                                            @foreach (json_decode($response) as $teacher)
+                                                <option value="{{ $teacher->id }}">{{ strtoupper($teacher->sname) }}, {{ ucwords($teacher->oname) }}</option>
+                                            @endforeach
                                         </select>
-                                        <label>Role</label>
+                                        <label>Select Class Teacher</label>
                                     </div>
-
-                                    <div class="input-field col s6">
+                                </div>
+                                <div class="col s12">
+                                    <div class="input-field col s12">
+                                        <textarea id="message5" class="materialize-textarea" maxlength="250" name="description"></textarea>
+                                        <label for="message">Class Description</label>
+                                    </div>
+                                </div>
+                                <div class="col s12">
+                                    <div class="input-field col s12 m6">
                                         <select name="status">
-                                            <option value="" disabled selected>Choose a Status</option>
-                                            {{-- @foreach (json_decode($responseUserStatus) as $userStatus)
-                                                <option value="{{ $userStatus->id }}">{{ $userStatus->status }}</option>
-                                            @endforeach --}}
+                                            <option value="" disabled selected>Select Status</option>
+                                            @foreach (json_decode($responseStatus) as $status)
+                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                            @endforeach
                                         </select>
                                         <label>Status</label>
                                     </div>
-                                </div>
-
-                                <div class="col s12">
-                                    <div class="input-field col s6">
-                                        <input id="phone" type="text" name="phone" class="validate" required max="11">
-                                        <label for="phone">Phone Number</label>
+                                    <div class="input-field col s12 m6">
+                                        <span><input id="color" type="color" name="color" class="validate" value="#1976D2" required></span>
+                                        <span><label for="color">Choose a Class Color</label></span>
                                     </div>
                                 </div>
 
                                 <div class="col s12">
-                                    <div class="input-field col s6">
-                                        <input id="password" type="password" name="pword" class="validate"
-                                            placeholder="Provide a default password for this user" required>
-                                        <label for="password">Default Password</label>
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <input id="conf_password" type="password" name="pword_confirmation"
-                                            class="validate" placeholder="Confirm default password for this user"
-                                            required>
-                                        <label for="conf_password">Confirm Default Password</label>
+                                    <div class="col s12 file-field input-field">
+                                        <div class="btn float-right">
+                                            <span>Click to Attach Image</span>
+                                            <input type="file">
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text" name="imagePath">
+                                        </div>
+                                        <span class="helper-text" style="color: red">Supported file types: .png, .jpg, .jpeg</span>
                                     </div>
                                 </div>
 
                                 <div class="col s12">
                                     <div class="input-field col s12">
-                                        <button class="btn border-round col s12">Create User</button>
+                                        <button class="btn border-round col s12">Create Class</button>
                                     </div>
                                 </div>
                             </form>
