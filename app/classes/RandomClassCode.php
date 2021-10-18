@@ -8,7 +8,7 @@ class RandomClassCode
 {
 
     public function generateRandomString($length) {
-        $characters = '$!<>@#0123456789abcdeghjknopqrsuvwxyzABCDEGHIJKLNOPQRSUVWXYZ';
+        $characters = '$!<>@#0123456789abcdeghjknpqrvwxyzABCDEGHIJKLNOPQRSUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
