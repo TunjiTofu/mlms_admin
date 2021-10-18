@@ -190,18 +190,6 @@ class UsersController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
         }
-
-
-        // if ($response->status() == 200 && $response->ok() == true) {
-        //     $user = json_decode($response);
-        //     // dd($person);
-        //     $breadcrumbs = [
-        //         ['link' => "/users", 'name' => "Users"],
-        //         ['link' => "/users/view/$id", 'name' => "View User"],
-        //     ];
-        //     $pageConfigs = ['pageHeader' => true];
-        //     return view('pages.admin.users.view', compact(['user', 'breadcrumbs', 'pageConfigs']));
-        // }
     }
 
     /**
@@ -245,18 +233,6 @@ class UsersController extends Controller
             $pageConfigs = ['pageHeader' => true];
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
-
-
-        // $responsePriv = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/privileges");
-        // $responseUserStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/userstatus");
-        // if ($responsePriv->status() == 200 && $responseUserStatus->status() == 200) {
-        //     $breadcrumbs = [
-        //         ['link' => "/users", 'name' => "Users"],
-        //         ['link' => "/users/create", 'name' => "Create"],
-        //     ];
-        //     $pageConfigs = ['pageHeader' => true];
-        //     return view('pages.admin.users.create', compact(['responsePriv', 'responseUserStatus', 'breadcrumbs', 'pageConfigs']));
-        // }
     }
 
     /**
