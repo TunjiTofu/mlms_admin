@@ -31,7 +31,9 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="col s12 m6 l3">
-                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" disabled href="#new-user">
+                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="{{ route('topics-add') }}">
+                                    {{-- <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#new-user"> --}}
+                                   
                                     <i class="material-icons left">add_circle_outline</i>
                                     Create New Topic
                                 </a>
@@ -107,7 +109,8 @@
                                                     @endphp
                                             </td>
                                             <td>
-                                                <a href="#e{{ $topic->id }}" class=" modal-trigger mr-5">
+                                                <a href="{{ route('topics-edit', ['id' => $topic->id]) }}" class=" modal-trigger mr-5">
+                                                    {{-- <a href="#e{{ $topic->id }}" class=" modal-trigger mr-5"> --}}
                                                     <i class="material-icons">edit</i>
                                                 </a>
                                                 {{-- <a href="{{ route('users-view', ['id' => $topic->id]) }}"

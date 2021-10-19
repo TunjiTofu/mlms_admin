@@ -167,7 +167,37 @@ class TopicsController extends Controller
      */
     public function edit($id)
     {
-        //
+        // dd($id);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/".$id);
+        $responseClasses = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses");
+        $responseStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus");
+        $responseModules = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules");
+        // dd($response->json());
+        if (($response->status() == 403) || ($responseClasses->status() == 403) || ($responseStatus->status() == 403)|| ($responseModules->status() == 403)) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if (($response->status() == 200 && $response->ok() == true) || ($responseModules->status() == 200 && $responseModules->ok() == true) || ($responseClasses->status() == 200 && $responseClasses->ok() == true) || ($responseStatus->status() == 200 && $responseStatus->ok() == true)) {
+            
+            $topic = json_decode($response);
+            // dd($topic);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/topics/edit/$id", 'name' => "Edit Topic"], 
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.topics.edit', compact(['topic', 'responseClasses', 'responseStatus', 'responseModules', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/privileges", 'name' => "Privileges"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**
@@ -179,7 +209,65 @@ class TopicsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request);
+        $rules = [
+            'topicName' => 'required|min:3|max:255',
+            'status' => 'required',
+            'classList' => 'required',
+            // 'module' => 'required',
+            'currentModule' => 'required',
+        ];
+
+        $custom_messages = [
+            'topicName.required' => 'Topic name is required',
+            'status.required' => 'Topic status is required',
+            'classList.required' => 'Class Name is required',
+            // 'module.required' => 'Module Name is required',
+            'currentModule.required' => 'Current Module Name is required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $custom_messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+        // $code = generateRandomString(5);
+
+        $sortNumber ="0"; // Display order in the front end
+
+        $updatedModule='';
+        if($request->module == null){
+            $updatedModule = $request->currentModule; 
+        }
+        if($request->module != null){
+            $updatedModule = $request->module; 
+        }
+
+        $data = [
+            'topicName' => $request->topicName,
+            'status' => $request->status,
+            'class' => $request->classList,
+            'module' => $updatedModule,
+            'sortNumber' => $sortNumber,
+        ];
+        // dd($data);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/'.$id,  $data);
+        //  dd($response->status());
+         if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect('/topics')->with('success', "Topic has been updated");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**

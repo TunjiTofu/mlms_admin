@@ -139,7 +139,7 @@ Route::prefix('topics')->as('topics')->group(function () {
     Route::get('/create', [TopicsController::class, 'create'])->name('-add');
     Route::post('/store', [TopicsController::class, 'store'])->name('-store');
     // Route::get('/view/{id}', [TopicsController::class, 'show'])->name('-view');
-    // Route::get('/edit/{id}', [TopicsController::class, 'edit'])->name('-edit');
+    Route::get('/edit/{id}', [TopicsController::class, 'edit'])->name('-edit');
     Route::patch('/update/{id}', [TopicsController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [TopicsController::class, 'destroy'])->name('-delete');
     
