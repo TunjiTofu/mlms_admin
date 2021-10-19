@@ -79,7 +79,7 @@
       "i18n": "Classes", 
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "classes_menu",
-      "icon": "person_outline",
+      "icon": "class",
       "submenu": [
         {
           "url": "/classes",
@@ -90,6 +90,33 @@
           "url": "/classes/create",
           "name": "Create Class",
           "slug": "teachers-page"
+        }
+      ]
+    },
+    {
+      "url": "/modules",
+      "name": "Modules",
+      "slug": "modules",
+      "class": "waves-effect waves-cyan",
+      "icon": "view_module"
+    },
+    {
+      "url": "#",
+      "name": "Topics",
+      "i18n": "Topics", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "topics_menu",
+      "icon": "note_add",
+      "submenu": [
+        {
+          "url": "/topics",
+          "name": "View Topics",
+          "slug": "view-topics"
+        },
+        {
+          "url": "/topics/create",
+          "name": "Create Topic",
+          "slug": "create-topic"
         }
       ]
     },

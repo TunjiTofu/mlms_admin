@@ -145,5 +145,9 @@ return [
     "Default Status"=>"Default Status",
     "Resource Types"=>"Resource Types",
     "Quiz Types"=>"Quiz Types",
+    "Modules"=>"Modules",
+    "Topics"=>"Topics",
+    "View Topics"=>"View Topics",
+    "Create Topic"=>"Create Topic",
 ];
 ?>

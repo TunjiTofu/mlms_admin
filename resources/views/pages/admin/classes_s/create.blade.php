@@ -10,6 +10,13 @@
 @section('vendor-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/flag-icon/css/flag-icon.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/noUiSlider/nouislider.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/select2/select2-materialize.css') }}">
+@endsection
+
+{{-- page styles --}}
+@section('page-style')
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/form-select2.css') }}">
 @endsection
 
 {{-- page content --}}
@@ -32,14 +39,14 @@
                                         <label for="name">Name Your Class</label>
                                     </div>
                                     <div class="input-field col s12 m6">
-                                        <select name="teacher">
+                                        <select name="teacher" class="select2 browser-default">
                                             <option value="0" disabled selected>Select Teacher</option>
                                             @foreach (json_decode($response) as $teacher)
                                                 <option value="{{ $teacher->id }}">{{ strtoupper($teacher->sname) }}, {{ ucwords($teacher->oname) }}</option>
                                             @endforeach
                                         </select>
-                                        <label>Select Class Teacher</label>
                                     </div>
+                                   
                                 </div>
                                 <div class="col s12">
                                     <div class="input-field col s12">
@@ -89,4 +96,15 @@
             </div>
         </div>
     </div>
+@endsection
+
+
+{{-- vendor scripts --}}
+@section('vendor-script')
+    <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
+@endsection
+
+{{-- page script --}}
+@section('page-script')
+    <script src="{{ asset('js/scripts/form-select2.js') }}"></script>
 @endsection
