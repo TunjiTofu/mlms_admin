@@ -3,7 +3,7 @@
 
 {{-- page title --}}
 @section('title')
-    Create Class
+    Edit Topic
 @endsection
 
 {{-- vendor styles --}}
@@ -24,23 +24,27 @@
 
 
     <div class="section">
-        <div class="card">
+        <div class="card"> 
             <div class="card-content">
                 <p class="caption mb-0">
-                <h6>Create Topic</h6>
-                <form class="row" method="POST" action="{{ route('topics-store') }}">
-                    {{ csrf_field() }}
+                <h6>Edit Topic</h6>
+                <form class="row" method="POST" action="{{ route('topics-update', ['id' => $topic->id]) }}">
+                    @csrf
+                    {{ method_field('PATCH') }}
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field col s12 m6">
-                                <input id="topic" type="text" name="topicName" class="validate" required>
+                                <input type="text" name="topicName" class="validate" value="{{ $topic->topicName }}" required>
                                 <label for="code">Topic</label>
                             </div>
                             <div class="input-field col s12 m6">
+                                {{-- <h>Status</h> --}}
                                 <select name="status" id="status" class="select2 browser-default">
                                     <option value="" disabled selected>Select Status</option>
                                     @foreach (json_decode($responseStatus) as $status)
-                                        <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                        <option value="{{ $status->id }}"
+                                            {{ $status->id == $topic->status ? 'selected = "selected"' : '' }}> {{ $status->status }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 {{-- <label>Status</label> --}}
@@ -50,10 +54,13 @@
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field col s12">
+                                <h>Class Name</h>
                                 <select name="classList" id="classList" class="select2 browser-default">
                                     <option value="" disabled selected>Select Class</option>
                                     @foreach (json_decode($responseClasses) as $class)
-                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        <option value="{{ $class->id }}"
+                                            {{ $class->id == $topic->class ? 'selected = "selected"' : '' }}> {{ $class->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -62,21 +69,30 @@
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field col s12">
+                                @php
+                                    $id_token = session()->get('id_Token');
+                                    $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/' .$topic->module);
+                                    $module = json_decode($response);
+                                    // dd($teacher)
+                                @endphp
+                                <input type="hidden" value="{{ $module->id }}" name="currentModule" readonly>
+                                <input type="text" value="{{ $module->moduleName }}" disabled readonly>
+                                <label for="code">Current Module </label>
+                                <span class="helper-text" style="color: red">To change the current module, re-select the class name </span>
+                            </div>
+                            <div class="input-field col s12">
+                                <h>New Module</h>
                                 <select name="module" id="module" class="select2 browser-default">
                                     <option value="">Select a Module for this topic</option>
                                 </select>
+                                <span class="helper-text" style="color: red">Do not select if the current module is not changing</span>
                             </div>
                         </div>
-
-                        {{-- <option value="" disabled selected>Select a Module for this topic</option> --}}
-                        {{-- @foreach (json_decode($responseModules) as $module)
-                            <option value="{{ $module->id }}">{{ $module->moduleName }}</option>
-                        @endforeach --}}
                     </div>
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field col s12">
-                                <button class="btn border-round col s12">Create Topic</button>
+                                <button class="btn border-round col s12">Update Topic</button>
                             </div>
                         </div>
                     </div>
@@ -90,12 +106,12 @@
         jQuery(document).ready(function() {
             // $('select').material_select();
             jQuery('select[name="classList"]').on('change', function() {
-                // console.log("Ready");
+                console.log("Ready");
                 var classID = jQuery(this).val();
                 // console.log("Class ID - " + classID);
                 if (classID) {
                     jQuery.ajax({
-                        url: 'moduleclass/' +classID,
+                        url: '/topics/moduleclass/' +classID,
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
@@ -107,7 +123,7 @@
                             // console.log("Data Id - " + data[id].id);
                             // console.log("Data Module - "+ data[id].moduleName);
 
-                                $("#module").append('<option value="' + data[id].id + '">' + data[id].moduleName +'</option>');
+                                $("#module").append('<option value="' + data[id].id + '">  ' + data[id].moduleName +'</option>');
                                 $("#module").formSelect();
                             });
                         }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 
-class TopicsController extends Controller
+class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,12 @@ class TopicsController extends Controller
      */
     public function index()
     {
-        // dd('stop');
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts');
+        // $responseTopics = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics');
+        // $responseClasses = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses");
+        // $responseStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus");
+        // $responseModules = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules");
         // dd($response->json());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -26,14 +29,14 @@ class TopicsController extends Controller
         if ($response->status() == 200 && $response->ok() == true) {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.topics.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.posts_s.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -61,15 +64,15 @@ class TopicsController extends Controller
         if (($responseModules->status() == 200 && $responseModules->ok() == true) || ($responseClasses->status() == 200 && $responseClasses->ok() == true) || ($responseStatus->status() == 200 && $responseStatus->ok() == true)) {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
-                ['link' => "/topics/create", 'name' => "Create Topic"],
+                ['link' => "/posts", 'name' => "Posts"],
+                ['link' => "/posts/create", 'name' => "Make Post"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.topics.create', compact(['responseClasses', 'responseStatus', 'responseModules', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.posts_s.create', compact(['responseClasses', 'responseStatus', 'responseModules', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -77,12 +80,19 @@ class TopicsController extends Controller
         }
     }
 
-    public function getModuleClass($id)
+    public function getClass2Module($id)
     {
         // dd($id);
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/modClass/'.$id);
-        // $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/modClas2/'.$id);
+        return $response;
+    }
+    
+    public function getModule2Topic($id)
+    {
+        // dd($id);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/topicMod/'.$id);
         return $response;
     }
 
@@ -94,19 +104,26 @@ class TopicsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        dd($request);
         $rules = [
-            'topicName' => 'required|min:3|max:255',
-            'status' => 'required',
+            'postTitle' => 'required|min:3|max:255',
+            'postContent' => 'required|min:3',
             'classList' => 'required',
             'module' => 'required',
+            'topic' => 'required',
+            'status' => 'required',
         ];
 
         $custom_messages = [
-            'topicName.required' => 'Topic name is required',
-            'status.required' => 'Topic status is required',
-            'classList.required' => 'Class Name is required',
-            'module.required' => 'Module Name is required',
+            'postTitle.required' => 'Post Title is required',
+            'postTitle.min' => 'Post Title must have a minumum of 3 characters',
+            'postTitle.max' => 'Post Title can have a maximum of 255 characters',
+            'postContent.required' => 'Post Content is required',
+            'postContent.min' => 'Post Content  must have a minumum of 3 characters',
+            'classList.required' => 'Class is required',
+            'module.required' => 'Module is required',
+            'topic.required' => 'Topic is required',
+            'status.required' => 'Post status is required',
         ];
 
         $validator = Validator::make($request->all(), $rules, $custom_messages);
@@ -116,28 +133,32 @@ class TopicsController extends Controller
         // $code = generateRandomString(5);
 
         $sortNumber ="0";
+        $user_id = session()->get('user_id');
 
         $data = [
-            'topicName' => $request->topicName,
-            'status' => $request->status,
+            'postTitle' => $request->postTitle,
+            'postContent' => $request->postContent,
             'class' => $request->classList,
             'module' => $request->module,
+            'topic' => $request->topic,
+            'status' => $request->status,
             'sortNumber' => $sortNumber,
+            'postedBy' => $user_id,
         ];
         // dd($data);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics', $data);
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts', $data);
         //  dd($response->status());
          if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/topics')->with('success', "Topic has been created");
+            return redirect('/posts')->with('success', "Post has been created");
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -153,7 +174,36 @@ class TopicsController extends Controller
      */
     public function show($id)
     {
-        //
+        // dd($id);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts/'.$id);
+        // $responseAuth = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/userauths/'.$id);
+        // dd($responseAuth->body());
+        // dd($response->json());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->json() != null && $response->status() == 200) {
+            $post = json_decode($response);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/posts", 'name' => "Posts"],
+                ['link' => "/posts/view/$id", 'name' => "View Post"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.posts_s.view', compact(['post', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/posts", 'name' => "Posts"],
+                ['link' => "/posts/view/$id", 'name' => "View Post"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**
@@ -164,9 +214,9 @@ class TopicsController extends Controller
      */
     public function edit($id)
     {
-        // dd($id);
+        // dd('stop');
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/".$id);
+        $response = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts/".$id);
         $responseClasses = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses");
         $responseStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus");
         $responseModules = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules");
@@ -176,20 +226,19 @@ class TopicsController extends Controller
         }
 
         if (($response->status() == 200 && $response->ok() == true) || ($responseModules->status() == 200 && $responseModules->ok() == true) || ($responseClasses->status() == 200 && $responseClasses->ok() == true) || ($responseStatus->status() == 200 && $responseStatus->ok() == true)) {
-            
-            $topic = json_decode($response);
-            // dd($topic);
+            $post = json_decode($response);
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
-                ['link' => "/topics/edit/$id", 'name' => "Edit Topic"], 
+                ['link' => "/posts", 'name' => "Posts"],
+                ['link' => "/posts/edit", 'name' => "Edit Post"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.topics.edit', compact(['topic', 'responseClasses', 'responseStatus', 'responseModules', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.posts_s.edit', compact(['post', 'responseClasses', 'responseStatus', 'responseModules', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
+                ['link' => "/posts/edit", 'name' => "Edit Post"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -208,19 +257,24 @@ class TopicsController extends Controller
     {
         // dd($request);
         $rules = [
-            'topicName' => 'required|min:3|max:255',
-            'status' => 'required',
+            'postTitle' => 'required|min:3|max:255',
+            'postContent' => 'required|min:3',
             'classList' => 'required',
+            'status' => 'required',
             // 'module' => 'required',
-            'currentModule' => 'required',
+            // 'topic' => 'required',
         ];
 
         $custom_messages = [
-            'topicName.required' => 'Topic name is required',
-            'status.required' => 'Topic status is required',
-            'classList.required' => 'Class Name is required',
-            // 'module.required' => 'Module Name is required',
-            'currentModule.required' => 'Current Module Name is required',
+            'postTitle.required' => 'Post Title is required',
+            'postTitle.min' => 'Post Title must have a minumum of 3 characters',
+            'postTitle.max' => 'Post Title can have a maximum of 255 characters',
+            'postContent.required' => 'Post Content is required',
+            'postContent.min' => 'Post Content  must have a minumum of 3 characters',
+            'classList.required' => 'Class is required',
+            'status.required' => 'Post status is required',
+            // 'module.required' => 'Module is required',
+            // 'topic.required' => 'Topic is required',
         ];
 
         $validator = Validator::make($request->all(), $rules, $custom_messages);
@@ -229,7 +283,8 @@ class TopicsController extends Controller
         }
         // $code = generateRandomString(5);
 
-        $sortNumber ="0"; // Display order in the front end
+        $sortNumber ="0";
+        // $user_id = session()->get('user_id');
 
         $updatedModule='';
         if($request->module == null){
@@ -239,27 +294,38 @@ class TopicsController extends Controller
             $updatedModule = $request->module; 
         }
 
+        $updatedTopic='';
+        if($request->topic == null){
+            $updatedTopic = $request->currentTopic; 
+        }
+        if($request->topic != null){
+            $updatedModule = $request->topic; 
+        }
+
         $data = [
-            'topicName' => $request->topicName,
-            'status' => $request->status,
+            'postTitle' => $request->postTitle,
+            'postContent' => $request->postContent,
             'class' => $request->classList,
             'module' => $updatedModule,
+            'topic' => $updatedTopic,
+            'status' => $request->status,
             'sortNumber' => $sortNumber,
+            // 'postedBy' => $user_id,
         ];
         // dd($data);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/'.$id,  $data);
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts/'.$id, $data);
         //  dd($response->status());
          if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/topics')->with('success', "Topic has been updated");
+            return redirect('/posts')->with('success', "Post has been updated");
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -277,18 +343,18 @@ class TopicsController extends Controller
     {
         // dd($id);
         $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/'.$id);
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts/'.$id);
         // dd($response);
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
         if ($response->status() == 200 && $response->successful() == true) {
-            return redirect('/topics')->with('success', "Module successfully deleted");
+            return redirect('/posts')->with('success', "Post successfully deleted");
         }else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/topics", 'name' => "Topics"],
+                ['link' => "/posts", 'name' => "Posts"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];

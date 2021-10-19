@@ -48,6 +48,7 @@ class IndexController extends Controller
         if ($result['success']) {
             session()->put('id_Token', $result['idToken']);
             session()->put('user_email', $result['email']);
+            session()->put('user_id', $result['localId']);
             return redirect('/')->with('success','Login Successful');
         } else {
             $success =  $result['success'];

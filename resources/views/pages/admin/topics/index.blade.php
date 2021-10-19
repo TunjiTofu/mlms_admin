@@ -31,13 +31,15 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="col s12 m6 l3">
-                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" disabled href="#new-user">
+                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="{{ route('topics-add') }}">
+                                    {{-- <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#new-user"> --}}
+                                   
                                     <i class="material-icons left">add_circle_outline</i>
                                     Create New Topic
                                 </a>
                             </div>
                         </div>
-                        <h4 class="card-title">All Modules</h4>
+                        <h4 class="card-title">All Topics</h4>
                         <div class="row">
                             <div class="col s12">
                                 <table id="page-length-option" class="display">
@@ -107,7 +109,8 @@
                                                     @endphp
                                             </td>
                                             <td>
-                                                <a href="#e{{ $topic->id }}" class=" modal-trigger mr-5">
+                                                <a href="{{ route('topics-edit', ['id' => $topic->id]) }}" class=" modal-trigger mr-5">
+                                                    {{-- <a href="#e{{ $topic->id }}" class=" modal-trigger mr-5"> --}}
                                                     <i class="material-icons">edit</i>
                                                 </a>
                                                 {{-- <a href="{{ route('users-view', ['id' => $topic->id]) }}"
@@ -226,63 +229,6 @@
     </div>
     {{-- Data Table Ends Here --}}
 
-
-
-    {{-- <div id="new-user" class="modal">
-        <div class="modal-content">
-            <h6>Create Topic</h6>
-                <form class="row" method="POST" action="{{ route('topics-store') }}">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="input-field col s12 m6">
-                                <input id="code" type="text" name="topicName" class="validate" required>
-                                <label for="code">Topic Name</label>
-                            </div>
-                            <div class="input-field col s12 m6">
-                                <select name="status">
-                                    <option value="" disabled selected>Select Status</option>
-                                    @foreach (json_decode($responseStatus) as $status)
-                                        <option value="{{ $status->id }}">{{ $status->status }}</option>
-                                    @endforeach
-                                </select>
-                                <label>Status</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="input-field col s12">
-                                <select name="classList" id="classList">
-                                    <option value="" disabled selected>Select Class</option>
-                                    @foreach (json_decode($responseClasses) as $class)
-                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
-                                    @endforeach
-                                </select>
-                                <label>Class</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="input-field col s12">
-                                <select name="module" id="module">
-                                    <option value="">Select a Module for this topic</option>
-                                </select>
-                                <label>Module</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="input-field col s12">
-                                <button class="btn border-round col s12">Create Topic</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-        </div>
-    </div> --}}
 @endsection
 
 

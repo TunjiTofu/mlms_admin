@@ -14,6 +14,7 @@ use App\Http\Controllers\QuiztypeController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\TopicsController;
+use App\Http\Controllers\PostsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,12 +140,26 @@ Route::prefix('topics')->as('topics')->group(function () {
     Route::get('/create', [TopicsController::class, 'create'])->name('-add');
     Route::post('/store', [TopicsController::class, 'store'])->name('-store');
     // Route::get('/view/{id}', [TopicsController::class, 'show'])->name('-view');
-    // Route::get('/edit/{id}', [TopicsController::class, 'edit'])->name('-edit');
+    Route::get('/edit/{id}', [TopicsController::class, 'edit'])->name('-edit');
     Route::patch('/update/{id}', [TopicsController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [TopicsController::class, 'destroy'])->name('-delete');
-    
+    //Route for AJAX
     Route::get('/moduleclass/{id}', [TopicsController::class, 'getModuleClass']);
+});
 
+// Posts ROUTES
+Route::prefix('posts')->as('posts')->group(function () {
+    Route::get('/', [PostsController::class, 'index'])->name('');
+    Route::get('/create', [PostsController::class, 'create'])->name('-add');
+    Route::post('/store', [PostsController::class, 'store'])->name('-store');
+    Route::get('/view/{id}', [PostsController::class, 'show'])->name('-view');
+    Route::get('/edit/{id}', [PostsController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [PostsController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [PostsController::class, 'destroy'])->name('-delete');
+    
+    //Route for AJAX
+    Route::get('/class2module/{id}', [PostsController::class, 'getClass2Module']);
+    Route::get('/module2topic/{id}', [PostsController::class, 'getModule2Topic']);
 });
 
 
