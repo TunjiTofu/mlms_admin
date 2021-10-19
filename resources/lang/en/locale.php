@@ -149,5 +149,8 @@ return [
     "Topics"=>"Topics",
     "View Topics"=>"View Topics",
     "Create Topic"=>"Create Topic",
+    "Posts"=>"Posts",
+    "View Posts"=>"View Posts",
+    "Create Post"=>"Create Post",
 ];
 ?>

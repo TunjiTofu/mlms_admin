@@ -3,7 +3,7 @@
 
 {{-- page title --}}
 @section('title')
-    Create Class
+    Edit Topic
 @endsection
 
 {{-- vendor styles --}}

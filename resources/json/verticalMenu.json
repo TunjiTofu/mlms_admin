@@ -121,6 +121,26 @@
       ]
     },
     {
+      "url": "#",
+      "name": "Posts",
+      "i18n": "Posts", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "posts_menu",
+      "icon": "subject",
+      "submenu": [
+        {
+          "url": "/posts",
+          "name": "View Posts",
+          "slug": "view-posts"
+        },
+        {
+          "url": "/posts/create",
+          "name": "Create Post",
+          "slug": "create-post"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Pages",
       "i18n": "Pages",
