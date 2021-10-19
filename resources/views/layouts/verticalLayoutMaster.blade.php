@@ -2,6 +2,9 @@
   class="{{$configData['mainLayoutTypeClass']}} @if(!empty($configData['bodyCustomClass']) && isset($configData['bodyCustomClass'])) {{$configData['bodyCustomClass']}} @endif @if($configData['isMenuCollapsed'] && isset($configData['isMenuCollapsed'])){{'menu-collapse'}} @endif"
   data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
 
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  
+
   <!-- BEGIN: Header-->
   <header class="page-topbar" id="header">
     @include('panels.navbar')

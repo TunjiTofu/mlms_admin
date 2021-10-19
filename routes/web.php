@@ -12,6 +12,8 @@ use App\Http\Controllers\DefaultstatusController;
 use App\Http\Controllers\ResourcetypeController;
 use App\Http\Controllers\QuiztypeController;
 use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\ModulesController;
+use App\Http\Controllers\TopicsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +120,31 @@ Route::prefix('classes')->as('classes')->group(function () {
     Route::get('/edit/{id}', [ClassesController::class, 'edit'])->name('-edit');
     Route::patch('/update/{id}', [ClassesController::class, 'update'])->name('-update');
     Route::get('/delete/{id}', [ClassesController::class, 'destroy'])->name('-delete');
+});
+
+// Modules ROUTES
+Route::prefix('modules')->as('modules')->group(function () {
+    Route::get('/', [ModulesController::class, 'index'])->name('');
+    // Route::get('/create', [ModulesController::class, 'create'])->name('-add');
+    Route::post('/store', [ModulesController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [ModulesController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [ModulesController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [ModulesController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [ModulesController::class, 'destroy'])->name('-delete');
+});
+
+// Topics ROUTES
+Route::prefix('topics')->as('topics')->group(function () {
+    Route::get('/', [TopicsController::class, 'index'])->name('');
+    Route::get('/create', [TopicsController::class, 'create'])->name('-add');
+    Route::post('/store', [TopicsController::class, 'store'])->name('-store');
+    // Route::get('/view/{id}', [TopicsController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [TopicsController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [TopicsController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [TopicsController::class, 'destroy'])->name('-delete');
+    
+    Route::get('/moduleclass/{id}', [TopicsController::class, 'getModuleClass']);
+
 });
 
 
