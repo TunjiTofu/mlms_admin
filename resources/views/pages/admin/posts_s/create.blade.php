@@ -22,6 +22,8 @@
 {{-- page styles --}}
 @section('page-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/form-select2.css') }}">
+     <!-- Include Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.0.5/quill.snow.css" rel="stylesheet" />
 @endsection
 
 {{-- page content --}}
@@ -79,7 +81,7 @@
                                                     <button class="ql-clean"></button>
                                                 </span>
                                             </div>
-                                            <div id="editor" class="editor">
+                                            <div class="editor">
                                                 <h1 class="ql-align-center">Quill Rich Text Editor</h1>
                                                 <p><br></p>
                                                 <p>
@@ -125,7 +127,7 @@
             <div class="card-content">
                 <p class="caption mb-0">
                 <h6>Make Post</h6>
-                <form class="row" method="POST" action="{{ route('posts-store') }}">
+                <form class="row" id="myForm" method="POST" action="{{ route('posts-store') }}">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col s12">
@@ -140,8 +142,11 @@
 
                             <!-- Create the toolbar container -->
                             <div id="toolbar">
-                                <button class="ql-bold">Bold</button>
-                                <button class="ql-italic">Italic</button>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                </span>
 
                                 <span class="ql-formats">
                                     <select class="ql-header browser-default">
@@ -158,11 +163,7 @@
                                         <option value="ubuntu">Ubuntu Mono</option>
                                     </select>
                                 </span>
-                                <span class="ql-formats">
-                                    <button class="ql-bold"></button>
-                                    <button class="ql-italic"></button>
-                                    <button class="ql-underline"></button>
-                                </span>
+                                
                                 <span class="ql-formats">
                                     <button class="ql-list" value="ordered"></button>
                                     <button class="ql-list" value="bullet"></button>
@@ -182,8 +183,10 @@
                             </div>
 
                             <!-- Create the editor container -->
-                            <div id="editor" name="quiull">
-                                <p>Hello World!</p>
+                            {{-- <label for="about">About me</label> --}}
+                            {{-- <textarea class="materialize-textarea"  id="editor-textarea" name="about"></textarea> --}}
+                            <div id="editor">
+                                {{-- <p>Hello World!</p> --}}
                             </div>
 
                         </div>
@@ -191,10 +194,10 @@
                     </div>
                     <div class="row">
                         <div class="col s12">
-                            <div class="input-field col s12">
+                            {{-- <div class="input-field col s12">
                                 <input id="post" type="text" name="postContent" class="validate" required>
                                 <label for="code">Post Content</label>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <div class="row">
@@ -329,26 +332,34 @@
 
 {{-- vendor scripts --}}
 @section('vendor-script')
-    <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
-    {{-- <script src="{{ asset('vendors/quill/katex.min.js') }}"></script>
+    <script src="{{ asset('vendors/quill/katex.min.js') }}"></script>
     <script src="{{ asset('vendors/quill/highlight.min.js') }}"></script>
-    <script src="{{ asset('vendors/quill/quill.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendors/quill/quill.min.js') }}"></script> --}}
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.0.5/quill.min.js"></script>
+    <!-- Initialize Quill editor -->
+    <script>
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: '#toolbar'
+            },
+            theme: 'snow',
+        });
+
+        $(document).ready(function(){
+        $("#myForm").on("submit", function () {
+            var hvalue = $('.ql-editor').html();
+            $(this).append("<textarea name='postContent' style='display:none'>"+hvalue+"</textarea>");
+        });
+        });
+    </script>
+
+    <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
 @endsection
 
 {{-- page script --}}
 @section('page-script')
     <script src="{{ asset('js/scripts/form-select2.js') }}"></script>
     {{-- <script src="{{ asset('js/scripts/form-editor.js') }}"></script> --}}
-    <!-- Include the Quill library -->
-    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-    <script>
-        var editor = new Quill('#editor', {
-            modules: {
-                toolbar: '#toolbar'
-            },
-            theme: 'snow',
-        });
-    </script>
 @endsection

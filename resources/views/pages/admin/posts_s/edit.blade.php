@@ -17,6 +17,8 @@
 {{-- page styles --}}
 @section('page-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/form-select2.css') }}">
+     <!-- Include Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.0.5/quill.snow.css" rel="stylesheet" />
 @endsection
 
 {{-- page content --}}
@@ -28,7 +30,7 @@
             <div class="card-content">
                 <p class="caption mb-0">
                 <h6>Edit Post</h6>
-                <form class="row" method="POST" action="{{ route('posts-update', ['id' => $post->id]) }}">
+                <form class="row" id="myForm" method="POST" action="{{ route('posts-update', ['id' => $post->id]) }}">
                     @csrf
                     {{ method_field('PATCH') }}
                     <div class="row">
@@ -41,9 +43,58 @@
                     </div>
                     <div class="row">
                         <div class="col s12">
-                            <div class="input-field col s12">
+                            {{-- <div class="input-field col s12">
                                 <input id="post" type="text" name="postContent" class="validate" value="{{ $post->postContent }}" required>
                                 <label for="code">Post Content</label>
+                            </div> --}}
+
+
+                             <!-- Create the toolbar container -->
+                             <div id="toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                </span>
+
+                                <span class="ql-formats">
+                                    <select class="ql-header browser-default">
+                                        <option value="1">Heading</option>
+                                        <option value="2">Subheading</option>
+                                        <option selected>Normal</option>
+                                    </select>
+                                    <select class="ql-font browser-default">
+                                        <option selected>Sailec Light</option>
+                                        <option value="sofia">Sofia Pro</option>
+                                        <option value="slabo">Slabo 27px</option>
+                                        <option value="roboto">Roboto Slab</option>
+                                        <option value="inconsolata">Inconsolata</option>
+                                        <option value="ubuntu">Ubuntu Mono</option>
+                                    </select>
+                                </span>
+                                
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                    <button class="ql-image"></button>
+                                    <button class="ql-video"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-formula"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+
+                            <!-- Create the editor container -->
+                            <div id="editor">
+                                {{-- <p>Hello World!</p> --}}
+                                {!! $post->postContent !!}
                             </div>
                         </div>
                     </div>
@@ -210,16 +261,30 @@
         });
     });
 </script>
-    
-
 @endsection
-
-
-
 
 {{-- vendor scripts --}}
 @section('vendor-script')
     <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.0.5/quill.min.js"></script>
+    <!-- Initialize Quill editor -->
+    <script>
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: '#toolbar'
+            },
+            theme: 'snow',
+        });
+
+        $(document).ready(function(){
+        $("#myForm").on("submit", function () {
+            var hvalue = $('.ql-editor').html();
+            $(this).append("<textarea name='postContent' style='display:none'>"+hvalue+"</textarea>");
+        });
+        });
+    </script>
 @endsection
 
 {{-- page script --}}

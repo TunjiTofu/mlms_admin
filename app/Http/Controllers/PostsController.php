@@ -104,7 +104,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
         $rules = [
             'postTitle' => 'required|min:3|max:255',
             'postContent' => 'required|min:3',

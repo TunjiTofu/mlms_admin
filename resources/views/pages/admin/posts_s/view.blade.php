@@ -65,12 +65,25 @@
                             <i class="material-icons">subject</i>
                             Post Info
                         </h6>
+
+                        <div class="row">
+                            <div class="col s12">
+                                Post Content
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12">
+                                {!! $post->postContent !!}
+                            </div>
+                        </div>
+
                         <table class="striped">
                             <tbody>
-                                <tr>
+                                {{-- <tr>
                                     <td>Post Content:</td>
-                                    <td class="users-view-name">{{ $post->postContent }}</td>
-                                </tr>
+                                    <td class="users-view-name">{!! $post->postContent !!}</td>
+                                </tr> --}}
                                 <tr>
                                     <td>Class Name:</td>
                                     <td class="users-view-email">

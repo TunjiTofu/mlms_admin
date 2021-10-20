@@ -4,8 +4,7 @@
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   
-  <!-- Include Quill stylesheet -->
-<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+ 
 
   <!-- BEGIN: Header-->
   <header class="page-topbar" id="header">
