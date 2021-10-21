@@ -85,6 +85,9 @@ class PostsController extends Controller
         // dd($id);
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/modClass/'.$id);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
         return $response;
     }
     
@@ -93,6 +96,9 @@ class PostsController extends Controller
         // dd($id);
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/topicMod/'.$id);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
         return $response;
     }
 

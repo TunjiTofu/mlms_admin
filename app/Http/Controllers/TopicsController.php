@@ -82,7 +82,9 @@ class TopicsController extends Controller
         // dd($id);
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/modClass/'.$id);
-        // $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/modClas2/'.$id);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
         return $response;
     }
 
