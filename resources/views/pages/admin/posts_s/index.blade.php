@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/data-tables/css/select.dataTables.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/select2/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/select2/select2-materialize.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/sweetalert/sweetalert.css') }}">
 @endsection
 
 {{-- page styles --}}
@@ -31,9 +32,10 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="col s12 m6 l3">
-                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="{{ route('posts-add') }}">
+                                <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1"
+                                    href="{{ route('posts-add') }}">
                                     {{-- <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#new-user"> --}}
-                                   
+
                                     <i class="material-icons left">add_circle_outline</i>
                                     Create New Post
                                 </a>
@@ -55,88 +57,100 @@
                                     </thead>
                                     <tbody>
                                         @foreach (json_decode($response) as $post)
-                                        <tr>
-                                            <td>{{ $post->postTitle }}</td>
-                                            <td>
-                                                @php
-                                                    $id_token = session()->get('id_Token');
-                                                    $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/'.$post->class);
-                                                    $class = json_decode($response);
-                                                @endphp
-                                            {{ $class->name }}
-                                            </td>
-                                            <td>
-                                                {{-- {{ $post->postedBy }} --}}
-                                                <b>Posted By:</b>
-                                                @php
-                                                    $id_token = session()->get('id_Token');
-                                                    $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/'.$post->postedBy);
-                                                    $user = json_decode($response);
-                                                @endphp
-                                                {{ strtoupper($user->sname) }}, {{ ucwords($user->oname) }} <br>
-                                                @php
-                                                     if($user->role == 'SDM'){
-                                                        echo "<b>(Super Admin)</b>";
-                                                    }elseif  ($user->role == 'ADM') {
-                                                        echo "<b>(Admin)</b>";
-                                                    }elseif ($user->role == 'TEA') {
-                                                        echo "<b>(Teacher)</b>";
-                                                    }elseif ($user->role == 'STD') {
-                                                        echo "<b>(Student)</b>";
-                                                    }else {
-                                                        echo "<b>Invalid Post</b>";
-                                                    }
-                                                @endphp
-                                            </td>
-                                            <td>
-                                                @if ($post->status == 'active')
-                                                    <span class="chip green lighten-5">
-                                                        <span class="green-text">Active</span>
-                                                    </span>
-                                                @endif
-                                                @if ($post->status == 'disabled')
-                                                    <span class="chip red lighten-5">
-                                                        <span class="red-text">Disabled</span>
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('posts-edit', ['id' => $post->id]) }}" class=" modal-trigger mr-5">
-                                                    {{-- <a href="#e{{ $post->id }}" class=" modal-trigger mr-5"> --}}
-                                                    <i class="material-icons">edit</i>
-                                                </a>
-                                                <a href="{{ route('posts-view', ['id' => $post->id]) }}"
+                                            <tr>
+                                                <td>{{ $post->postTitle }}</td>
+                                                <td>
+                                                    @php
+                                                        $id_token = session()->get('id_Token');
+                                                        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $post->class);
+                                                        $class = json_decode($response);
+                                                    @endphp
+                                                    {{ $class->name }}
+                                                </td>
+                                                <td>
+                                                    {{-- {{ $post->postedBy }} --}}
+                                                    <b>Posted By:</b>
+                                                    @php
+                                                        $id_token = session()->get('id_Token');
+                                                        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $post->postedBy);
+                                                        $user = json_decode($response);
+                                                    @endphp
+                                                    {{ strtoupper($user->sname) }}, {{ ucwords($user->oname) }} <br>
+                                                    @php
+                                                        if ($user->role == 'SDM') {
+                                                            echo '<b>(Super Admin)</b>';
+                                                        } elseif ($user->role == 'ADM') {
+                                                            echo '<b>(Admin)</b>';
+                                                        } elseif ($user->role == 'TEA') {
+                                                            echo '<b>(Teacher)</b>';
+                                                        } elseif ($user->role == 'STD') {
+                                                            echo '<b>(Student)</b>';
+                                                        } else {
+                                                            echo '<b>Invalid Post</b>';
+                                                        }
+                                                    @endphp
+                                                </td>
+                                                <td>
+                                                    @if ($post->status == 'active')
+                                                        <span class="chip green lighten-5">
+                                                            <span class="green-text">Active</span>
+                                                        </span>
+                                                    @endif
+                                                    @if ($post->status == 'disabled')
+                                                        <span class="chip red lighten-5">
+                                                            <span class="red-text">Disabled</span>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('posts-edit', ['id' => $post->id]) }}"
+                                                        class=" modal-trigger mr-5">
+                                                        {{-- <a href="#e{{ $post->id }}" class=" modal-trigger mr-5"> --}}
+                                                        <i class="material-icons">edit</i>
+                                                    </a>
+                                                    <a href="{{ route('posts-view', ['id' => $post->id]) }}"
                                                         class="mr-5">
                                                         <i class="material-icons">remove_red_eye</i>
                                                     </a>
-                                                <a href="#{{ $post->id }}" class=" modal-trigger mr-5">
-                                                    <i class="material-icons">delete</i>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col s12">
-                                                        <div id="{{ $post->id }}" class="modal">
-                                                            <div class="modal-content">
-                                                                <h6>Delete Post</h6>
-                                                                <p>Are you sure you want to delete
-                                                                    <b>{{ $post->postTitle }}</b> from the Post Records?
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <a href="#"
-                                                                    class="modal-action modal-close waves-effect waves-red btn-flat ">No,
-                                                                    Cancel</a>
-                                                                <a href="{{ route('posts-delete', ['id' => $post->id]) }}"
-                                                                    class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
-                                                                    Delete</a>
+                                                    <a href="#" class=" btn-warning-cancel"
+                                                        data-id="{{ $post->id }}"
+                                                        data-title="{{ $post->postTitle }}">
+                                                        <i class="material-icons">delete</i>
+                                                    </a>
+
+                                                    {{-- <div id="view-passing-parameter">
+                                                        <div class="row">
+                                                          <div class="col s12">
+                                                            <button class="btn btn-warning-cancel waves-effect waves-light">Try Me!</button>
+                                                          </div>
+                                                        </div>
+                                                      </div> --}}
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <div id="{{ $post->id }}" class="modal">
+                                                                <div class="modal-content">
+                                                                    <h6>Delete Post</h6>
+                                                                    <p>Are you sure you want to delete
+                                                                        <b>{{ $post->postTitle }}</b> from the Post
+                                                                        Records?
+                                                                    </p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="#"
+                                                                        class="modal-action modal-close waves-effect waves-red btn-flat ">No,
+                                                                        Cancel</a>
+                                                                    <a href="{{ route('posts-delete', ['id' => $post->id]) }}"
+                                                                        class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
+                                                                        Delete</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            {{-- <td><a href="{{ route('users-view',['id'=>$hashid->encode($user->id)])) }}"><i --}}
-                                        </tr>
+                                                </td>
+                                                {{-- <td><a href="{{ route('users-view',['id'=>$hashid->encode($user->id)])) }}"><i --}}
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
@@ -159,6 +173,8 @@
     </div>
     {{-- Data Table Ends Here --}}
 
+
+
 @endsection
 
 {{-- vendor scripts --}}
@@ -167,6 +183,7 @@
     <script src="{{ asset('vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('vendors/data-tables/js/dataTables.select.min.js') }}"></script>
     <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('vendors/sweetalert/sweetalert.min.js') }}"></script>
 @endsection
 
 {{-- page script --}}
@@ -175,4 +192,47 @@
     <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
     <script src="{{ asset('js/scripts/ui-alerts.js') }}"></script>
     <script src="{{ asset('js/scripts/form-select2.js') }}"></script>
+    <script src="{{ asset('js/scripts/extra-components-sweetalert.js') }}"></script>
+
+    <script>
+        $('.btn-warning-cancel').click(function() {
+            var deleteButnData = $(this);
+            var dataId = deleteButnData.data('id');
+            var dataTitle = deleteButnData.data('title');
+            swal({
+                title: "Delete Record?",
+                text: 'Are you sure you want to delete \"' + dataTitle +
+                    '\" from the Post Records? You will not be able to recover this imaginary file!',
+                icon: 'warning',
+                dangerMode: true,
+                buttons: {
+                    cancel: 'No, Cancel',
+                    delete: 'Yes, Delete It'
+                }
+            }).then(function(willDelete) {
+                if (willDelete) {
+                    // console.log("ID - " + dataId);
+                    // console.log("dataTitle - " + dataTitle);
+                    jQuery.ajax({
+                        url: 'posts/delete/' + dataId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {}
+                    });
+                    
+                    swal("\""+ dataTitle +"\" record has been deleted!", {
+                        icon: "success",
+                    });
+
+                    $(location).attr('href', '/posts'); //Refressh the page
+
+                } else {
+                    swal("Your record is safe", {
+                        title: 'Cancelled',
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

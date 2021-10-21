@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/monokai-sublime.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.snow.css') }}">
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.bubble.css') }}"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/sweetalert/sweetalert.css') }}">
 @endsection
 
 {{-- page style --}}
@@ -25,7 +26,7 @@
         <!-- users view media object start -->
         @php
             $id_token = session()->get('id_Token');
-            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/'.$post->class);
+            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $post->class);
             $class = json_decode($response);
             // dd($teacher)
         @endphp
@@ -58,8 +59,12 @@
                 <div class="col s12 m12 l5 quick-action-btns display-flex justify-content-end align-items-center pt-2">
                     {{-- <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
                             class="material-icons">mail_outline</i></a> --}}
-                    <a href="{{  route('posts-edit', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">Edit
-                        Post Info</a>
+                    <a class=" btn-warning-cancel btn-small btn-light-indigo"
+                        data-id="{{ $post->id }}"
+                        data-title="{{ $post->postTitle }}">Delete
+                        Post</a>
+                    <a href="{{ route('posts-edit', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">Edit
+                        Post</a>
                     <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">View Post Comments</a>
                 </div>
             </div>
@@ -86,14 +91,14 @@
                             <div class="snow-editor col s12" id="editor-container">
                                 <div id="snow-wrapper">
                                     <div id="snow-container">
-                                       
+
                                         <!-- Create the editor container -->
                                         <div id="editor" style="border: 1px solid {{ $class->color }}">
                                             {!! $post->postContent !!}
                                         </div>
                                     </div>
                                 </div>
-    
+
                             </div>
                             <!-- End of Quill Rich Text Editor -->
                         </div>
@@ -107,16 +112,16 @@
                                 <tr>
                                     <td>Class Name:</td>
                                     <td class="users-view-email">
-                                        {{ $class->name  }}
-                                        
+                                        {{ $class->name }}
+
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Module Name:</td>
                                     <td class="users-view-latest-activity">
-                                       @php
+                                        @php
                                             $id_token = session()->get('id_Token');
-                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/'.$post->module);
+                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/' . $post->module);
                                             $module = json_decode($response);
                                         @endphp
                                         {{ $module->moduleName }}
@@ -127,7 +132,7 @@
                                     <td>
                                         @php
                                             $id_token = session()->get('id_Token');
-                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/'.$post->topic);
+                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/' . $post->topic);
                                             $topic = json_decode($response);
                                         @endphp
                                         {{ $topic->topicName }}
@@ -147,7 +152,7 @@
                                     <td>Date Updated:</td>
                                     <td>
                                         @php
-                                            if ($post->updatedAt != "") {
+                                            if ($post->updatedAt != '') {
                                                 $timestamp2 = $post->updatedAt->_seconds;
                                                 date_default_timezone_set('Africa/Lagos');
                                                 echo date('d-M-Y h:i a', $timestamp2);
@@ -358,6 +363,7 @@
     <script src="{{ asset('vendors/quill/highlight.min.js') }}"></script>
     <script src="{{ asset('vendors/quill/quill.min.js') }}"></script>
     <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('vendors/sweetalert/sweetalert.min.js') }}"></script>
 @endsection
 
 {{-- page script --}}
@@ -372,6 +378,50 @@
             placeholder: 'No Content Here...',
             bounds: '#editor-container',
             readOnly: true,
+        });
+    </script>
+
+    <script src="{{ asset('js/scripts/extra-components-sweetalert.js') }}"></script>
+
+    <script>
+        $('.btn-warning-cancel').click(function() {
+            var deleteButnData = $(this);
+            var dataId = deleteButnData.data('id');
+            var dataTitle = deleteButnData.data('title');
+            swal({
+                title: "Delete Record?",
+                text: 'Are you sure you want to delete \"' + dataTitle +
+                    '\" from the Post Records? You will not be able to recover this imaginary file!',
+                icon: 'warning',
+                dangerMode: true,
+                buttons: {
+                    cancel: 'No, Cancel',
+                    delete: 'Yes, Delete It'
+                }
+            }).then(function(willDelete) {
+                if (willDelete) {
+                    console.log("ID - " + dataId);
+                    // console.log("dataTitle - " + dataTitle);
+                    jQuery.ajax({
+                        url: "/posts/delete/" + dataId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {}
+                    });
+
+                    swal("\"" + dataTitle + "\" record has been deleted!", {
+                        icon: "success",
+                    });
+
+                    $(location).attr('href', '/posts'); //Refressh the page
+
+                } else {
+                    swal("Your record is safe", {
+                        title: 'Cancelled',
+                        icon: "error",
+                    });
+                }
+            });
         });
     </script>
 @endsection
