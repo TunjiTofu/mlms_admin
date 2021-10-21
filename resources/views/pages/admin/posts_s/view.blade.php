@@ -4,6 +4,15 @@
 {{-- page title --}}
 @section('title', 'View Post Details')
 
+{{-- vendor styles --}}
+@section('vendor-style')
+    {{-- Quill Editor --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/katex.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/monokai-sublime.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.snow.css') }}">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.bubble.css') }}"> --}}
+@endsection
+
 {{-- page style --}}
 @section('page-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/page-users.css') }}">
@@ -73,9 +82,20 @@
                         </div>
 
                         <div class="row">
-                            <div class="col s12">
-                                {!! $post->postContent !!}
+                            <!-- Quill Rich Text Editor -->
+                            <div class="snow-editor col s12" id="editor-container">
+                                <div id="snow-wrapper">
+                                    <div id="snow-container">
+                                       
+                                        <!-- Create the editor container -->
+                                        <div id="editor" style="border: 1px solid {{ $class->color }}">
+                                            {!! $post->postContent !!}
+                                        </div>
+                                    </div>
+                                </div>
+    
                             </div>
+                            <!-- End of Quill Rich Text Editor -->
                         </div>
 
                         <table class="striped">
@@ -332,8 +352,26 @@
     <!-- users view ends -->
 @endsection
 
+{{-- vendor scripts --}}
+@section('vendor-script')
+    <script src="{{ asset('vendors/quill/katex.min.js') }}"></script>
+    <script src="{{ asset('vendors/quill/highlight.min.js') }}"></script>
+    <script src="{{ asset('vendors/quill/quill.min.js') }}"></script>
+    <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
+@endsection
+
 {{-- page script --}}
 @section('page-script')
-    {{-- <script src="{{ asset('js/scripts/page-users.js') }}"></script> --}}
+    <script src="{{ asset('js/scripts/form-select2.js') }}"></script>
     <script src="{{ asset('js/scripts/ui-alerts.js') }}"></script>
+
+    <!-- Initialize Quill editor -->
+    <script src="{{ asset('js/scripts/form-editor.js') }}"></script>
+    <script>
+        var quill = new Quill('#editor', {
+            placeholder: 'No Content Here...',
+            bounds: '#editor-container',
+            readOnly: true,
+        });
+    </script>
 @endsection
