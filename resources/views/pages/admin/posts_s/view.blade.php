@@ -65,7 +65,7 @@
                         Post</a>
                     <a href="{{ route('posts-edit', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">Edit
                         Post</a>
-                    <a href="{{ asset('user-profile-page') }}" class="btn-small btn-light-indigo">View Post Comments</a>
+                    <a href="{{ route('comments-postcomments', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">View Post Comments</a>
                 </div>
             </div>
         </div>

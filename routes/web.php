@@ -15,6 +15,7 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -160,6 +161,18 @@ Route::prefix('posts')->as('posts')->group(function () {
     //Route for AJAX
     Route::get('/class2module/{id}', [PostsController::class, 'getClass2Module']);
     Route::get('/module2topic/{id}', [PostsController::class, 'getModule2Topic']);
+});
+
+// Comments ROUTES
+Route::prefix('comments')->as('comments')->group(function () {
+    Route::get('/', [CommentsController::class, 'index'])->name('');
+    Route::get('/postcomments/{id}', [CommentsController::class, 'postComments'])->name('-postcomments');
+    Route::get('/create', [CommentsController::class, 'create'])->name('-add');
+    Route::post('/store', [CommentsController::class, 'store'])->name('-store');
+    Route::get('/view/{id}', [CommentsController::class, 'show'])->name('-view');
+    Route::get('/edit/{id}', [CommentsController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [CommentsController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [CommentsController::class, 'destroy'])->name('-delete');
 });
 
 

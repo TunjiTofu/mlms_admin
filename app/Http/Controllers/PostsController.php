@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 
-class PostsController extends Controller
+class PostsController extends Controller 
 {
     /**
      * Display a listing of the resource.
