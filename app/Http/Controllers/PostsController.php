@@ -30,7 +30,7 @@ class PostsController extends Controller
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/posts", 'name' => "Posts"],
-            ];
+            ]; 
             $pageConfigs = ['pageHeader' => true];
             return view('pages.admin.posts_s.index', compact(['response', 'breadcrumbs', 'pageConfigs']));
         } else {

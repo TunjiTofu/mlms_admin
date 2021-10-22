@@ -139,18 +139,24 @@
                                                                 class=" modal-trigger mr-5">
                                                                 <i class="small material-icons">reply</i> Post a Reply
                                                             </a>
-                                                            <div class="switch mb-1">
-
-                                                                {{-- <input type="checkbox" name="tag_1" id="tag_1" value="yes" <?php echo $dbvalue['tag_1'] == 1 ? 'checked' : ''; ?>>
-                                                                                    {{ $class->id == $post->class ? 'selected = "selected"' : '' }} --}}
+                                                            <div class="switch mb-1 mr-5">
                                                                 <label>
-                                                                    Disabled
-                                                                    <input type="checkbox" name="status" id="status"
+                                                                    Disable
+                                                                    <input type="checkbox" class="status"
+                                                                        name="status" id="status"
+                                                                        data-id="{{ $comment->id }}"
+                                                                        data-status="{{ $comment->status }}"
                                                                         {{ $comment->status == 'active' ? 'checked' : '' }}>
                                                                     <span class="lever"></span>
                                                                     Enable
                                                                 </label>
                                                             </div>
+                                                            <a href="#replyCommentId{{ $comment->id }}"
+                                                                class="delete" data-id="{{ $comment->id }}"
+                                                                data-user="{{ $comment->userId }}">
+                                                                <i class="small material-icons">delete_forever</i> Delete
+                                                                Reply
+                                                            </a>
                                                         </div>
 
 
@@ -198,14 +204,40 @@
 
                                                                         <div class="switch mb-1">
                                                                             <label>
-                                                                                Disabled
-                                                                                <input type="checkbox" name="status"
+                                                                                Disable
+                                                                                <input type="checkbox"
+                                                                                    class="status" name="status"
                                                                                     id="status"
+                                                                                    data-id="{{ $commentChild->id }}"
+                                                                                    data-status="{{ $commentChild->status }}"
                                                                                     {{ $commentChild->status == 'active' ? 'checked' : '' }}>
                                                                                 <span class="lever"></span>
                                                                                 Enable
                                                                             </label>
                                                                         </div>
+                                                                        {{-- {{ $commentChild->userId }}
+                                                                        @php
+                                                                        $user_id = session()->get('user_id');
+                                                                        echo $user_id;
+                                                                            if($commentChild->userId == $user_id) {
+                                                                                echo '<a href="#" class="delete"
+                                                                            data-id="{{ $commentChild->id }}"
+                                                                            data-user="{{ $commentChild->userId }}">
+                                                                            <i
+                                                                                class="small material-icons">delete_forever</i>
+                                                                            Delete Reply
+                                                                        </a>';
+                                                                            }
+                                                                        @endphp --}}
+
+                                                                        <a href="#" class="delete"
+                                                                            data-id="{{ $commentChild->id }}"
+                                                                            data-user="{{ $commentChild->userId }}">
+                                                                            <i
+                                                                                class="small material-icons">delete_forever</i>
+                                                                            Delete Reply
+                                                                        </a>
+
                                                                     </div>
                                                                 </div>
                                                                 {{-- <div class="list-desc">{!! $commentChild->comment !!}
@@ -271,10 +303,10 @@
                                                                         <textarea name="childComment" style="display:none"
                                                                             id="hiddenAreaReplyComment-{{ $comment->id }}"></textarea>
 
-                                                                        <input type="text" readonly name="postId" id=""
+                                                                        <input type="hidden" readonly name="postId" id=""
                                                                             value="{{ $post->id }}">
 
-                                                                        <input type="text" readonly name="parentCommentId"
+                                                                        <input type="hidden" readonly name="parentCommentId"
                                                                             id="" value="{{ $comment->id }}">
 
                                                                         <div class="col s12">
@@ -590,14 +622,73 @@
     <script src="{{ asset('js/scripts/extra-components-sweetalert.js') }}"></script>
 
     <script>
-        $('.btn-warning-cancel').click(function() {
+        $('.status').click(function() {
+            console.log('Status Ready');
             var deleteButnData = $(this);
             var dataId = deleteButnData.data('id');
-            var dataTitle = deleteButnData.data('title');
+            var dataStatus = deleteButnData.data('status');
+            var quest = '';
+
+            if (dataStatus == 'active') {
+                quest = 'Disable this Comment?';
+            }
+
+            if (dataStatus == 'disabled') {
+                quest = 'Enable this Comment?';
+            }
+
+            swal({
+                title: quest,
+                text: 'Are you sure you want to ' + quest,
+                dangerMode: true,
+                buttons: {
+                    cancel: 'No',
+                    delete: 'Yes'
+                }
+            }).then(function(willDelete) {
+                if (willDelete) {
+                    // console.log("ID - " + dataId);
+                    // console.log("dataStatus - " + dataStatus);
+                    jQuery.ajax({
+                        url: "/comments/disable/" + dataId + "/" + dataStatus,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            console.log("Success");
+                        }
+                    });
+                    swal("Comment status updated! Please Refresh the Page...", {
+                        icon: "success",
+                    });
+
+                    // $(location).attr('href', '/posts'); //Refressh the page
+
+                } else {
+                    swal("Comment status is intact", {
+                        title: 'Action cancelled',
+                        icon: "error",
+                    });
+                }
+            });
+
+        });
+    </script>
+
+
+
+    <script>
+        $('.delete').click(function() {
+            console.log('Delete Ready');
+
+            var deleteButnData = $(this);
+            var dataId = deleteButnData.data('id');
+            var dataUser = deleteButnData.data('user');
+
+            // console.log("ID - " + dataId);
+            // console.log("dataUser - " + dataUser);
             swal({
                 title: "Delete Record?",
-                text: 'Are you sure you want to delete \"' + dataTitle +
-                    '\" from the Post Records? You will not be able to recover this imaginary file!',
+                text: 'Are you sure you want to delete this comment?',
                 icon: 'warning',
                 dangerMode: true,
                 buttons: {
@@ -606,23 +697,32 @@
                 }
             }).then(function(willDelete) {
                 if (willDelete) {
-                    console.log("ID - " + dataId);
+                    // console.log("ID - " + dataId);
                     // console.log("dataTitle - " + dataTitle);
                     jQuery.ajax({
-                        url: "/posts/delete/" + dataId,
+                        url: "/comments/delete/" + dataId + "/" + dataUser,
                         type: "GET",
                         dataType: "json",
-                        success: function(data) {}
+                        success: function(data) {
+                            // console.log('Dataaaa Success- ' + data);
+                            swal("Comment deleted! Please Refresh the Page...", {
+                                icon: "success",
+                            });
+                            location.reload();
+                        },
+                        error: function(data) {
+                            // console.log('Dataaaa Error- ' + data);
+                            swal("You do not have the permission to delete this comment!", {
+                                icon: "error",
+                            });
+                        }
                     });
 
-                    swal("\"" + dataTitle + "\" record has been deleted!", {
-                        icon: "success",
-                    });
 
-                    $(location).attr('href', '/posts'); //Refressh the page
+                    // $(location).attr('href', '/posts'); //Refressh the page
 
                 } else {
-                    swal("Your record is safe", {
+                    swal("Your comment is intact", {
                         title: 'Cancelled',
                         icon: "error",
                     });
