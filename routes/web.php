@@ -170,9 +170,10 @@ Route::prefix('comments')->as('comments')->group(function () {
     // Route::get('/create', [CommentsController::class, 'create'])->name('-add');
     Route::post('/storeparent', [CommentsController::class, 'storeParent'])->name('-storeparent');
     Route::post('/storechild', [CommentsController::class, 'storeChild'])->name('-storechild');
+    Route::get('/disable/{id}/{currentstatus}', [CommentsController::class, 'disableComments'])->name('-disable');
     // Route::get('/view/{id}', [CommentsController::class, 'show'])->name('-view');
-    // Route::get('/edit/{id}', [CommentsController::class, 'edit'])->name('-edit');
+    // Route::get('/edit/{id}', [CommentsController::class, 'edit'])->name('-edit'); 
     // Route::patch('/update/{id}', [CommentsController::class, 'update'])->name('-update');
-    // Route::get('/delete/{id}', [CommentsController::class, 'destroy'])->name('-delete');
+    Route::get('/delete/{id}/{userid}', [CommentsController::class, 'destroy'])->name('-delete');
 });
 

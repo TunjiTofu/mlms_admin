@@ -47,7 +47,7 @@ class CommentsController extends Controller
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/posts", 'name' => "Posts"],
-                ['link' => "/posts/view/$id", 'name' => "View Post"],
+                ['link' => "/posts/view/$id", 'name' => "View Post"], 
                 ['link' => "/comments/postcomments/$id", 'name' => "Comments"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -187,6 +187,32 @@ class CommentsController extends Controller
         }
     }
 
+
+    public function disableComments($id, $currentstatus)
+    {
+        // dd($id);
+        // dd($currentstatus);
+
+        $newStatus = '';
+        if($currentstatus == 'active'){
+            $newStatus = 'disabled';
+        }
+        if($currentstatus == 'disabled'){
+            $newStatus = 'active';
+        }
+
+        $data = [
+            'status' => $newStatus,
+        ];
+
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/adminComments/'.$id, $data);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        return $response;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -227,8 +253,18 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $userid)
     {
-        //
+        // dd($id);
+        // dd($currentstatus);
+
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/adminComments/'.$id.'/'.$userid);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if ($response->status() == 200 && $response->successful() == true) {
+            return json_encode(['success' => 200], $response->status());
+        }
     }
 }
