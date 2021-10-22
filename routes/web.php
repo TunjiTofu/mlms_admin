@@ -167,12 +167,12 @@ Route::prefix('posts')->as('posts')->group(function () {
 Route::prefix('comments')->as('comments')->group(function () {
     Route::get('/', [CommentsController::class, 'index'])->name('');
     Route::get('/postcomments/{id}', [CommentsController::class, 'postComments'])->name('-postcomments');
-    Route::get('/create', [CommentsController::class, 'create'])->name('-add');
-    Route::post('/store', [CommentsController::class, 'store'])->name('-store');
-    Route::get('/view/{id}', [CommentsController::class, 'show'])->name('-view');
-    Route::get('/edit/{id}', [CommentsController::class, 'edit'])->name('-edit');
-    Route::patch('/update/{id}', [CommentsController::class, 'update'])->name('-update');
-    Route::get('/delete/{id}', [CommentsController::class, 'destroy'])->name('-delete');
+    // Route::get('/create', [CommentsController::class, 'create'])->name('-add');
+    Route::post('/storeparent', [CommentsController::class, 'storeParent'])->name('-storeparent');
+    Route::post('/storechild', [CommentsController::class, 'storeChild'])->name('-storechild');
+    // Route::get('/view/{id}', [CommentsController::class, 'show'])->name('-view');
+    // Route::get('/edit/{id}', [CommentsController::class, 'edit'])->name('-edit');
+    // Route::patch('/update/{id}', [CommentsController::class, 'update'])->name('-update');
+    // Route::get('/delete/{id}', [CommentsController::class, 'destroy'])->name('-delete');
 });
-
 

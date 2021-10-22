@@ -18,10 +18,15 @@
 @section('page-style')
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/app-sidebar.css') }}"> --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/app-email.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/page-users.css') }}">
 @endsection
 
 {{-- page content --}}
 @section('content')
+
+    <!--- Brought quill min.js up here bcos of the reply loop -->
+    <script src="{{ asset('vendors/quill/quill.min.js') }}"></script>
+
     <!-- users view start -->
     <div class="section users-view">
         <!-- users view media object start -->
@@ -92,250 +97,224 @@
                                     <div class=" scrollspy border-radius-6 fixed-width">
                                         <div class="card-content p-0 pb-2">
                                             <div class="collection email-collection">
-                                                <div class="email-brief-info collection-item animate fadeUp delay-1">
-                                                    <a class="list-content" href="{{ asset('app-email/content') }}">
-                                                        <div class="list-title-area">
-                                                            <div class="user-media">
-                                                                <img src="{{ asset('images/user/2.jpg') }}" alt=""
-                                                                    class="circle z-depth-2 responsive-img avtar">
-                                                                <div class="list-title">Gorge Fernandis</div>
+
+                                                @foreach (json_decode($responseComments) as $comment)
+                                                    <div class="email-brief-info collection-item animate fadeUp delay-1">
+                                                        <div class="list-content">
+                                                            <div class="list-title-area">
+                                                                <div class="user-media">
+                                                                    <img src="{{ asset('images/user/2.jpg') }}" alt=""
+                                                                        class="circle z-depth-2 responsive-img avtar">
+                                                                    <div class="list-title">
+                                                                        @php
+                                                                            $id_token = session()->get('id_Token');
+                                                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $comment->userId);
+                                                                            $user = json_decode($response);
+                                                                            
+                                                                            if ($user->role == 'SDM' || $user->role == 'ADM') {
+                                                                                echo '<b>Admin</b>';
+                                                                            } else {
+                                                                                echo ucwords($user->sname) . ', ' . ucwords($user->oname);
+                                                                            }
+                                                                        @endphp
+                                                                    </div>
+                                                                </div>
+                                                                <div class="title-right">
+                                                                    <span class="list-date">
+                                                                        @php
+                                                                            $timestamp = $comment->createdAt->_seconds;
+                                                                            date_default_timezone_set('Africa/Lagos');
+                                                                            echo date('h:i a', $timestamp);
+                                                                        @endphp
+
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                            <div class="title-right">
-                                                                <span class="list-date"> 2:03 PM </span>
+                                                            <div class="list-desc">{!! $comment->comment !!}
                                                             </div>
+
                                                         </div>
-                                                        <div class="list-desc">There are many variations of
-                                                            passages of
-                                                            Lorem
-                                                            Ipsum
-                                                            available, but the majority
-                                                            have suffered alteration in some form, by injected humour,
-                                                            or
-                                                            randomised
-                                                            words which
-                                                            don't look even
-                                                            slightly believable. If you are going to use a passage of
-                                                            Lorem
-                                                            Ipsum
+                                                        <div style="display: flex">
+                                                            <a href="#replyCommentId{{ $comment->id }}"
+                                                                class=" modal-trigger mr-5">
+                                                                <i class="small material-icons">reply</i> Post a Reply
+                                                            </a>
+                                                            <div class="switch mb-1">
+
+                                                                {{-- <input type="checkbox" name="tag_1" id="tag_1" value="yes" <?php echo $dbvalue['tag_1'] == 1 ? 'checked' : ''; ?>>
+                                                                                    {{ $class->id == $post->class ? 'selected = "selected"' : '' }} --}}
+                                                                <label>
+                                                                    Disabled
+                                                                    <input type="checkbox" name="status" id="status"
+                                                                        {{ $comment->status == 'active' ? 'checked' : '' }}>
+                                                                    <span class="lever"></span>
+                                                                    Enable
+                                                                </label>
+                                                            </div>
                                                         </div>
 
-                                                    </a>
-                                                    <div>
-                                                        {{-- <a href="{{ route('posts-edit', ['id' => $post->id]) }}"
-                                                                class=" modal-trigger mr-5"> --}}
-                                                        {{-- <a href="#e{{ $post->id }}" class=" modal-trigger mr-5"> --}}
-                                                        <a href="#replyCommentId" class=" modal-trigger mr-5">
-                                                            <i class="small material-icons">reply</i> Reply Comment
-                                                        </a>
-                                                    </div>
-                                                </div>
 
-                                                <div class="email-brief-info collection-item animate fadeUp delay-1">
-                                                    <a class="list-content" href="{{ asset('app-email/content') }}">
-                                                        <div class="list-title-area">
-                                                            <div class="user-media">
-                                                                <img src="{{ asset('images/user/10.jpg') }}" alt=""
-                                                                    class="circle z-depth-2 responsive-img avtar">
-                                                                <div class="list-title">Gorge Fernandis</div>
+                                                        <!-- Child Comment-->
+                                                        @php
+                                                            $id_token = session()->get('id_Token');
+                                                            $responseChild = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminComments/child/' . $comment->id);
+                                                        @endphp
+                                                        @foreach (json_decode($responseChild) as $commentChild)
+                                                            <div class="list-content ml-5 mt-1 ">
+                                                                <div class="list-title-area">
+                                                                    <div class="user-media">
+                                                                        <img src="{{ asset('images/user/2.jpg') }}"
+                                                                            alt=""
+                                                                            class="circle z-depth-2 responsive-img avtar">
+                                                                        <div>
+                                                                            <div class="list-title">
+                                                                                @php
+                                                                                    $id_token = session()->get('id_Token');
+                                                                                    $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $commentChild->userId);
+                                                                                    $user = json_decode($response);
+                                                                                    
+                                                                                    if ($user->role == 'SDM' || $user->role == 'ADM') {
+                                                                                        echo '<b>Admin</b>';
+                                                                                    } else {
+                                                                                        echo ucwords($user->sname) . ', ' . ucwords($user->oname);
+                                                                                    }
+                                                                                @endphp <br>
+
+                                                                            </div>
+                                                                            <div class="list-desc">
+                                                                                {!! $commentChild->comment !!}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="title-right">
+                                                                        <span class="list-date">
+                                                                            @php
+                                                                                $timestamp = $commentChild->createdAt->_seconds;
+                                                                                date_default_timezone_set('Africa/Lagos');
+                                                                                echo date('h:i a', $timestamp);
+                                                                            @endphp
+
+                                                                        </span>
+
+                                                                        <div class="switch mb-1">
+                                                                            <label>
+                                                                                Disabled
+                                                                                <input type="checkbox" name="status"
+                                                                                    id="status"
+                                                                                    {{ $commentChild->status == 'active' ? 'checked' : '' }}>
+                                                                                <span class="lever"></span>
+                                                                                Enable
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {{-- <div class="list-desc">{!! $commentChild->comment !!}
+                                                                </div> --}}
+
                                                             </div>
-                                                            <div class="title-right">
-                                                                <span class="list-date"> 2:03 PM </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-desc">There are many variations of
-                                                            passages of
-                                                            Lorem
-                                                            Ipsum
-                                                            available, but the majority
-                                                            have suffered alteration in some form, by injected humour,
-                                                            or
-                                                            randomised
-                                                            words which
-                                                            don't look even
-                                                            slightly believable. If you are going to use a passage of
-                                                            Lorem
-                                                            Ipsum
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="email-brief-info collection-item animate fadeUp delay-1">
-                                                    <a class="list-content" href="{{ asset('app-email/content') }}">
-                                                        <div class="list-title-area">
-                                                            <div class="user-media">
-                                                                <img src="{{ asset('images/user/4.jpg') }}" alt=""
-                                                                    class="circle z-depth-2 responsive-img avtar">
-                                                                <div class="list-title">Gorge Fernandis</div>
-                                                            </div>
-                                                            <div class="title-right">
-                                                                <span class="list-date"> 2:03 PM </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-desc">There are many variations of
-                                                            passages of
-                                                            Lorem
-                                                            Ipsum
-                                                            available, but the majority
-                                                            have suffered alteration in some form, by injected humour,
-                                                            or
-                                                            randomised
-                                                            words which
-                                                            don't look even
-                                                            slightly believable. If you are going to use a passage of
-                                                            Lorem
-                                                            Ipsum
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="email-brief-info collection-item animate fadeUp delay-1">
-                                                    <a class="list-content" href="{{ asset('app-email/content') }}">
-                                                        <div class="list-title-area">
-                                                            <div class="user-media">
-                                                                <img src="{{ asset('images/user/6.jpg') }}" alt=""
-                                                                    class="circle z-depth-2 responsive-img avtar">
-                                                                <div class="list-title">Gorge Fernandis</div>
-                                                            </div>
-                                                            <div class="title-right">
-                                                                <span class="list-date"> 2:03 PM </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-desc">There are many variations of
-                                                            passages of
-                                                            Lorem
-                                                            Ipsum
-                                                            available, but the majority
-                                                            have suffered alteration in some form, by injected humour,
-                                                            or
-                                                            randomised
-                                                            words which
-                                                            don't look even
-                                                            slightly believable. If you are going to use a passage of
-                                                            Lorem
-                                                            Ipsum
-                                                        </div>
-                                                    </a>
-                                                </div>
+                                                            {{-- <div>
+                                                                <a href="#replyCommentId{{ $comment->id }}"
+                                                                    class=" modal-trigger mr-5">
+                                                                    <i class="small material-icons">reply</i> Reply Comment
+                                                                </a>
+                                                            </div> --}}
+
+                                                        @endforeach
+
+                                                    </div> <!-- - End of Parent Comment -->
 
 
-                                                <div class="email-brief-info collection-item animate fadeUp delay-3">
-                                                    <div class="list-left">
-                                                        <label>
-                                                            <input type="checkbox" name="foo" />
-                                                            <span></span>
-                                                        </label>
-                                                        <div class="favorite">
-                                                            <i class="material-icons">star_border</i>
-                                                        </div>
-                                                        <div class="email-label">
-                                                            <i class="material-icons">label_outline</i>
-                                                        </div>
-                                                    </div>
-                                                    <a class="list-content" href="{{ asset('app-email/content') }}">
-                                                        <div class="list-title-area">
-                                                            <div class="user-media">
-                                                                <img src="{{ asset('images/user/4.jpg') }}" alt=""
-                                                                    class="circle z-depth-2 responsive-img avtar">
-                                                                <div class="list-title">Alin Kystal</div>
-                                                            </div>
-                                                            <div class="title-right">
-                                                                <span class="attach-file">
-                                                                    <i class="material-icons">attach_file</i>
-                                                                </span>
-                                                                <span class="badge grey lighten-3"><i
-                                                                        class="purple-text material-icons small-icons mr-2">
-                                                                        fiber_manual_record </i>Note</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-desc">There are many variations of
-                                                            passages of
-                                                            Lorem
-                                                            Ipsum
-                                                            available, but the majority
-                                                            have suffered alteration in some form, by injected humour,
-                                                            or
-                                                            randomised
-                                                            words which
-                                                            don't look even
-                                                            slightly believable. If you are going to use a passage of
-                                                            Lorem
-                                                            Ipsum
-                                                        </div>
-                                                    </a>
-                                                    <div class="list-right">
-                                                        <div class="list-date"> 8:18 AM </div>
-                                                    </div>
-                                                </div>
+                                                    <!-- Reply Comment Modal-->
+                                                    <div id="replyCommentId{{ $comment->id }}" class="modal">
+                                                        <div class="modal-content">
+                                                            <h6>Reply Comment</h6>
+                                                            <div class="row">
+                                                                <div class="col s12">
+                                                                    <form class="row mt-1"
+                                                                        id="replyComment-{{ $comment->id }}"
+                                                                        method="POST"
+                                                                        action="{{ route('comments-storechild') }}">
+                                                                        {{ csrf_field() }}
+                                                                        <div class="input-field">
+                                                                            <!-- Compose mail Quill editor -->
+                                                                            <div class="snow-container snow-editor"
+                                                                                id="editorReply-container{{ $comment->id }}">
+                                                                                <div id="snow-wrapper">
+                                                                                    <div id="snow-container">
+                                                                                        <!-- Create the toolbar container -->
+                                                                                        <div
+                                                                                            id="editorReplyComment-{{ $comment->id }}">
 
-
-
-
-                                                <div class="row">
-                                                    <div class="col s12">
-                                                        <div id="replyCommentId" class="modal">
-                                                            <div class="modal-content">
-                                                                <h6>Reply Comment</h6>
-                                                                <div class="row">
-                                                                    <div class="col s12">
-                                                                        <form class="row mt-1" id="replyComment"
-                                                                            method="POST"
-                                                                            action="{{ route('comments-store') }}">
-                                                                            {{ csrf_field() }}
-                                                                            <div class="input-field">
-                                                                                <!-- Compose mail Quill editor -->
-                                                                                <div class="snow-container snow-editor"
-                                                                                    id="editorReply-container">
-                                                                                    <div id="snow-wrapper">
-                                                                                        <div id="snow-container">
-                                                                                            <!-- Create the toolbar container -->
-                                                                                            <div id="editorReplyComment">
-
-                                                                                            </div>
-                                                                                            <div id="toolbarReply"
-                                                                                                class="compose-quill-toolbar">
-                                                                                                <span
-                                                                                                    class="ql-formats mr-0">
-                                                                                                    <button
-                                                                                                        class="ql-bold"
-                                                                                                        title="Bold"></button>
-                                                                                                    <button
-                                                                                                        class="ql-italic"
-                                                                                                        title="Italics"></button>
-                                                                                                    <button
-                                                                                                        class="ql-underline"
-                                                                                                        title="Underline"></button>
-                                                                                                    <button
-                                                                                                        class="ql-link"
-                                                                                                        title="Embed Link"></button>
-                                                                                                </span>
-                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div id="toolbarReply{{ $comment->id }}"
+                                                                                            class="compose-quill-toolbar">
+                                                                                            <span class="ql-formats mr-0">
+                                                                                                <button
+                                                                                                    class="ql-bold"
+                                                                                                    title="Bold"></button>
+                                                                                                <button
+                                                                                                    class="ql-italic"
+                                                                                                    title="Italics"></button>
+                                                                                                <button
+                                                                                                    class="ql-underline"
+                                                                                                    title="Underline"></button>
+                                                                                                <button
+                                                                                                    class="ql-link"
+                                                                                                    title="Embed Link"></button>
+                                                                                            </span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <!-- End of Quill Rich Text Editor -->
                                                                             </div>
-                                                                            <textarea name="replyComment"
-                                                                                style="display:none"
-                                                                                id="hiddenAreaReplyComment"></textarea>
+                                                                            <!-- End of Quill Rich Text Editor -->
+                                                                        </div>
+                                                                        <textarea name="childComment" style="display:none"
+                                                                            id="hiddenAreaReplyComment-{{ $comment->id }}"></textarea>
 
-                                                                            <div class="col s12">
-                                                                                <div class="input-field col s12">
-                                                                                    <button
-                                                                                        class="btn border-round col s12">Update
-                                                                                        Module</button>
-                                                                                </div>
+                                                                        <input type="text" readonly name="postId" id=""
+                                                                            value="{{ $post->id }}">
+
+                                                                        <input type="text" readonly name="parentCommentId"
+                                                                            id="" value="{{ $comment->id }}">
+
+                                                                        <div class="col s12">
+                                                                            <div class="input-field col s12">
+                                                                                <button
+                                                                                    class="btn border-round col s5 m3"><i
+                                                                                        class="material-icons left">send</i>Comment</button>
                                                                             </div>
-                                                                        </form>
-                                                                    </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
-
-
                                                             </div>
+
+
                                                         </div>
                                                     </div>
-                                                </div>
 
+                                                    <script>
+                                                        var quillId = "#editorReplyComment-<?php echo $comment->id; ?>";
+                                                        var id = "<?php echo $comment->id; ?>";
+                                                        var formName = "#replyComment-<?php echo $comment->id; ?>";
+                                                        var textAreaName = "#hiddenAreaReplyComment-<?php echo $comment->id; ?>";
+                                                        var QuillAndEditorID = "#editorReplyComment-<?php echo $comment->id; ?> .ql-editor";
 
+                                                        var quill = new Quill(quillId, {
+                                                            modules: {
+                                                                toolbar: '#toolbarReply' + id
+                                                            },
+                                                            theme: 'snow',
+                                                            placeholder: 'Write a Comment...',
+                                                            bounds: '#editorReply-container' + id
+                                                        });
 
+                                                        $(formName).on("submit", function() {
+                                                            $("#hiddenAreaReplyComment-<?php echo $comment->id; ?>").val($(
+                                                                "#editorReplyComment-<?php echo $comment->id; ?> .ql-editor").html());
+                                                        });
+                                                    </script>
 
+                                                @endforeach
 
                                             </div> <!-- Stop Cut here -->
                                         </div>
@@ -345,7 +324,7 @@
                         </div>
                     </div> <!-- End Col -->
 
-                    <form class="row mt-1" id="myForm" method="POST" action="{{ route('comments-store') }}">
+                    <form class="row mt-1" id="myForm" method="POST" action="{{ route('comments-storeparent') }}">
                         {{ csrf_field() }}
                         <div class="col s12 m4">
                             <div class="input-field">
@@ -370,7 +349,8 @@
                                 </div>
                                 <!-- End of Quill Rich Text Editor -->
                             </div>
-                            <textarea name="postContent" style="display:none" id="hiddenAreaContent"></textarea>
+                            <textarea name="parentComment" style="display:none" id="hiddenAreaContent"></textarea>
+                            <input type="hidden" readonly name="postId" id="" value="{{ $post->id }}">
 
                             <div class="row">
                                 <div class="col s12">
@@ -585,7 +565,7 @@
 @section('vendor-script')
     <script src="{{ asset('vendors/quill/katex.min.js') }}"></script>
     <script src="{{ asset('vendors/quill/highlight.min.js') }}"></script>
-    <script src="{{ asset('vendors/quill/quill.min.js') }}"></script>
+
     <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('vendors/sweetalert/sweetalert.min.js') }}"></script>
 @endsection
@@ -666,18 +646,7 @@
         });
     </script>
 
-    <script>
-        var quill = new Quill('#editorReplyComment', {
-            modules: {
-                toolbar: '#toolbarReply'
-            },
-            theme: 'snow',
-            placeholder: 'Write a Comment...',
-            bounds: '#editorReply-container'
-        });
 
-        $("#replyComment").on("submit", function() {
-            $("#hiddenAreaReplyComment").val($("#editorReplyComment .ql-editor").html());
-        });
-    </script>
+
+
 @endsection

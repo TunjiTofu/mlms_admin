@@ -17,7 +17,7 @@
 {{-- page style --}}
 @section('page-style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/page-users.css') }}">
-@endsection
+@endsection 
 
 {{-- page content --}}
 @section('content')
