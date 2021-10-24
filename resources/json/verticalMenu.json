@@ -141,6 +141,26 @@
       ]
     },
     {
+      "url": "#",
+      "name": "Upload Resources",
+      "i18n": "uploadResources", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "upload_res",
+      "icon": "cloud_upload",
+      "submenu": [
+        {
+          "url": "/resources",
+          "name": "View Resources",
+          "slug": "view-resources"
+        },
+        {
+          "url": "/resources/create",
+          "name": "Upload Resources",
+          "slug": "upload-resources"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Pages",
       "i18n": "Pages",

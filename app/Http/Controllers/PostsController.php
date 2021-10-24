@@ -26,7 +26,7 @@ class PostsController extends Controller
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
-        if ($response->status() == 200 && $response->ok() == true) {
+        if ($response->status() == 200 && $response->ok() == true) { 
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/posts", 'name' => "Posts"],
