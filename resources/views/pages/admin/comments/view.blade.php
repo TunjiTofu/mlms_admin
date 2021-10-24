@@ -124,7 +124,7 @@
                                                                         @php
                                                                             $timestamp = $comment->createdAt->_seconds;
                                                                             date_default_timezone_set('Africa/Lagos');
-                                                                            echo date('h:i a', $timestamp);
+                                                                            echo date('d/M/y h:i A', $timestamp);
                                                                         @endphp
 
                                                                     </span>
@@ -197,7 +197,7 @@
                                                                             @php
                                                                                 $timestamp = $commentChild->createdAt->_seconds;
                                                                                 date_default_timezone_set('Africa/Lagos');
-                                                                                echo date('h:i a', $timestamp);
+                                                                                echo date('d/M/y h:i A', $timestamp);
                                                                             @endphp
 
                                                                         </span>
