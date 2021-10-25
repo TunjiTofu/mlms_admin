@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\RandomClassCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -85,58 +86,94 @@ class ResourcesController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator->errors());
         }
-        // $code = generateRandomString(5);
+        //Random code to appen to the title
+        $code = new RandomClassCode();
+        $randCode = $code->generateRandomCharResource(4);
+        // dd($randCode);
 
+        //User ID
         $user_id = session()->get('user_id');
-        $newResTitle = str_replace(' ', '_', $request->resourceTitle);
-        // $base64 = 'data:image/' . $type . ';base64,' . base64_encode($request->imagePath);
+
+        //New Resource Title
+        $titleWithRandCode = $request->resourceTitle . '_' . $randCode;
+        $newResTitle = str_replace(' ', '_', $titleWithRandCode);
+
+        //Resource Type
+        $resType = $request->resourceType;
+        // dd($resType);
 
         if ($request->hasFile('imagePath')) {
             if ($request->file('imagePath')->isValid()) {
                 try {
                     $file = $request->file('imagePath');
+                    // dd($file);
                     $extension = $request->file('imagePath')->extension();
                     // dd($extension);
-                    $image = base64_encode(file_get_contents($request->file('imagePath')));
+                    $mime = $request->file('imagePath')->getMimeType();
+                    dd($mime);
+
+                    //Checking for Valid Picture File
+                    if ((($resType == 'pics') && ($mime == 'image/jpeg')) || (($resType == 'pics') && ($mime == 'image/png'))) {
+                        $image = base64_encode(file_get_contents($request->file('imagePath')));
+                    } else {
+                        return back()->with('error', "Resource Type and Upload Document do not match.\n Upload a \".jpg\" or \".png\" file");
+                    }
+
+                    //Checking for Valid Word Document
+                    if ((($resType == 'docx') && ($mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) ) {
+                        $image = base64_encode(file_get_contents($request->file('imagePath')));
+                    } else {
+                        return back()->with('error', "Resource Type and Upload Document do not match.<br>Change the Resource Type or Upload a \".docx\" or \".doc\" file");
+                    }
+
+                    // || 
+                    // (($resType == 'docx') && ($mime == 'application/doc')) || (($resType == 'docx') && ($mime == 'application/ms-doc')) || 
+                    // (($resType == 'docx') && ($mime == 'application/msword'))
+
+                    // $image = base64_encode(file_get_contents($request->file('imagePath')));
+                    dd($image);
+                    // $doc = file_get_contents($request->file('imagePath'));
                     // $base64 = 'data:image/' . $extension . ';base64,' . $image;
 
-                    // dd($base64);
+                    // dd($image);
 
                 } catch (FileNotFoundException $e) {
                     echo "catch";
 
                 }
             }
-        }
 
-        $data = [
-            'resourceTitle' => $newResTitle,
-            'class' => $request->class,
-            'resourceType' => $request->resourceType,
-            'imagePath' => $image,
-            'status' => $request->status,
-            'userId' => $user_id,
-            // 'base64' => $base64,
-        ];
-        // dd($data);
-        $id_token = session()->get('id_Token');
-        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources', $data);
-        dd($response->status());
-
-        if ($response->status() == 403) {
-            return redirect('/login')->with('error', 'Unauthorized - Please login');
-        }
-
-        if ($response->status() == 201 && $response->successful() == true) {
-            return redirect('/resources')->with('success', "Resource has been added");
-        } else {
-            $breadcrumbs = [
-                ['link' => "/", 'name' => "Dashboard"],
-                ['link' => "/resources", 'name' => "Resources"],
-                ['link' => "#", 'name' => "404 Page"],
+            $data = [
+                'resourceTitle' => $newResTitle,
+                'class' => $request->class,
+                'resourceType' => $request->resourceType,
+                'imagePath' => $image,
+                'status' => $request->status,
+                'userId' => $user_id,
+                'extension' => $mime,
+                // 'base64' => $base64,
             ];
-            $pageConfigs = ['pageHeader' => true];
-            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+            // dd($data);
+            $id_token = session()->get('id_Token');
+            // $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources', $data);
+            $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/others', $data);
+            dd($response->status());
+
+            if ($response->status() == 403) {
+                return redirect('/login')->with('error', 'Unauthorized - Please login');
+            }
+
+            if ($response->status() == 201 && $response->successful() == true) {
+                return redirect('/resources')->with('success', "Resource has been added");
+            } else {
+                $breadcrumbs = [
+                    ['link' => "/", 'name' => "Dashboard"],
+                    ['link' => "/resources", 'name' => "Resources"],
+                    ['link' => "#", 'name' => "404 Page"],
+                ];
+                $pageConfigs = ['pageHeader' => true];
+                return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+            }
         }
 
     }

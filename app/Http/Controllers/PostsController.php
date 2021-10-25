@@ -116,7 +116,7 @@ class PostsController extends Controller
             'postContent' => 'required|min:3',
             'classList' => 'required',
             'module' => 'required',
-            'topic' => 'required',
+            'topic' => 'required', 
             'status' => 'required',
         ];
 
