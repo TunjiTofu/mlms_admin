@@ -188,7 +188,7 @@ Route::prefix('resources')->as('resources')->group(function () {
     Route::get('/view/{id}/{type}', [ResourcesController::class, 'showWord'])->name('-viewword');
     // Route::get('/edit/{id}', [ResourcesController::class, 'edit'])->name('-edit');
     // Route::patch('/update/{id}', [ResourcesController::class, 'update'])->name('-update');
-    // Route::get('/delete/{id}', [ResourcesController::class, 'destroy'])->name('-delete');
+    Route::get('/delete/{class}/{type}/{id}', [ResourcesController::class, 'destroy'])->name('-delete');
     
     //Route for AJAX
     // Route::get('/class2module/{id}', [ResourcesController::class, 'getClass2Module']);
