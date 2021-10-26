@@ -144,7 +144,6 @@ class ResourcesController extends Controller
                     $resSize = $size->humanFileSize($request->file('imagePath')->getSize());
                     // dd($resSize);
 
-
                     $resBase64Encode = '';
 
                     switch ($resType) {
@@ -211,7 +210,8 @@ class ResourcesController extends Controller
             }
 
             $data = [
-                'resourceTitle' => $newResTitle,
+                'resourceDocumentTitle' => $newResTitle,
+                'resourceTitle' => $request->resourceTitle,
                 'class' => $request->class,
                 'resourceType' => $request->resourceType,
                 'resourceBase64Encoded' => $resBase64Encode,
@@ -256,14 +256,14 @@ class ResourcesController extends Controller
         $classId = $id;
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/' . $id);
-        $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
+        // $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
         // dd($response->json());
 
-        if ($response->status() == 403 || $responseReTypes->status() == 403) {
+        if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
         }
 
-        if (($response->json() != null && $response->status() == 200) || ($responseReTypes->json() != null && $responseReTypes->status() == 200)) {
+        if (($response->json() != null && $response->status() == 200)) {
             // $post = json_decode($response);
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -271,7 +271,60 @@ class ResourcesController extends Controller
                 ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.resources.view', compact(['response', 'responseReTypes', 'classId', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.resources.view', compact(['response', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else if (($response->json() == null && $response->status() == 200)) {
+            // $post = json_decode($response);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.resources.view-specific-resource-empty', compact(['response', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+
+    }
+
+    public function showWord($id, $type)
+    {
+        // dd($type);
+        $classId = $id;
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/' . $id . '/' . $type);
+        // $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
+        // dd($response->json());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if (($response->json() != null && $response->status() == 200)) {
+            // $post = json_decode($response);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.resources.view-specific-resource', compact(['response', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else if (($response->json() == null && $response->status() == 200)) {
+            // $post = json_decode($response);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.resources.view-specific-resource-empty', compact(['response', 'classId', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
