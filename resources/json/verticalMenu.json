@@ -142,10 +142,10 @@
     },
     {
       "url": "#",
-      "name": "Upload Resources",
-      "i18n": "uploadResources", 
+      "name": "Resources",
+      "i18n": "Resources", 
       "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "upload_res",
+      "slug": "resources",
       "icon": "cloud_upload",
       "submenu": [
         {

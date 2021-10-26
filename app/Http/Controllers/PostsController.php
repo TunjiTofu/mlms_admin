@@ -17,10 +17,6 @@ class PostsController extends Controller
     {
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminPosts');
-        // $responseTopics = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics');
-        // $responseClasses = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses");
-        // $responseStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus");
-        // $responseModules = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules");
         // dd($response->json());
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');

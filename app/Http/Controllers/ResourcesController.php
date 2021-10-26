@@ -367,8 +367,33 @@ class ResourcesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($class, $type, $id)
     {
-        //
+        // dd($id);
+        $id_token = session()->get('id_Token');
+        $responseFileName = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/single/' . $id);
+        $fileName = json_decode($responseFileName);
+        $docTitle = $fileName->resourceDocumentTitle;
+
+        $path = $class . '/' . $type . '/' . $docTitle;
+        // dd($path);
+
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/'.$id.'?path='.$path);
+        // dd($response->status());
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->status() == 200 && $response->successful() == true) {
+            return redirect('/resources/view/'.$class)->with('success', "File successfully deleted");
+        }else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 }

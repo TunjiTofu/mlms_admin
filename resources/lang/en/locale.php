@@ -152,7 +152,7 @@ return [
     "Posts"=>"Posts",
     "View Posts"=>"View Posts",
     "Create Post"=>"Create Post",
-    "Upload Resources"=>"Upload Resources",
+    "Resources"=>"Resources",
     "View Resources"=>"View Resources",
     "Upload Resources"=>"Upload Resources",
 ];

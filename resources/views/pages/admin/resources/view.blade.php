@@ -49,7 +49,8 @@
                             {{ $class->name }} Class Drive
                         </span>
                         <div class="collection file-manager-drive mt-3">
-                            <a href="{{ route('resources-view', ['id' => $class->id]) }}" class="collection-item file-item-action active">
+                            <a href="{{ route('resources-view', ['id' => $class->id]) }}"
+                                class="collection-item file-item-action active">
                                 <div class="fonticon-wrap display-inline mr-3">
                                     <i class="material-icons">folder_open</i>
                                 </div>
@@ -68,7 +69,8 @@
                                 </div>
                                 <span> Documents</span>
                             </a>
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'docx']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'docx']) }}"
+                                class="collection-item file-item-action">
                                 <div style="display: flex">
                                     <img class="recent-file" src="{{ asset('images/icon/doc-image.png') }}" height="30"
                                         width="22" alt="Card image cap" style="margin-left: 20px">
@@ -81,10 +83,11 @@
                                 </div>
                             </a>
 
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'pdf']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'pdf']) }}"
+                                class="collection-item file-item-action">
                                 <div style="display: flex">
-                                    <img class="recent-file" src="{{ asset('images/icon/pdf-image.png') }}" height="30"
-                                        width="22" alt="Card image cap" style="margin-left: 20px">
+                                    <img class="recent-file" src="{{ asset('images/icon/pdf-image.png') }}"
+                                        height="30" width="22" alt="Card image cap" style="margin-left: 20px">
 
 
                                     <div class="fonticon-wrap display-inline mr-3">
@@ -95,10 +98,11 @@
                             </a>
 
 
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'ppt']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'ppt']) }}"
+                                class="collection-item file-item-action">
                                 <div style="display: flex">
-                                    <img class="recent-file" src="{{ asset('images/icon/ppt-image.png') }}" height="30"
-                                        width="22" alt="Card image cap" style="margin-left: 20px">
+                                    <img class="recent-file" src="{{ asset('images/icon/ppt-image.png') }}"
+                                        height="30" width="22" alt="Card image cap" style="margin-left: 20px">
 
 
                                     <div class="fonticon-wrap display-inline mr-3">
@@ -108,10 +112,11 @@
                                 </div>
                             </a>
 
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'xlxs']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'xlxs']) }}"
+                                class="collection-item file-item-action">
                                 <div style="display: flex">
-                                    <img class="recent-file" src="{{ asset('images/icon/xls-image.png') }}" height="30"
-                                        width="22" alt="Card image cap" style="margin-left: 20px">
+                                    <img class="recent-file" src="{{ asset('images/icon/xls-image.png') }}"
+                                        height="30" width="22" alt="Card image cap" style="margin-left: 20px">
 
 
                                     <div class="fonticon-wrap display-inline mr-3">
@@ -121,7 +126,8 @@
                                 </div>
                             </a>
 
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'txt']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'txt']) }}"
+                                class="collection-item file-item-action">
                                 <div style="display: flex">
                                     <img class="recent-file" src="{{ asset('images/icon/txt-image.png') }}"
                                         height="25" width="22" alt="Card image cap" style="margin-left: 20px">
@@ -135,14 +141,16 @@
                             </a>
 
                             <hr>
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'pics']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'pics']) }}"
+                                class="collection-item file-item-action">
                                 <div class="fonticon-wrap display-inline mr-3">
                                     <i class="material-icons">filter</i>
                                 </div>
                                 <span>Images</span>
                             </a>
                             <hr>
-                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'audio']) }}" class="collection-item file-item-action">
+                            <a href="{{ route('resources-viewword', ['id' => $class->id, 'type' => 'audio']) }}"
+                                class="collection-item file-item-action">
                                 <div class="fonticon-wrap display-inline mr-3">
                                     <i class="material-icons">music_note</i>
                                 </div>
@@ -190,107 +198,231 @@
 
                         @foreach (json_decode($response) as $resource)
                             <div class="col xl3 l6 m3 s6">
-                                <div class="card box-shadow-none mb-1 app-file-info">
-                                    <div class="card-content">
-                                        <div class="app-file-content-logo grey lighten-4">
-                                            <div class="fonticon">
-                                                <i class="material-icons">more_vert</i>
-                                            </div>
+                                <a href="#vvu{{ $resource->id }}" class="modal-trigger" style="color: inherit"
+                                    title="Click to View Details">
+                                    <div class="card box-shadow-none mb-1 ">
+                                        <div class="card-content">
+                                            <div class="app-file-content-logo grey lighten-4">
+                                                <div class="fonticon">
+                                                    <i class="material-icons">more_vert</i>
+                                                </div>
 
-                                            {{-- <span>{{ $resource->resourceType }}</span> --}}
-                                            {{-- <span class="chip green lighten-5">
+                                                {{-- <span>{{ $resource->resourceType }}</span> --}}
+                                                {{-- <span class="chip green lighten-5">
                                                     <span class="green-text">Active</span>
                                                 </span> --}}
-                                            @if ($resource->resourceType == 'docx')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/doc-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
-                                                    Document
-                                                    File</div>
+                                                @if ($resource->resourceType == 'docx')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/doc-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
+                                                        Document
+                                                        File</div>
 
-                                            @elseif($resource->resourceType == 'pics')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/jpg-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
-                                                    Document File</div>
+                                                @elseif($resource->resourceType == 'pics')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/jpg-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
+                                                        Document File</div>
 
-                                            @elseif($resource->resourceType == 'audio')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/audio-img.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Audio
-                                                    File</div>
+                                                @elseif($resource->resourceType == 'audio')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/audio-img.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Audio
+                                                        File</div>
 
-                                            @elseif($resource->resourceType == 'pdf')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/pdf-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Portable
-                                                    Document Format File</div>
+                                                @elseif($resource->resourceType == 'pdf')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/pdf-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Portable
+                                                        Document Format File</div>
 
-                                            @elseif($resource->resourceType == 'ppt')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/ppt-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">PowerPoint
-                                                    Document File</div>
+                                                @elseif($resource->resourceType == 'ppt')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/ppt-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">
+                                                        PowerPoint
+                                                        Document File</div>
 
-                                            @elseif($resource->resourceType == 'xlxs')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/xls-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Excel
-                                                    Document File</div>
+                                                @elseif($resource->resourceType == 'xlxs')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/xls-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Excel
+                                                        Document File</div>
 
-                                            @elseif($resource->resourceType == 'txt')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/txt-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Text
-                                                    Document File</div>
+                                                @elseif($resource->resourceType == 'txt')
+                                                    <img class="recent-file mb-2"
+                                                        src="{{ asset('images/icon/txt-image.png') }}" height="38"
+                                                        width="30" alt="Card image cap">
+                                                    <div class="app-file-size" style="text-align: center">
+                                                        {{ $resource->size }}</div>
+                                                    <div class="app-file-type mt-3 pb-2" style="text-align: center">Text
+                                                        Document File</div>
 
-                                            @endif
+                                                @endif
+                                            </div>
+
+                                            <div class="app-file-details" style="text-align: center">
+                                                <div class="app-file-name font-weight-700">{{ $resource->resourceTitle }}
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div style="text-align: center" class="mb-4">
+                                        <a href="{{ $resource->url }}" target="blank"><i
+                                                class="large material-icons">cloud_download</i>
+                                            Download File</a>
+                                    </div>
+                                </a>
+                            </div>
 
-                                        <div class="app-file-details" style="text-align: center">
-                                            <div class="app-file-name font-weight-700">{{ $resource->resourceTitle }}
+                            <!-- View Resource Details Maodal -->
+                            <div class="modal" id="vvu{{ $resource->id }}">
+                                <div class="col s12">
+                                    <div class="modal-content">
+                                        <h6>File Additional Details</h6>
+                                        <a href="#d{{ $resource->id }}" class=" modal-trigger mr-5 btn ">
+                                            <i class="material-icons ">delete</i>Delete File
+                                        </a>
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <table class="striped">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>File Name:</td>
+                                                            <td>{{ $resource->resourceTitle }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>File Type:</td>
+                                                            <td>{{ $resource->resourceType }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>File Size:</td>
+                                                            <td>{{ $resource->size }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Class Name:</td>
+                                                            <td>
+                                                                @php
+                                                                    $id_token = session()->get('id_Token');
+                                                                    $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $resource->class);
+                                                                    $class = json_decode($responseClass);
+                                                                @endphp
+                                                                {{ $class->name }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>File Status:</td>
+                                                            <td>
+                                                                <span class="users-view-id">
+                                                                    @if ($resource->status == 'active')
+                                                                        <span class="chip green lighten-5">
+                                                                            <span class="green-text">Active</span>
+                                                                        </span>
+                                                                    @endif
+                                                                    @if ($resource->status == 'disabled')
+                                                                        <span class="chip red lighten-5">
+                                                                            <span class="red-text">Disabled</span>
+                                                                        </span>
+                                                                    @endif
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Uploaded By:</td>
+                                                            <td>
+                                                                @php
+                                                                    $id_token = session()->get('id_Token');
+                                                                    $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/users/' . $resource->userId);
+                                                                    $user = json_decode($response);
+                                                                    
+                                                                    if ($user->role == 'SDM' || $user->role == 'ADM') {
+                                                                        echo '<b>Admin</b>';
+                                                                    } else {
+                                                                        echo ucwords($user->sname) . ', ' . ucwords($user->oname) . '<br>';
+                                                                        echo $user->role;
+                                                                    }
+                                                                @endphp
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Date Created:</td>
+                                                            <td>
+                                                                @php
+                                                                    $timestamp = $resource->createdAt->_seconds;
+                                                                    date_default_timezone_set('Africa/Lagos');
+                                                                    echo date('d-M-Y h:i A', $timestamp);
+                                                                @endphp
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Date Updated:</td>
+                                                            <td>
+                                                                @php
+                                                                    if ($resource->updatedAt != '') {
+                                                                        $timestamp2 = $resource->updatedAt->_seconds;
+                                                                        date_default_timezone_set('Africa/Lagos');
+                                                                        echo date('d-M-Y h:i a', $timestamp2);
+                                                                    }
+                                                                @endphp
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div style="text-align: center" class="mb-4">
-                                    <a href="{{ $resource->url }}" target="blank"><i
-                                            class="large material-icons">cloud_download</i>
-                                        Download File</a>
+                            </div>
+                            <!-- End View Resource Modal -->
+
+                            <!-- Start Delete Resource Modal -->
+                            <div class="modal" id="d{{ $resource->id }}">
+                                <div class="col s12">
+                                    <div class="modal-content">
+                                        <h6>Delete File</h6>
+                                        <p>Are you sure you want to delete this file?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat ">No,
+                                            Cancel</a>
+                                        <a href="{{ route('resources-delete', ['class' => $resource->class, 'type' => $resource->resourceType, 'id' => $resource->id]) }}"
+                                            class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
+                                            Delete</a>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- End Delete Resource Modal -->
+
                         @endforeach
 
-                    <!-- App File - Files Section Ends -->
+                        <!-- App File - Files Section Ends -->
+                    </div>
                 </div>
-            </div>
 
-            <!-- file manager main content end  -->
-        </div>
-        <!-- content-right end -->
-        <!-- App File sidebar - Right section Starts -->
-        <div class="app-file-sidebar-info">
+                <!-- file manager main content end  -->
+            </div>
+            <!-- content-right end -->
+            <!-- App File sidebar - Right section Starts -->
+            {{-- <div class="app-file-sidebar-info">
             <div class="card box-shadow-none m-0 pb-1">
                 <div class="card-header display-flex justify-content-between align-items-center">
                     <h6 class="m-0">Document.pdf</h6>
@@ -434,16 +566,17 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+            <!-- App File sidebar - Right section Ends -->
         </div>
-        <!-- App File sidebar - Right section Ends -->
-    </div>
-@endsection
+    @endsection
 
-{{-- vendor scripts --}}
-@section('vendor-script')
-@endsection
+    {{-- vendor scripts --}}
+    @section('vendor-script')
+    @endsection
 
-{{-- page script --}}
-@section('page-script')
-    <script src="{{ asset('js/scripts/app-file-manager.js') }}"></script>
-@endsection
+    {{-- page script --}}
+    @section('page-script')
+        <script src="{{ asset('js/scripts/app-file-manager.js') }}"></script>
+        <script src="{{ asset('js/scripts/advance-ui-modals.js') }}"></script>
+    @endsection
