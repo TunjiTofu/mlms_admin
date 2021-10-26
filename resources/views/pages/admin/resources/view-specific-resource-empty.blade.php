@@ -182,105 +182,13 @@
 
                 <!-- App File Content Starts -->
                 <div class="app-file-content">
-                    <h6 class="font-weight-700 mb-3">All Files</h6>
+                    <h6 class="font-weight-700 mb-3">No Result Found</h6>
 
                     <!-- App File - Files Section Starts -->
                     <label class="app-file-label">Files</label>
                     <div class="row app-file-files">
 
-                        @foreach (json_decode($response) as $resource)
-                            <div class="col xl3 l6 m3 s6">
-                                <div class="card box-shadow-none mb-1 app-file-info">
-                                    <div class="card-content">
-                                        <div class="app-file-content-logo grey lighten-4">
-                                            <div class="fonticon">
-                                                <i class="material-icons">more_vert</i>
-                                            </div>
-
-                                            {{-- <span>{{ $resource->resourceType }}</span> --}}
-                                            {{-- <span class="chip green lighten-5">
-                                                    <span class="green-text">Active</span>
-                                                </span> --}}
-                                            @if ($resource->resourceType == 'docx')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/doc-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
-                                                    Document
-                                                    File</div>
-
-                                            @elseif($resource->resourceType == 'pics')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/jpg-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
-                                                    Document File</div>
-
-                                            @elseif($resource->resourceType == 'audio')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/audio-img.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Audio
-                                                    File</div>
-
-                                            @elseif($resource->resourceType == 'pdf')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/pdf-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Portable
-                                                    Document Format File</div>
-
-                                            @elseif($resource->resourceType == 'ppt')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/ppt-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">PowerPoint
-                                                    Document File</div>
-
-                                            @elseif($resource->resourceType == 'xlxs')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/xls-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Excel
-                                                    Document File</div>
-
-                                            @elseif($resource->resourceType == 'txt')
-                                                <img class="recent-file mb-2"
-                                                    src="{{ asset('images/icon/txt-image.png') }}" height="38" width="30"
-                                                    alt="Card image cap">
-                                                <div class="app-file-size" style="text-align: center">
-                                                    {{ $resource->size }}</div>
-                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Text
-                                                    Document File</div>
-
-                                            @endif
-                                        </div>
-
-                                        <div class="app-file-details" style="text-align: center">
-                                            <div class="app-file-name font-weight-700">{{ $resource->resourceTitle }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="text-align: center" class="mb-4">
-                                    <a href="{{ $resource->url }}" target="blank"><i
-                                            class="large material-icons">cloud_download</i>
-                                        Download File</a>
-                                </div>
-                            </div>
-                        @endforeach
+                        No Result Found
 
                     <!-- App File - Files Section Ends -->
                 </div>

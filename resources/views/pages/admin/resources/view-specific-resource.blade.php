@@ -182,7 +182,7 @@
 
                 <!-- App File Content Starts -->
                 <div class="app-file-content">
-                    <h6 class="font-weight-700 mb-3">All Files</h6>
+                    <h6 class="font-weight-700 mb-3">Specific Files</h6>
 
                     <!-- App File - Files Section Starts -->
                     <label class="app-file-label">Files</label>
