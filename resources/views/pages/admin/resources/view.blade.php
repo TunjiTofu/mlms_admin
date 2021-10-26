@@ -6,422 +6,709 @@
 
 {{-- vendor styles --}}
 @section('vendor-style')
-    {{-- Quill Editor --}}
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/katex.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/monokai-sublime.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.snow.css') }}">
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('vendors/quill/quill.bubble.css') }}"> --}}
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/sweetalert/sweetalert.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/flag-icon/css/flag-icon.min.css') }}">
 @endsection
 
 {{-- page style --}}
 @section('page-style')
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/page-users.css') }}">
-@endsection 
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/app-file-manager.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/widget-timeline.css') }}">
+@endsection
 
 {{-- page content --}}
 @section('content')
-    <!-- users view start -->
-    <div class="section users-view">
-        <!-- users view media object start -->
-        @php
-            $id_token = session()->get('id_Token');
-            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $post->class);
-            $class = json_decode($response);
-            // dd($teacher)
-        @endphp
-        <div class="card-panel" style="background-color:{{ $class->color }}; color:#efe7e7">
-            <div class="row">
-                <div class="col s12 m12">
-                    <div class="display-flex media">
-                        <div class="media-body">
-                            <h6 class="media-heading" style="color: #efe7e7">
-                                {{-- <span class="users-view-name">{{ $user->sname }}, {{ $user->oname }} </span>
-                                <span class="grey-text">@</span> --}}
-                                <span class="users-view-username"> <b>Post Title: </b>{{ $post->postTitle }}</span>
-                            </h6>
-                            <span><b>Post Status: </b></span>
-                            <span class="users-view-id">
-                                @if ($post->status == 'active')
-                                    <span class="chip green lighten-5">
-                                        <span class="green-text">Active</span>
-                                    </span>
-                                @endif
-                                @if ($post->status == 'disabled')
-                                    <span class="chip red lighten-5">
-                                        <span class="red-text">Disabled</span>
-                                    </span>
-                                @endif
-                            </span>
+    <div class="section app-file-manager-wrapper">
+        <!-- File Manager app overlay -->
+        <div class="app-file-overlay"></div>
+        <!-- /File Manager app overlay -->
+        <!-- sidebar left start -->
+        <div class="sidebar-left">
+            <!--left sidebar of file manager start -->
+            <div class="app-file-sidebar display-flex">
+                <!-- App File sidebar - Left section Starts -->
+                <div class="app-file-sidebar-left">
+                    <!-- sidebar close icon starts -->
+                    <span class="app-file-sidebar-close hide-on-med-and-up"><i class="material-icons">close</i></span>
+                    <!-- sidebar close icon ends -->
+                    <div class="input-field add-new-file mt-0">
+                        <!-- Add File Button -->
+                        <a class="add-file-btn btn btn-block waves-effect waves-light mb-10"
+                            href="{{ route('resources-add') }}">
+                            <i class="material-icons">add_circle_outline</i>
+                            Upload Resources
+                        </a>
+                    </div>
+                    <div class="app-file-sidebar-content">
+                        <!-- App File Left Sidebar - Drive Content Starts -->
+                        @php
+                            $id_token = session()->get('id_Token');
+                            $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
+                            $class = json_decode($responseClass);
+                        @endphp
+                        <span class="app-file-label" style="color: {{ $class->color }}">
+                            {{ $class->name }} Class Drive
+                        </span>
+                        <div class="collection file-manager-drive mt-3">
+                            <a href="#" class="collection-item file-item-action active">
+                                <div class="fonticon-wrap display-inline mr-3">
+                                    <i class="material-icons">folder_open</i>
+                                </div>
+                                <span>All Files</span>
+                                <span class="chip red lighten-5 float-right red-text">2</span>
+                            </a>
                         </div>
+                        <!-- App File Left Sidebar - Drive Content Ends -->
+
+                        <!-- App File Left Sidebar - Labels Content Starts -->
+                        <span class="app-file-label">Labels</span>
+                        <div class="collection file-manager-drive mt-3">
+                            <a href="#" class="collection-item file-item-action">
+                                <div class="fonticon-wrap display-inline mr-3">
+                                    <i class="material-icons">content_paste</i>
+                                </div>
+                                <span> Documents</span>
+                            </a>
+                            <a href="#" class="collection-item file-item-action">
+                                <div style="display: flex">
+                                    <img class="recent-file" src="{{ asset('images/icon/doc-image.png') }}" height="30"
+                                        width="22" alt="Card image cap" style="margin-left: 20px">
+
+
+                                    <div class="fonticon-wrap display-inline mr-3">
+                                        {{-- <i class="material-icons">picture_as_pdf</i> --}}
+                                    </div>
+                                    <span class=" mt-2">Word</span>
+                                </div>
+                            </a>
+
+                            <a href="#" class="collection-item file-item-action">
+                                <div style="display: flex">
+                                    <img class="recent-file" src="{{ asset('images/icon/pdf-image.png') }}" height="30"
+                                        width="22" alt="Card image cap" style="margin-left: 20px">
+
+
+                                    <div class="fonticon-wrap display-inline mr-3">
+                                        {{-- <i class="material-icons">picture_as_pdf</i> --}}
+                                    </div>
+                                    <span class=" mt-2"> PDF</span>
+                                </div>
+                            </a>
+
+
+                            <a href="#" class="collection-item file-item-action">
+                                <div style="display: flex">
+                                    <img class="recent-file" src="{{ asset('images/icon/ppt-image.png') }}" height="30"
+                                        width="22" alt="Card image cap" style="margin-left: 20px">
+
+
+                                    <div class="fonticon-wrap display-inline mr-3">
+                                        {{-- <i class="material-icons">picture_as_pdf</i> --}}
+                                    </div>
+                                    <span class=" mt-2"> PowerPoint</span>
+                                </div>
+                            </a>
+
+                            <a href="#" class="collection-item file-item-action">
+                                <div style="display: flex">
+                                    <img class="recent-file" src="{{ asset('images/icon/xls-image.png') }}" height="30"
+                                        width="22" alt="Card image cap" style="margin-left: 20px">
+
+
+                                    <div class="fonticon-wrap display-inline mr-3">
+                                        {{-- <i class="material-icons">picture_as_pdf</i> --}}
+                                    </div>
+                                    <span class=" mt-2"> Excel</span>
+                                </div>
+                            </a>
+
+                            <a href="#" class="collection-item file-item-action">
+                                <div style="display: flex">
+                                    <img class="recent-file" src="{{ asset('images/icon/txt-image.png') }}"
+                                        height="25" width="22" alt="Card image cap" style="margin-left: 20px">
+
+
+                                    <div class="fonticon-wrap display-inline mr-3">
+                                        {{-- <i class="material-icons">picture_as_pdf</i> --}}
+                                    </div>
+                                    <span class=" mt-2"> Text Files</span>
+                                </div>
+                            </a>
+
+                            <hr>
+                            <a href="#" class="collection-item file-item-action">
+                                <div class="fonticon-wrap display-inline mr-3">
+                                    <i class="material-icons">filter</i>
+                                </div>
+                                <span>Images</span>
+                            </a>
+                            <hr>
+                            <a href="#" class="collection-item file-item-action">
+                                <div class="fonticon-wrap display-inline mr-3">
+                                    <i class="material-icons">music_note</i>
+                                </div>
+                                <span> Audio</span>
+                            </a>
+
+                        </div>
+                        <!-- App File Left Sidebar - Labels Content Ends -->
+
+                        <!-- App File Left Sidebar - Storage Content Starts -->
+                        {{-- <span class="app-file-label">Storage Status</span>
+                        <div class="display-flex mb-1 mt-3">
+                            <div class="fonticon-wrap mr-3">
+                                <i class="material-icons storage-icon">sd_card</i>
+                            </div>
+                            <div class="file-manager-progress">
+                                <small>19.5GB used of 25GB</small>
+                                <div class="progress pink lighten-5 mt-0">
+                                    <div class="determinate" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div> --}}
+                        <!-- App File Left Sidebar - Storage Content Ends -->
                     </div>
                 </div>
-                <div class="col s12 m12 quick-action-btns display-flex justify-content-end align-items-center pt-2">
-                    {{-- <a href="{{ asset('app-email') }}" class="btn-small btn-light-indigo"><i
-                            class="material-icons">mail_outline</i></a> --}}
-                    <a class=" btn-warning-cancel btn-small btn-light-indigo"
-                        data-id="{{ $post->id }}"
-                        data-title="{{ $post->postTitle }}">Delete
-                        Post</a>
-                    <a href="{{ route('posts-edit', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">Edit
-                        Post</a>
-                    <a href="{{ route('comments-postcomments', ['id' => $post->id]) }}" class="btn-small btn-light-indigo">View Post Comments</a>
-                </div>
             </div>
+            <!--left sidebar of file manager start -->
         </div>
-        <!-- users view media object ends -->
-        {{-- Card Personal Info --}}
-        <div class="card">
-            <div class="card-content">
-                <div class="row">
-                    <div class="col s12">
-                        <h6 class="mb-2 mt-2">
-                            <i class="material-icons">subject</i>
-                            Post Info
-                        </h6>
+        <!--/ sidebar left end -->
+        <!-- content-right start -->
+        <div class="content-right">
+            <!-- file manager main content start -->
+            <div class="app-file-area">
+                <!-- File App Content Area -->
+                <!-- App File Header Starts -->
 
-                        <div class="row">
-                            <div class="col s12">
-                                Post Content
+
+                <!-- App File Content Starts -->
+                <div class="app-file-content">
+                    <h6 class="font-weight-700 mb-3">All Files</h6>
+
+                    <!-- App File - Recent Accessed Files Section Starts -->
+                    {{-- <span class="app-file-label">Recently Accessed Files</span>
+                    <div class="row app-file-recent-access mb-3">
+                        <div class="col xl3 l6 m3 s12">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/pdf.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-recent-details">
+                                        <div class="app-file-name font-weight-700">Felecia_Resume.pdf</div>
+                                        <div class="app-file-size">12.85kb</div>
+                                        <div class="app-file-last-access">Last accessed : 3 hours ago</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="col xl3 l6 m3 s12">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon"><i class="material-icons">more_vert</i></div>
+                                        <img class="recent-file" src="{{ asset('images/icon/psd.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-content-details">
+                                        <div class="app-file-name font-weight-700">Logo_design.psd</div>
+                                        <div class="app-file-size">15.60mb</div>
+                                        <div class="app-file-last-access">Last accessed : 3 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s12">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon"> <i class="material-icons">more_vert</i></div>
+                                        <img class="recent-file" src="{{ asset('images/icon/doc.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-content-details">
+                                        <div class="app-file-name font-weight-700">Music_Two.xyz</div>
+                                        <div class="app-file-size">1.2gb</div>
+                                        <div class="app-file-last-access">Last accessed : 3 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s12">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/sketch.png') }}"
+                                            height="38" width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-content-details">
+                                        <div class="app-file-name font-weight-700">Application.sketch</div>
+                                        <div class="app-file-size">92.83kb</div>
+                                        <div class="app-file-last-access">Last accessed : 3 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <!-- App File - Recent Accessed Files Section Ends -->
 
-                        <div class="row">
-                            <!-- Quill Rich Text Editor -->
-                            <div class="snow-editor col s12" id="editor-container">
-                                <div id="snow-wrapper">
-                                    <div id="snow-container">
-
-                                        <!-- Create the editor container -->
-                                        <div id="editor" style="border: 1px solid {{ $class->color }}">
-                                            {!! $post->postContent !!}
+                    <!-- App File - Folder Section Starts -->
+                    {{-- <span class="app-file-label">Folder</span>
+                    <div class="row app-file-folder mb-3">
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Project</div>
+                                            <div class="app-file-folder-size">2 files, 14.05mb</div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <!-- End of Quill Rich Text Editor -->
                         </div>
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Video</div>
+                                            <div class="app-file-folder-size">130 files, 890mb</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Music</div>
+                                            <div class="app-file-folder-size">15 files, 58mb</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Documents</div>
+                                            <div class="app-file-folder-size">12 files, 9.5mb</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Application Design</div>
+                                            <div class="app-file-folder-size">1 files, 36.25kb</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m4 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-folder-content cursor-pointer display-flex align-items-center">
+                                        <div class="app-file-folder-logo mr-3">
+                                            <i class="material-icons">folder_open</i>
+                                        </div>
+                                        <div class="app-file-folder-details">
+                                            <div class="app-file-folder-name font-weight-700">Photos</div>
+                                            <div class="app-file-folder-size">3.6k files, 348mb</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <!-- App File - Folder Section Ends -->
 
-                        <table class="striped">
-                            <tbody>
-                                {{-- <tr>
-                                    <td>Post Content:</td>
-                                    <td class="users-view-name">{!! $post->postContent !!}</td>
-                                </tr> --}}
-                                <tr>
-                                    <td>Class Name:</td>
-                                    <td class="users-view-email">
-                                        {{ $class->name }}
+                    <!-- App File - Files Section Starts -->
+                    <label class="app-file-label">Files</label>
+                    <div class="row app-file-files">
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Module Name:</td>
-                                    <td class="users-view-latest-activity">
-                                        @php
-                                            $id_token = session()->get('id_Token');
-                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules/' . $post->module);
-                                            $module = json_decode($response);
-                                        @endphp
-                                        {{ $module->moduleName }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Topic:</td>
-                                    <td>
-                                        @php
-                                            $id_token = session()->get('id_Token');
-                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics/' . $post->topic);
-                                            $topic = json_decode($response);
-                                        @endphp
-                                        {{ $topic->topicName }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Date Created:</td>
-                                    <td>
-                                        @php
-                                            $timestamp = $post->createdAt->_seconds;
-                                            date_default_timezone_set('Africa/Lagos');
-                                            echo date('d-M-Y h:i a', $timestamp);
-                                        @endphp
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Date Updated:</td>
-                                    <td>
-                                        @php
-                                            if ($post->updatedAt != '') {
-                                                $timestamp2 = $post->updatedAt->_seconds;
-                                                date_default_timezone_set('Africa/Lagos');
-                                                echo date('d-M-Y h:i a', $timestamp2);
-                                            }
-                                        @endphp
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        @foreach (json_decode($response) as $resource)
+                            <div class="col xl3 l6 m3 s6">
+                                <div class="card box-shadow-none mb-1 app-file-info">
+                                    <div class="card-content">
+                                        <div class="app-file-content-logo grey lighten-4">
+                                            <div class="fonticon">
+                                                <i class="material-icons">more_vert</i>
+                                            </div>
+
+                                            {{-- <span>{{ $resource->resourceType }}</span> --}}
+                                            {{-- <span class="chip green lighten-5">
+                                                    <span class="green-text">Active</span>
+                                                </span> --}}
+                                            @if ($resource->resourceType == 'docx')
+                                                <img class="recent-file mb-2"
+                                                    src="{{ asset('images/icon/doc-image.png') }}" height="38" width="30"
+                                                    alt="Card image cap">
+                                                <div class="app-file-size" style="text-align: center">15.60mb</div>
+                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
+                                                    Document
+                                                    File</div>
+
+                                            @elseif($resource->resourceType == 'pics')
+                                                <img class="recent-file mb-2"
+                                                    src="{{ asset('images/icon/jpg-image.png') }}" height="38" width="30"
+                                                    alt="Card image cap">
+                                                <div class="app-file-size" style="text-align: center">15.60mb</div>
+                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
+                                                    Document
+                                                    File</div>
+
+                                            @elseif($resource->resourceType == 'audio')
+                                                <img class="recent-file mb-2"
+                                                    src="{{ asset('images/icon/cup.png') }}" height="38" width="30"
+                                                    alt="Card image cap">
+                                                <div class="app-file-size" style="text-align: center">15.60mb</div>
+                                                <div class="app-file-type mt-3 pb-2" style="text-align: center">Word
+                                                    Document
+                                                    File</div>
+
+                                            @endif
+
+
+                                        </div>
+
+                                        <div class="app-file-details" style="text-align: center">
+                                            <div class="app-file-name font-weight-700">{{ $resource->resourceTitle }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align: center" class="mb-4">
+                                    <a href="{{ $resource->url }}"><i class="large material-icons">cloud_download</i>
+                                        Download File</a>
+                                </div>
+                            </div>
+
+                        @endforeach
+
+
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/psd.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Management.docx</div>
+                                        <div class="app-file-size">15.60mb</div>
+                                        <div class="app-file-type">Word Document</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/doc.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Thunder.mp3</div>
+                                        <div class="app-file-size">3.4mb</div>
+                                        <div class="app-file-type">Mp3 File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/sketch.png') }}"
+                                            height="38" width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Dashboard.sketch</div>
+                                        <div class="app-file-size">108kb</div>
+                                        <div class="app-file-type">Sketch File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row app-file-files">
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/psd.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Logo.psd</div>
+                                        <div class="app-file-size">10.6kb</div>
+                                        <div class="app-file-type">Photoshop File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/sketch.png') }}"
+                                            height="38" width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Logo_Design.sketch</div>
+                                        <div class="app-file-size">256.5kb</div>
+                                        <div class="app-file-type">Sketch File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/doc.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Bootstrap.xyz</div>
+                                        <div class="app-file-size">0.0kb</div>
+                                        <div class="app-file-type">Unknown File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col xl3 l6 m3 s6">
+                            <div class="card box-shadow-none mb-1 app-file-info">
+                                <div class="card-content">
+                                    <div class="app-file-content-logo grey lighten-4">
+                                        <div class="fonticon">
+                                            <i class="material-icons">more_vert</i>
+                                        </div>
+                                        <img class="recent-file" src="{{ asset('images/icon/pdf.png') }}" height="38"
+                                            width="30" alt="Card image cap">
+                                    </div>
+                                    <div class="app-file-details">
+                                        <div class="app-file-name font-weight-700">Read_Me.pdf</div>
+                                        <div class="app-file-size">10.5kb</div>
+                                        <div class="app-file-type">PDF File</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- App File - Files Section Ends -->
+                </div>
+            </div>
+
+            <!-- file manager main content end  -->
+        </div>
+        <!-- content-right end -->
+        <!-- App File sidebar - Right section Starts -->
+        <div class="app-file-sidebar-info">
+            <div class="card box-shadow-none m-0 pb-1">
+                <div class="card-header display-flex justify-content-between align-items-center">
+                    <h6 class="m-0">Document.pdf</h6>
+                    <div class="app-file-action-icons display-flex align-items-center">
+                        <i class="material-icons mr-10">delete</i>
+                        <i class="material-icons close-icon">close</i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <ul class="tabs tabs-fixed-width mb-1">
+                        <li class="tab mr-1 pr-1">
+                            <a class="active display-flex align-items-center" id="details-tab" href="#details">
+                                <i class="material-icons mr-1">content_paste</i>
+                                <span>Details</span>
+                            </a>
+                        </li>
+                        <li class="tab">
+                            <a class="display-flex align-items-center" id="activity-tab" href="#file-activity">
+                                <i class="material-icons mr-1">timeline</i>
+                                <span>Activity</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="details-tab active" id="details">
+                            <div class="display-flex align-items-center flex-column pb-2 pt-4">
+                                <img src="{{ asset('images/icon/pdf.png') }}" alt="PDF" height="42" width="35"
+                                    class="mt-5 mb-5">
+                                <p class="mt-4">15.3mb</p>
+                            </div>
+                            <div class="divider mt-5 mb-5"></div>
+                            <div class="pt-6">
+                                <span class="app-file-label">Setting</span>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>File Sharing</p>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox" id="customSwitchGlow1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Synchronization</p>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox" id="customSwitchGlow2" checked>
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6 mb-8">
+                                    <p>Backup</p>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox" id="customSwitchGlow3">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <span class="app-file-label">Info</span>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Type</p>
+                                    <p class="font-weight-700">PDF</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Size</p>
+                                    <p class="font-weight-700">15.6mb</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Location</p>
+                                    <p class="font-weight-700">Files > Documents</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Owner</p>
+                                    <p class="font-weight-700">Elnora Reese</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Modified</p>
+                                    <p class="font-weight-700">September 4 2019</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Opened</p>
+                                    <p class="font-weight-700">July 8, 2019</p>
+                                </div>
+                                <div class="display-flex justify-content-between align-items-center mt-6">
+                                    <p>Created</p>
+                                    <p class="font-weight-700">July 1, 2019</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-tab" id="file-activity">
+                            <ul class="widget-timeline mb-0">
+                                <li class="timeline-items timeline-icon-green active">
+                                    <div class="timeline-time">Today</div>
+                                    <h6 class="timeline-title">You added an item to</h6>
+                                    <p class="timeline-text">You added an item</p>
+                                    <div class="timeline-content">
+                                        <img src="{{ asset('images/icon/psd.png') }}" alt="PSD" height="30" width="25"
+                                            class="mr-1">Mockup.psd
+                                    </div>
+                                </li>
+                                <li class="timeline-items timeline-icon-cyan active">
+                                    <div class="timeline-time">10 min ago</div>
+                                    <h6 class="timeline-title">You shared 2 times</h6>
+                                    <p class="timeline-text">Emily Bennett edited an item</p>
+                                    <div class="timeline-content">
+                                        <img src="{{ asset('images/icon/sketch.png') }}" alt="Sketch" height="30"
+                                            width="25" class="mr-1">Template_Design.sketch
+                                    </div>
+                                </li>
+                                <li class="timeline-items timeline-icon-red active">
+                                    <div class="timeline-time">Mon 10:20 PM</div>
+                                    <h6 class="timeline-title">You edited an item</h6>
+                                    <p class="timeline-text">You edited an item</p>
+                                    <div class="timeline-content">
+                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
+                                            width="25" class="mr-1">Information.doc
+                                    </div>
+                                </li>
+                                <li class="timeline-items timeline-icon-indigo active">
+                                    <div class="timeline-time">Jul 13 2019</div>
+                                    <h6 class="timeline-title">You edited an item</h6>
+                                    <p class="timeline-text">John Keller edited an item</p>
+                                    <div class="timeline-content">
+                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
+                                            width="25" class="mr-1">Documentation.doc
+                                    </div>
+                                </li>
+                                <li class="timeline-items timeline-icon-orange">
+                                    <div class="timeline-time">Apr 18 2019</div>
+                                    <h6 class="timeline-title">You added an item to</h6>
+                                    <p class="timeline-text">You edited an item</p>
+                                    <div class="timeline-content">
+                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
+                                            width="25" class="mr-1">Resume.pdf
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- End Card Personal Info --}}
-
-        <!-- users view card data start -->
-        {{-- <div class="card">
-            <div class="card-content">
-                <div class="row">
-                    <div class="col s12 m4">
-                        <h6 class="mb-2 mt-2"><i class="material-icons">person_outline</i> Enrolled Students</h6>
-                        <table class="striped">
-                            <tbody>
-
-                                <tr>
-                                    <td>Last Activity:</td>
-                                    <td>{{ '$userAuth->metadata->lastSignInTime' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Verified:</td>
-                                    <td class="users-view-verified">
-                                        @if ('$userAuth->emailVerified' == false)
-                                            <span class="chip red lighten-5">
-                                                <span class="red-text">No</span>
-                                            </span>
-                                        @endif
-                                        @if ('$userAuth->emailVerified' == true)
-                                            <span class="chip green lighten-5">
-                                                <span class="green-text">Yes</span>
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Role:</td>
-                                    <td class="users-view-role">
-                                        @if ('$userAuth->customClaims->role' == 'SDM')
-                                            <span class="chip purple lighten-5">
-                                                <span class="purple-text">Super Administrator</span>
-                                            </span>
-                                        @endif
-                                        @if ('$userAuth->customClaims->role' == 'ADM')
-                                            <span class="chip pink lighten-5">
-                                                <span class="pink-text">Administrator</span>
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Status:</td>
-                                    <td>
-                                        @if ('$userAuth->customClaims->status' == 'active')
-                                            <span class="chip green lighten-5">
-                                                <span class="green-text">Active</span>
-                                            </span>
-                                        @endif
-                                        @if ('$userAuth->customClaims->status' == 'banned')
-                                            <span class="chip red lighten-5">
-                                                <span class="red-text">Banned</span>
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col s12 m8">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Module Permission</th>
-                                    <th>Read</th>
-                                    <th>Write</th>
-                                    <th>Create</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Users</td>
-                                    <td>Yes</td>
-                                    <td>No</td>
-                                    <td>No</td>
-                                    <td>Yes</td>
-                                </tr>
-                                <tr>
-                                    <td>Articles</td>
-                                    <td>No</td>
-                                    <td>Yes</td>
-                                    <td>No</td>
-                                    <td>Yes</td>
-                                </tr>
-                                <tr>
-                                    <td>Staff</td>
-                                    <td>Yes</td>
-                                    <td>Yes</td>
-                                    <td>No</td>
-                                    <td>No</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <!-- users view card data ends -->
-
-
-        <!-- users view card details start -->
-        {{-- <div class="card">
-            <div class="card-content">
-                <div class="row indigo lighten-5 border-radius-4 mb-2">
-                    <div class="col s12 m4 users-view-timeline">
-                        <h6 class="indigo-text m-0">Posts: <span>125</span></h6>
-                    </div>
-                    <div class="col s12 m4 users-view-timeline">
-                        <h6 class="indigo-text m-0">Followers: <span>534</span></h6>
-                    </div>
-                    <div class="col s12 m4 users-view-timeline">
-                        <h6 class="indigo-text m-0">Following: <span>256</span></h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12">
-                        <table class="striped">
-                            <tbody>
-                                <tr>
-                                    <td>Username:</td>
-                                    <td class="users-view-username">dean3004</td>
-                                </tr>
-                                <tr>
-                                    <td>Name:</td>
-                                    <td class="users-view-name">Dean Stanley</td>
-                                </tr>
-                                <tr>
-                                    <td>E-mail:</td>
-                                    <td class="users-view-email">deanstanley@gmail.com</td>
-                                </tr>
-                                <tr>
-                                    <td>Comapny:</td>
-                                    <td>XYZ Corp. Ltd.</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                        <h6 class="mb-2 mt-2"><i class="material-icons">link</i> Social Links</h6>
-                        <table class="striped">
-                            <tbody>
-                                <tr>
-                                    <td>Twitter:</td>
-                                    <td><a href="#">https://www.twitter.com/</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Facebook:</td>
-                                    <td><a href="#">https://www.facebook.com/</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Instagram:</td>
-                                    <td><a href="#">https://www.instagram.com/</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h6 class="mb-2 mt-2"><i class="material-icons">error_outline</i> Personal Info</h6>
-                        <table class="striped">
-                            <tbody>
-                                <tr>
-                                    <td>Birthday:</td>
-                                    <td>03/04/1990</td>
-                                </tr>
-                                <tr>
-                                    <td>Country:</td>
-                                    <td>USA</td>
-                                </tr>
-                                <tr>
-                                    <td>Languages:</td>
-                                    <td>English</td>
-                                </tr>
-                                <tr>
-                                    <td>Contact:</td>
-                                    <td>+(305) 254 24668</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- </div> -->
-            </div>
-        </div> --}}
-        <!-- users view card details ends -->
-
+        <!-- App File sidebar - Right section Ends -->
     </div>
-    <!-- users view ends -->
 @endsection
 
 {{-- vendor scripts --}}
 @section('vendor-script')
-    <script src="{{ asset('vendors/quill/katex.min.js') }}"></script>
-    <script src="{{ asset('vendors/quill/highlight.min.js') }}"></script>
-    <script src="{{ asset('vendors/quill/quill.min.js') }}"></script>
-    <script src="{{ asset('vendors/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('vendors/sweetalert/sweetalert.min.js') }}"></script>
 @endsection
 
 {{-- page script --}}
 @section('page-script')
-    <script src="{{ asset('js/scripts/form-select2.js') }}"></script>
-    <script src="{{ asset('js/scripts/ui-alerts.js') }}"></script>
-
-    <!-- Initialize Quill editor -->
-    <script src="{{ asset('js/scripts/form-editor.js') }}"></script>
-    <script>
-        var quill = new Quill('#editor', {
-            placeholder: 'No Content Here...',
-            bounds: '#editor-container',
-            readOnly: true,
-        });
-    </script>
-
-    <script src="{{ asset('js/scripts/extra-components-sweetalert.js') }}"></script>
-
-    <script>
-        $('.btn-warning-cancel').click(function() {
-            var deleteButnData = $(this);
-            var dataId = deleteButnData.data('id');
-            var dataTitle = deleteButnData.data('title');
-            swal({
-                title: "Delete Record?",
-                text: 'Are you sure you want to delete \"' + dataTitle +
-                    '\" from the Post Records? You will not be able to recover this imaginary file!',
-                icon: 'warning',
-                dangerMode: true,
-                buttons: {
-                    cancel: 'No, Cancel',
-                    delete: 'Yes, Delete It'
-                }
-            }).then(function(willDelete) {
-                if (willDelete) {
-                    console.log("ID - " + dataId);
-                    // console.log("dataTitle - " + dataTitle);
-                    jQuery.ajax({
-                        url: "/posts/delete/" + dataId,
-                        type: "GET",
-                        dataType: "json",
-                        success: function(data) {}
-                    });
-
-                    swal("\"" + dataTitle + "\" record has been deleted!", {
-                        icon: "success",
-                    });
-
-                    $(location).attr('href', '/posts'); //Refressh the page
-
-                } else {
-                    swal("Your record is safe", {
-                        title: 'Cancelled',
-                        icon: "error",
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/scripts/app-file-manager.js') }}"></script>
 @endsection

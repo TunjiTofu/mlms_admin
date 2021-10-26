@@ -184,7 +184,7 @@ Route::prefix('resources')->as('resources')->group(function () {
     Route::get('/', [ResourcesController::class, 'index'])->name('');
     Route::get('/create', [ResourcesController::class, 'create'])->name('-add');
     Route::post('/store', [ResourcesController::class, 'store'])->name('-store');
-    // Route::get('/view/{id}', [ResourcesController::class, 'show'])->name('-view');
+    Route::get('/view/{id}', [ResourcesController::class, 'show'])->name('-view');
     // Route::get('/edit/{id}', [ResourcesController::class, 'edit'])->name('-edit');
     // Route::patch('/update/{id}', [ResourcesController::class, 'update'])->name('-update');
     // Route::get('/delete/{id}', [ResourcesController::class, 'destroy'])->name('-delete');

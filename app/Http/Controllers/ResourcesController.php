@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\RandomClassCode;
+use App\Classes\ResourceFileSize;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,33 @@ class ResourcesController extends Controller
      */
     public function index()
     {
-        //
+        $id_token = session()->get('id_Token');
+        // $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources');
+        // $responseTopics = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminTopics');
+        $responseClasses = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses");
+        // $responseStatus = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus");
+        // $responseModules = Http::withToken($id_token)->GET("https://us-central1-mlms-ec62a.cloudfunctions.net/adminModules");
+        // dd($responseClasses->json());
+        if ($responseClasses->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($responseClasses->status() == 200 && $responseClasses->ok() == true) {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.resources.index', compact(['responseClasses', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Resources"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
     }
 
     /**
@@ -110,36 +137,76 @@ class ResourcesController extends Controller
                     $extension = $request->file('imagePath')->extension();
                     // dd($extension);
                     $mime = $request->file('imagePath')->getMimeType();
-                    dd($mime);
+                    // dd($mime);
 
-                    //Checking for Valid Picture File
-                    if ((($resType == 'pics') && ($mime == 'image/jpeg')) || (($resType == 'pics') && ($mime == 'image/png'))) {
-                        $image = base64_encode(file_get_contents($request->file('imagePath')));
-                    } else {
-                        return back()->with('error', "Resource Type and Upload Document do not match.\n Upload a \".jpg\" or \".png\" file");
+                    //Get the file of Uploaded Resource
+                    $size = new ResourceFileSize();
+                    $resSize = $size->humanFileSize($request->file('imagePath')->getSize());
+                    // dd($resSize);
+
+
+                    $resBase64Encode = '';
+
+                    switch ($resType) {
+                        case "pics":
+                            if ($mime == 'image/jpeg' || $mime == 'image/png') {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".jpg\" or \".png\" file");
+                            }
+                            break;
+                        case "docx":
+                            if (($mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') || ($mime == 'application/msword') || ($mime == 'application/doc') || ($mime == 'application/ms-doc')) {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match. Change the Resource Type or Upload a \".docx\" or \".doc\" file");
+                            }
+                            break;
+                        case "pdf":
+                            if ($mime == 'application/pdf') {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".pdf\" file");
+                            }
+                            break;
+                        case "ppt":
+                            if (($mime == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') || ($mime == 'application/x-mspowerpoint') || ($mime == 'application/vnd.ms-powerpoint') || ($mime == 'application/powerpoint') || ($mime == 'application/mspowerpoint')) {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".pptx\" or \".ppt\" file");
+                            }
+                            break;
+
+                        case "xlxs":
+                            if (($mime == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || ($mime == 'application/x-msexcel') || ($mime == 'application/vnd.ms-excel') || ($mime == 'application/x-excel') || ($mime == 'application/excel')) {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".xlsx\" or \".xlx\" file");
+                            }
+                            break;
+
+                        case "txt":
+                            if ($mime == 'text/plain') {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".txt\" file");
+                            }
+                            break;
+
+                        case "audio":
+                            if (($mime == 'audio/mpeg') || ($mime == 'audio/x-wav')) {
+                                $resBase64Encode = base64_encode(file_get_contents($request->file('imagePath')));
+                            } else {
+                                return back()->with('error', "Selected Resource Type and Uploaded Document do not match.\n Upload a \".mp3\" or \".wav\" file");
+                            }
+                            break;
+
+                        default:
+                            echo "Resource Type Invalid!";
                     }
-
-                    //Checking for Valid Word Document
-                    if ((($resType == 'docx') && ($mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) ) {
-                        $image = base64_encode(file_get_contents($request->file('imagePath')));
-                    } else {
-                        return back()->with('error', "Resource Type and Upload Document do not match.<br>Change the Resource Type or Upload a \".docx\" or \".doc\" file");
-                    }
-
-                    // || 
-                    // (($resType == 'docx') && ($mime == 'application/doc')) || (($resType == 'docx') && ($mime == 'application/ms-doc')) || 
-                    // (($resType == 'docx') && ($mime == 'application/msword'))
-
-                    // $image = base64_encode(file_get_contents($request->file('imagePath')));
-                    dd($image);
-                    // $doc = file_get_contents($request->file('imagePath'));
-                    // $base64 = 'data:image/' . $extension . ';base64,' . $image;
-
-                    // dd($image);
-
+                    // dd($resBase64Encode);
                 } catch (FileNotFoundException $e) {
                     echo "catch";
-
                 }
             }
 
@@ -147,17 +214,16 @@ class ResourcesController extends Controller
                 'resourceTitle' => $newResTitle,
                 'class' => $request->class,
                 'resourceType' => $request->resourceType,
-                'imagePath' => $image,
+                'resourceBase64Encoded' => $resBase64Encode,
                 'status' => $request->status,
                 'userId' => $user_id,
                 'extension' => $mime,
-                // 'base64' => $base64,
+                'size' => $resSize,
             ];
             // dd($data);
             $id_token = session()->get('id_Token');
-            // $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources', $data);
-            $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/others', $data);
-            dd($response->status());
+            $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources', $data);
+            // dd($response->status());
 
             if ($response->status() == 403) {
                 return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -186,7 +252,37 @@ class ResourcesController extends Controller
      */
     public function show($id)
     {
-        //
+        // dd($id);
+        $classId = $id;
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminResources/' . $id);
+        $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
+        // dd($response->json());
+
+        if ($response->status() == 403 || $responseReTypes->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if (($response->json() != null && $response->status() == 200) || ($responseReTypes->json() != null && $responseReTypes->status() == 200)) {
+            // $post = json_decode($response);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.resources.view', compact(['response', 'responseReTypes', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/resources", 'name' => "Class Resources"],
+                ['link' => "/resources/view/$id", 'name' => "View All Class Resources"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+
     }
 
     /**
