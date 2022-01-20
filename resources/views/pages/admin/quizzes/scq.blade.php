@@ -79,7 +79,7 @@
                         <!-- App File Left Sidebar - Drive Content Ends -->
 
                         <!-- App File Left Sidebar - Labels Content Starts -->
-                        <span class="app-file-label">Labels</span>
+                        <span class="app-file-label">Question Categories</span>
                         <div class="collection file-manager-drive mt-3">
                             <a href="{{ route('quizzes-viewscq', ['quizId' => $quizId, 'classId' => $classId]) }}"
                                 class="collection-item file-item-action">
@@ -180,7 +180,7 @@
                                                                 @foreach (json_decode($responseQuestionScq) as $key => $scqQuest)
                                                                     <tr>
                                                                         <td>
-                                                                            <h6>Question {{ $key + 1 }}.</h6>
+                                                                            <h6><u>Question {{ $key + 1 }}.</u></h6>
                                                                             {!! $scqQuest->question !!} 
                                                                             <h6>Option A.</h6>
                                                                             {!! $scqQuest->optionA !!} 
