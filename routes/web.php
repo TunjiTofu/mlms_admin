@@ -17,6 +17,7 @@ use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ResourcesController;
+use App\Http\Controllers\QuizController;
 
 
 /*
@@ -93,7 +94,7 @@ Route::prefix('resourcetype')->as('resourcetype')->group(function () {
     Route::get('/delete/{id}', [ResourcetypeController::class, 'destroy'])->name('-delete');
 });
 
-// QUIZ TPES ROUTES
+// QUIZ TYPES ROUTES
 Route::prefix('quiztype')->as('quiztype')->group(function () {
     Route::get('/', [QuiztypeController::class, 'index'])->name('');
     // Route::get('/create', [QuiztypeController::class, 'create'])->name('-add');
@@ -193,4 +194,25 @@ Route::prefix('resources')->as('resources')->group(function () {
     //Route for AJAX
     // Route::get('/class2module/{id}', [ResourcesController::class, 'getClass2Module']);
     // Route::get('/module2topic/{id}', [ResourcesController::class, 'getModule2Topic']);
+});
+
+// Quizes ROUTES
+Route::prefix('quizzes')->as('quizzes')->group(function () {
+    Route::get('/', [QuizController::class, 'index'])->name('');
+    Route::get('/create', [QuizController::class, 'create'])->name('-add');
+    Route::post('/store', [QuizController::class, 'store'])->name('-store');
+    Route::get('/view/{quizId}/{classId}', [QuizController::class, 'show'])->name('-view');
+    Route::get('/viewall/{quizId}', [QuizController::class, 'showAll'])->name('-viewall');
+    Route::get('/viewscq/{quizId}/{classId}', [QuizController::class, 'showScq'])->name('-viewscq');
+    Route::post('/storescq', [QuizController::class, 'storeScq'])->name('-storescq');
+    Route::get('/viewbq/{quizId}/{classId}', [QuizController::class, 'showBq'])->name('-viewbq');
+    Route::get('/viewtheory/{quizId}/{classId}', [QuizController::class, 'showTheory'])->name('-viewtheory');
+    // Route::get('/view/{id}/{type}', [QuizController::class, 'showWord'])->name('-viewword');
+    // Route::get('/edit/{id}', [QuizController::class, 'edit'])->name('-edit');
+    Route::patch('/update/{id}', [QuizController::class, 'update'])->name('-update');
+    Route::get('/delete/{id}', [QuizController::class, 'destroy'])->name('-delete');
+    
+    //Route for AJAX
+    // Route::get('/class2module/{id}', [QuizController::class, 'getClass2Module']);
+    // Route::get('/module2topic/{id}', [QuizController::class, 'getModule2Topic']);
 });

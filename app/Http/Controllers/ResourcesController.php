@@ -135,7 +135,7 @@ class ResourcesController extends Controller
                     $file = $request->file('imagePath');
                     // dd($file);
                     $extension = $request->file('imagePath')->extension();
-                    // dd($extension);
+                    // dd($extension); 
                     $mime = $request->file('imagePath')->getMimeType();
                     // dd($mime);
 

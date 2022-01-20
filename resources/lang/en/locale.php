@@ -155,5 +155,8 @@ return [
     "Resources"=>"Resources",
     "View Resources"=>"View Resources",
     "Upload Resources"=>"Upload Resources",
+    "Quizzes"=>"Quizzes",
+    "View Quizzes"=>"View Quizzes",
+    "Create Quiz"=>"Create Quiz",
 ];
 ?>

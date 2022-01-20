@@ -79,20 +79,25 @@
                                                 <td>
                                                     <b>Created on: </b>
                                                     @php
-                                                        $timestamp = $class->createdAt->_seconds;
-                                                        date_default_timezone_set("Africa/Lagos");
-                                                        echo date('d-M-Y h:i a',$timestamp);
+                                                        if (!empty($class->createdAt->_seconds)) {
+                                                            $timestamp = $class->createdAt->_seconds;
+                                                            date_default_timezone_set('Africa/Lagos');
+                                                            echo date('d-M-Y h:i a', $timestamp);
+                                                        }
                                                     @endphp
                                                     <br>
                                                     <b>Last Updated on: </b>
                                                     @php
-                                                        $timestamp2 = $class->updatedAt->_seconds;
-                                                        date_default_timezone_set("Africa/Lagos");
-                                                        echo date('d-M-Y h:i a',$timestamp2);
+                                                        if (!empty($class->updatedAt->_seconds)) {
+                                                            $timestamp2 = $class->updatedAt->_seconds;
+                                                            date_default_timezone_set('Africa/Lagos');
+                                                            echo date('d-M-Y h:i a', $timestamp2);
+                                                        }
                                                     @endphp
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('classes-edit', ['id' => $class->id]) }}" class=" modal-trigger mr-5">
+                                                    <a href="{{ route('classes-edit', ['id' => $class->id]) }}"
+                                                        class=" modal-trigger mr-5">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                     <a href="{{ route('classes-view', ['id' => $class->id]) }}"
@@ -195,7 +200,8 @@
                         <select name="teacher">
                             <option value="0" disabled selected>Select Teacher</option>
                             @foreach (json_decode($responseTeachers) as $teacher)
-                                <option value="{{ $teacher->id }}">{{ strtoupper($teacher->sname) }}, {{ ucwords($teacher->oname) }}</option>
+                                <option value="{{ $teacher->id }}">{{ strtoupper($teacher->sname) }},
+                                    {{ ucwords($teacher->oname) }}</option>
                             @endforeach
                         </select>
                         <label>Select Class Teacher</label>
@@ -218,7 +224,8 @@
                         <label>Status</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <span><input id="color" type="color" name="color" class="validate" value="#1976D2" required></span>
+                        <span><input id="color" type="color" name="color" class="validate" value="#1976D2"
+                                required></span>
                         <span><label for="color">Choose a Class Color</label></span>
                     </div>
                 </div>

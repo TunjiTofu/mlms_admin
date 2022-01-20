@@ -161,6 +161,26 @@
       ]
     },
     {
+      "url": "#",
+      "name": "Quizzes",
+      "i18n": "Quizzes", 
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "quizzes",
+      "icon": "format_list_numbered",
+      "submenu": [
+        {
+          "url": "/quizzes",
+          "name": "View Quizzes",
+          "slug": "view-quizzes"
+        },
+        {
+          "url": "/quizzes/create",
+          "name": "Create Quiz",
+          "slug": "upload-quiz"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Pages",
       "i18n": "Pages",
