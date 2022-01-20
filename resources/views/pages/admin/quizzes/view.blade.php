@@ -61,7 +61,7 @@
                         <!-- App File Left Sidebar - Drive Content Ends -->
 
                         <!-- App File Left Sidebar - Labels Content Starts -->
-                        <span class="app-file-label">Labels</span>
+                        <span class="app-file-label">Question Categories</span>
                         <div class="collection file-manager-drive mt-3">
                             <a href="{{ route('quizzes-viewscq', ['quizId' => $quizId, 'classId' => $classId]) }}" class="collection-item file-item-action">
                                 <div class="fonticon-wrap display-inline mr-3">
