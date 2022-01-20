@@ -180,56 +180,114 @@
                                                                 @foreach (json_decode($responseQuestionScq) as $key => $scqQuest)
                                                                     <tr>
                                                                         <td>
-                                                                            <h6><u>Question {{ $key + 1 }}.</u></h6>
-                                                                            {!! $scqQuest->question !!} 
-                                                                            <h6>Option A.</h6>
-                                                                            {!! $scqQuest->optionA !!} 
-                                                                            <h6>Option B.</h6>
-                                                                            {!! $scqQuest->optionB !!} 
-                                                                            <h6>Option C.</h6>
-                                                                            {!! $scqQuest->optionC !!} 
-                                                                            <h6>Option D.</h6>
-                                                                            {!! $scqQuest->optionD !!} 
+                                                                            <h6>
+                                                                                <u>Question {{ $key + 1 }}.</u>
+                                                                            </h6>
 
-                                                                            {{-- <b>{{ $quiz->title }}</b><br>
-                                                                        @php
-                                                                            $id_token = session()->get('id_Token');
-                                                                            $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $quiz->class);
-                                                                            $className = json_decode($response);
-                                                                            // dd($className)
-                                                                        @endphp
-                                                                        <b>Class: </b> <br>{{ ucwords($className->name) }} --}}
+
+
+                                                                            {!! $scqQuest->question !!}
+
+                                                                            @if ($scqQuest->answer == 'A')
+                                                                                <h6 style="color: green">Option A.</h6>
+                                                                                <div style="color: green">
+                                                                                    {!! $scqQuest->optionA !!}
+                                                                                </div>
+                                                                                <h6>Option B.</h6>
+                                                                                {!! $scqQuest->optionB !!}
+                                                                                <h6>Option C.</h6>
+                                                                                {!! $scqQuest->optionC !!}
+                                                                                <h6>Option D.</h6>
+                                                                                {!! $scqQuest->optionD !!}
+                                                                            @endif
+
+                                                                            @if ($scqQuest->answer == 'B')
+
+                                                                                <h6>Option A.</h6>
+                                                                                {!! $scqQuest->optionA !!}
+                                                                                <h6 style="color: green">Option B.</h6>
+                                                                                <div style="color: green">
+                                                                                    {!! $scqQuest->optionB !!}
+                                                                                </div>
+                                                                                <h6>Option C.</h6>
+                                                                                {!! $scqQuest->optionC !!}
+                                                                                <h6>Option D.</h6>
+                                                                                {!! $scqQuest->optionD !!}
+                                                                            @endif
+
+                                                                            @if ($scqQuest->answer == 'C')
+                                                                                <h6>Option A.</h6>
+                                                                                {!! $scqQuest->optionA !!}
+                                                                                <h6>Option B.</h6>
+                                                                                {!! $scqQuest->optionB !!}
+                                                                                <h6 style="color: green">Option C.</h6>
+                                                                                <div style="color: green">
+                                                                                    {!! $scqQuest->optionC !!}
+                                                                                </div>
+                                                                                <h6>Option D.</h6>
+                                                                                {!! $scqQuest->optionD !!}
+                                                                            @endif
+
+                                                                            @if ($scqQuest->answer == 'D')
+                                                                                <h6>Option A.</h6>
+                                                                                {!! $scqQuest->optionA !!}
+                                                                                <h6>Option B.</h6>
+                                                                                {!! $scqQuest->optionB !!}
+                                                                                <h6>Option C.</h6>
+                                                                                {!! $scqQuest->optionC !!}
+                                                                                <h6 style="color: green">Option D.</h6>
+                                                                                <div style="color: green">
+                                                                                    {!! $scqQuest->optionD !!}
+                                                                                </div>
+                                                                            @endif
+
+
+                                                                            @if ($scqQuest->status == 'disabled')
+                                                                                <span class="chip red lighten-5">
+                                                                                    <span class="red-text"> Question
+                                                                                        Disabled</span>
+                                                                                </span>
+                                                                            @endif
+                                                                            @if ($scqQuest->status == 'active')
+                                                                                <span class="chip green lighten-5">
+                                                                                    <span class="green-text"> Question
+                                                                                        Active</span>
+                                                                                </span>
+                                                                            @endif
+
+                                                                            <a href="{{ route('quizzes-scqedit', ['questId' => $scqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
+                                                                                class=" modal-trigger mr-5">
+                                                                                <i class="material-icons">edit</i> Edit
+                                                                                Question
+                                                                            </a>
+
+                                                                            <a href="#{{ $scqQuest->id }}"
+                                                                                class=" modal-trigger mr-5">
+                                                                                <i class="material-icons">delete</i> Delete
+                                                                                Question
+                                                                            </a>
+
                                                                         </td>
 
                                                                         <td>
-                                                                            <a href="#e{{ $scqQuest->id }}"
-                                                                                class=" modal-trigger mr-5">
-                                                                                <i class="material-icons">edit</i>
-                                                                            </a>
-                                                                            {{-- <a href="{{ route('quizzes-view', ['quizId' => $scqQuest->id,'classId' => $quiz->class], ) }}" --}}
-                                                                            <a href="#"
-                                                                                class="mr-5">
-                                                                                <i class="material-icons">remove_red_eye</i>
-                                                                            </a>
-                                                                            <a href="#{{ $scqQuest->id }}"
-                                                                                class=" modal-trigger mr-5">
-                                                                                <i class="material-icons">delete</i>
-                                                                            </a>
-                                                                            
                                                                             <div class="row">
                                                                                 <div class="col s12">
-                                                                                    <div id="{{ $scqQuest->id }}" class="modal">
+                                                                                    <div id="{{ $scqQuest->id }}"
+                                                                                        class="modal">
                                                                                         <div class="modal-content">
-                                                                                            <h6>Delete Single Choice Question</h6>
-                                                                                            <p>Are you sure you want to delete this question:
-                                                                                                <b>{!! $scqQuest->question !!}</b> from the pool?
+                                                                                            <h6>Delete Single Choice
+                                                                                                Question</h6>
+                                                                                            <p>Are you sure you want to
+                                                                                                delete this question:
+                                                                                                <b>{!! $scqQuest->question !!}</b>
+                                                                                                from the pool?
                                                                                             </p>
                                                                                         </div>
                                                                                         <div class="modal-footer">
                                                                                             <a href="#"
                                                                                                 class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                                                 Cancel</a>
-                                                                                            <a href="{{ route('quizzes-delete', ['id' => $scqQuest->id]) }}"
+                                                                                            <a href="{{ route('quizzes-scqdelete', ['questId' => $scqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
                                                                                                 class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                                                 Delete</a>
                                                                                         </div>

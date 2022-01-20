@@ -203,8 +203,13 @@ Route::prefix('quizzes')->as('quizzes')->group(function () {
     Route::post('/store', [QuizController::class, 'store'])->name('-store');
     Route::get('/view/{quizId}/{classId}', [QuizController::class, 'show'])->name('-view');
     Route::get('/viewall/{quizId}', [QuizController::class, 'showAll'])->name('-viewall');
+    
     Route::get('/viewscq/{quizId}/{classId}', [QuizController::class, 'showScq'])->name('-viewscq');
     Route::post('/storescq', [QuizController::class, 'storeScq'])->name('-storescq');
+    Route::get('/scqedit/{questId}/{quizId}/{classId}', [QuizController::class, 'showSingleScqQuest'])->name('-scqedit');
+    Route::patch('/scqupdate/{id}', [QuizController::class, 'updateSingleScqQuest'])->name('-scqupdate');
+    Route::get('/scqdelete/{questId}/{classId}/{quizId}', [QuizController::class, 'deleteSingleScqQuest'])->name('-scqdelete');
+
     Route::get('/viewbq/{quizId}/{classId}', [QuizController::class, 'showBq'])->name('-viewbq');
     Route::get('/viewtheory/{quizId}/{classId}', [QuizController::class, 'showTheory'])->name('-viewtheory');
     // Route::get('/view/{id}/{type}', [QuizController::class, 'showWord'])->name('-viewword');
