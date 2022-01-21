@@ -103,14 +103,16 @@
                                                     @endphp
                                                 </td>
                                                 <td>
-                                                    <a href="#e{{ $quiz->id }}" class=" modal-trigger mr-5">
+                                                    <a href="{{ route('quizzes-view', ['quizId' => $quiz->id,'classId' => $quiz->class], ) }}"
+                                                        class="mr-5" title="Add Questions to this Quiz">
+                                                        <i class="material-icons">add_circle_outline</i>
+                                                    </a>
+                                                    
+                                                    <a href="#e{{ $quiz->id }}" class=" modal-trigger mr-5" title="Edit Selected Quiz Details">
                                                         <i class="material-icons">edit</i>
                                                     </a>
-                                                    <a href="{{ route('quizzes-view', ['quizId' => $quiz->id,'classId' => $quiz->class], ) }}"
-                                                        class="mr-5">
-                                                        <i class="material-icons">remove_red_eye</i>
-                                                    </a>
-                                                    <a href="#{{ $quiz->id }}" class=" modal-trigger mr-5">
+                                                   
+                                                    <a href="#{{ $quiz->id }}" class=" modal-trigger mr-5" title="Delete Selected Quiz">
                                                         <i class="material-icons">delete</i>
                                                     </a>
                                                 </td>
