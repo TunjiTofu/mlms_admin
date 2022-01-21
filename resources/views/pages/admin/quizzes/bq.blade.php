@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title', 'Single Choice Questions')
+@section('title', 'Binary Choice Questions')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -102,7 +102,7 @@
 
 
                                                                             {!! $bqQuest->question !!}
-                                                                            <div style="color: green">
+                                                                            <div style="color: green" class="mb-1">
                                                                                Answer: 
                                                                                @if ($bqQuest->answer == "true")
                                                                                    True
@@ -125,7 +125,7 @@
                                                                                 </span>
                                                                             @endif
 
-                                                                            <a href="{{ route('quizzes-scqedit', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
+                                                                            <a href="{{ route('quizzes-bqedit', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
                                                                                 class=" modal-trigger mr-5">
                                                                                 <i class="material-icons">edit</i> Edit
                                                                                 Question
@@ -145,7 +145,7 @@
                                                                                     <div id="{{ $bqQuest->id }}"
                                                                                         class="modal">
                                                                                         <div class="modal-content">
-                                                                                            <h6>Delete Single Choice
+                                                                                            <h6>Delete Binary Choice
                                                                                                 Question</h6>
                                                                                             <p>Are you sure you want to
                                                                                                 delete this question:
@@ -157,7 +157,7 @@
                                                                                             <a href="#"
                                                                                                 class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                                                 Cancel</a>
-                                                                                            <a href="{{ route('quizzes-scqdelete', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
+                                                                                            <a href="{{ route('quizzes-bqdelete', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
                                                                                                 class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                                                 Delete</a>
                                                                                         </div>
@@ -419,66 +419,6 @@
 
             $("#myForm").on("submit", function() {
                 $("#hiddenAreaContentQuestion").val($("#editor .ql-editor").html());
-            });
-        </script>
-
-        <script>
-            var quill = new Quill('#editor2', {
-                modules: {
-                    toolbar: '#toolbarA'
-                },
-                theme: 'snow',
-                placeholder: 'Enter Option A Here...',
-                bounds: '#editor-container'
-            });
-
-            $("#myForm").on("submit", function() {
-                $("#hiddenAreaContentOptionA").val($("#editor2 .ql-editor").html());
-            });
-        </script>
-
-        <script>
-            var quill = new Quill('#editor3', {
-                modules: {
-                    toolbar: '#toolbarB'
-                },
-                theme: 'snow',
-                placeholder: 'Enter Option B Here...',
-                bounds: '#editor-container'
-            });
-
-            $("#myForm").on("submit", function() {
-                $("#hiddenAreaContentOptionB").val($("#editor3 .ql-editor").html());
-            });
-        </script>
-
-        <script>
-            var quill = new Quill('#editor4', {
-                modules: {
-                    toolbar: '#toolbarC'
-                },
-                theme: 'snow',
-                placeholder: 'Enter Option C Here...',
-                bounds: '#editor-container'
-            });
-
-            $("#myForm").on("submit", function() {
-                $("#hiddenAreaContentOptionC").val($("#editor4 .ql-editor").html());
-            });
-        </script>
-
-        <script>
-            var quill = new Quill('#editor5', {
-                modules: {
-                    toolbar: '#toolbarD'
-                },
-                theme: 'snow',
-                placeholder: 'Enter Option D Here...',
-                bounds: '#editor-container'
-            });
-
-            $("#myForm").on("submit", function() {
-                $("#hiddenAreaContentOptionD").val($("#editor5 .ql-editor").html());
             });
         </script>
 
