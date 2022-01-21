@@ -164,6 +164,7 @@ class QuizController extends Controller
     {
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/quizzes/' . $quizId);
+        $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
         // $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
         // dd($response->json());
 
@@ -172,13 +173,14 @@ class QuizController extends Controller
         }
         if (($response->json() != null && $response->status() == 200)) {
             $quizDetails = json_decode($response);
+            $classDetails = json_decode($responseClass);
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.quizzes.view', compact(['quizDetails', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.quizzes.view', compact(['quizDetails', 'classDetails', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -220,6 +222,42 @@ class QuizController extends Controller
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
                 ['link' => "/quizzes/viewscq/$quizId/$classId", 'name' => "View Single Choice Questions"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+    }
+
+    public function showBq($quizId, $classId)
+    {
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/quizzes/' . $quizId);
+        $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
+        $responseStatus = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus');
+        $responseQuestionBq = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsBq/'.$quizId);
+        // dd($responseQuestionBq->json());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if (($response->json() != null) && ($response->status() == 200)  && ($responseClass->json() != null) && ($responseClass->status() == 200)) {
+            $quizDetails = json_decode($response);
+            $classDetails = json_decode($responseClass);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
+                ['link' => "#", 'name' => "View Binary Questions (True/False)"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.quizzes.bq', compact(['responseQuestionBq', 'quizDetails', 'classDetails', 'responseStatus' ,'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -295,6 +333,66 @@ class QuizController extends Controller
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/quizzes/view/$request->quizId/$request->classId", 'name' => "View Quiz"],
                 ['link' => "/quizzes/viewscq/$request->quizId/$request->classId", 'name' => "View Single Choice Questions"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+    }
+
+    public function storeBq(Request $request)
+    {
+        // dd($request);
+        $rules = [
+            'quizId' => 'required|min:2',
+            'classId' => 'required|min:2',
+            'question' => 'required|min:2',
+            'answer' => 'required|in:true,false',
+            'status' => 'required',
+
+        ];
+        $custom_messages = [
+            'quizId.required' => 'Quiz ID is required',
+            'quizId.min' => 'Quiz ID must have a minimum of 2 characters',
+            'classId.required' => 'Class ID is required',
+            'classId.min' => 'Class ID must have a minimum of 2 characters',
+            'question.required' => 'Question is required',
+            'question.min' => 'Question must have a minimum of 2 characters',
+            'answer.required' => 'A correct option must be selected',
+            'answer.in' => 'Correct Answer value can ONLY be True or False',
+            'status.required' => 'Question status is required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $custom_messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $user_id = session()->get('user_id');
+
+        $data = [
+            'quizId' => $request->quizId,
+            'question' => $request->question,
+            'answer' => $request->answer,
+            'status' => $request->status,
+            'createdBy' => $user_id,
+        ];
+        // dd($data);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsBq', $data);
+        // dd($response->status());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect("/quizzes/viewbq/$request->quizId/$request->classId")->with('success', "New Binary Choice Question has been added");
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -447,9 +545,6 @@ class QuizController extends Controller
             return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
         }
     }
-
-    public function showBq($quizId, $classId)
-    {}
 
     public function showTheory($quizId, $classId)
     {}

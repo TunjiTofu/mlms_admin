@@ -211,6 +211,9 @@ Route::prefix('quizzes')->as('quizzes')->group(function () {
     Route::get('/scqdelete/{questId}/{classId}/{quizId}', [QuizController::class, 'deleteSingleScqQuest'])->name('-scqdelete');
 
     Route::get('/viewbq/{quizId}/{classId}', [QuizController::class, 'showBq'])->name('-viewbq');
+    Route::post('/storebq', [QuizController::class, 'storeBq'])->name('-storebq');
+   
+   
     Route::get('/viewtheory/{quizId}/{classId}', [QuizController::class, 'showTheory'])->name('-viewtheory');
     // Route::get('/view/{id}/{type}', [QuizController::class, 'showWord'])->name('-viewword');
     // Route::get('/edit/{id}', [QuizController::class, 'edit'])->name('-edit');
