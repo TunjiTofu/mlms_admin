@@ -217,6 +217,12 @@ Route::prefix('quizzes')->as('quizzes')->group(function () {
     Route::get('/bqdelete/{questId}/{classId}/{quizId}', [QuizController::class, 'deleteSingleBqQuest'])->name('-bqdelete');
    
     Route::get('/viewtheory/{quizId}/{classId}', [QuizController::class, 'showTheory'])->name('-viewtheory');
+    Route::post('/storetheory', [QuizController::class, 'storeTheory'])->name('-storetheory');
+    Route::get('/theoryedit/{questId}/{quizId}/{classId}', [QuizController::class, 'showSingleTheoryQuest'])->name('-theoryedit');
+    Route::patch('/theoryupdate/{id}', [QuizController::class, 'updateSingleTheoryQuest'])->name('-theoryupdate');
+    Route::get('/theorydelete/{questId}/{classId}/{quizId}', [QuizController::class, 'deleteSingleTheoryQuest'])->name('-theorydelete');
+
+
     // Route::get('/view/{id}/{type}', [QuizController::class, 'showWord'])->name('-viewword');
     // Route::get('/edit/{id}', [QuizController::class, 'edit'])->name('-edit');
     Route::patch('/update/{id}', [QuizController::class, 'update'])->name('-update');

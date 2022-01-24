@@ -216,7 +216,7 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th>Quiz Title</th>
+                                                                    <th>Single Choice Qustions</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </tfoot>

@@ -63,7 +63,9 @@
                                                     <b>Class: </b> <br>{{ ucwords($className->name) }}
                                                 </td>
                                                 <td>
-                                                    {{ $quiz->noq }}
+                                                    <b>OBJ :</b> {{ $quiz->noqScq }}<br>
+                                                    <b>Binary :</b> {{ $quiz->noqBq }}<br>
+                                                    <b>Theory:</b> {{ $quiz->noqTheory }}<br>
                                                 </td>
                                                 <td>
                                                     {{ $quiz->duration }}
@@ -103,16 +105,18 @@
                                                     @endphp
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('quizzes-view', ['quizId' => $quiz->id,'classId' => $quiz->class], ) }}"
+                                                    <a href="{{ route('quizzes-view', ['quizId' => $quiz->id, 'classId' => $quiz->class]) }}"
                                                         class="mr-5" title="Add Questions to this Quiz">
                                                         <i class="material-icons">add_circle_outline</i>
                                                     </a>
-                                                    
-                                                    <a href="#e{{ $quiz->id }}" class=" modal-trigger mr-5" title="Edit Selected Quiz Details">
+
+                                                    <a href="#e{{ $quiz->id }}" class=" modal-trigger mr-5"
+                                                        title="Edit Selected Quiz Details">
                                                         <i class="material-icons">edit</i>
                                                     </a>
-                                                   
-                                                    <a href="#{{ $quiz->id }}" class=" modal-trigger mr-5" title="Delete Selected Quiz">
+
+                                                    <a href="#{{ $quiz->id }}" class=" modal-trigger mr-5"
+                                                        title="Delete Selected Quiz">
                                                         <i class="material-icons">delete</i>
                                                     </a>
                                                 </td>
@@ -148,18 +152,30 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
+
                                                                         <div class="col s12">
                                                                             <div class="input-field col s12 m4">
-                                                                                <input id="noq" type="number" name="noq"
-                                                                                    class="validate" required
-                                                                                    value="{{ $quiz->noq }}">
-                                                                                <label for="noq">Number of Questions</label>
-                                                                                <span class="helper-text"
-                                                                                    style="color: red">Number of Questions
-                                                                                    to Be <br>Answered By Each
-                                                                                    Student</span>
+                                                                                <input id="noq" type="number" name="noqScq" class="validate" value="{{ $quiz->noqScq }}" required>
+                                                                                <label for="noq">Number of OBJ Questions</label>
+                                                                                <span class="helper-text" style="color: red">Number of Objective Questions to Be <br>Answered
+                                                                                    By Each Student</span>
                                                                             </div>
                                                                             <div class="input-field col s12 m4">
+                                                                                <input id="noq" type="number" name="noqBq" class="validate" value="{{ $quiz->noqBq }}" required>
+                                                                                <label for="noq">Number of Binary Questions</label>
+                                                                                <span class="helper-text" style="color: red">Number of True/False Questions to Be <br>Answered
+                                                                                    By Each Student</span>
+                                                                            </div>
+                                                                            <div class="input-field col s12 m4">
+                                                                                <input id="noq" type="number" name="noqTheory" class="validate" value="{{ $quiz->noqTheory }}" required>
+                                                                                <label for="noq">Number of Theory Questions</label>
+                                                                                <span class="helper-text" style="color: red">Number of Theory Questions to Be <br>Answered
+                                                                                    By Each Student</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="col s12">
+                                                                            <div class="input-field col s12 m6">
                                                                                 <input id="duration" type="number"
                                                                                     name="duration" class="validate"
                                                                                     value="{{ $quiz->duration }}"
@@ -169,7 +185,7 @@
                                                                                 <span class="helper-text"
                                                                                     style="color: red">(in Minutes)</span>
                                                                             </div>
-                                                                            <div class="input-field col s12 m4">
+                                                                            <div class="input-field col s12 m6">
                                                                                 <select name="status"
                                                                                     class="select2 browser-default">
                                                                                     <option value="0" disabled selected>
@@ -268,17 +284,32 @@
 
                 <div class="col s12">
                     <div class="input-field col s12 m4">
-                        <input id="noq" type="number" name="noq" class="validate" required>
-                        <label for="noq">Number of Questions</label>
-                        <span class="helper-text" style="color: red">Number of Questions to Be Answered By Each
-                            Student</span>
+                        <input id="noq" type="number" name="noqScq" class="validate" required>
+                        <label for="noq">Number of OBJ Questions</label>
+                        <span class="helper-text" style="color: red">Number of Objective Questions to Be Answered
+                            By Each Student</span>
                     </div>
                     <div class="input-field col s12 m4">
+                        <input id="noq" type="number" name="noqBq" class="validate" required>
+                        <label for="noq">Number of Binary Questions</label>
+                        <span class="helper-text" style="color: red">Number of True/False Questions to Be Answered
+                            By Each Student</span>
+                    </div>
+                    <div class="input-field col s12 m4">
+                        <input id="noq" type="number" name="noqTheory" class="validate" required>
+                        <label for="noq">Number of Theory Questions</label>
+                        <span class="helper-text" style="color: red">Number of Theory Questions to Be Answered
+                            By Each Student</span>
+                    </div>
+                </div>
+
+                <div class="col s12">
+                    <div class="input-field col s12 m6">
                         <input id="duration" type="number" name="duration" class="validate" required>
                         <label for="duration">Duration in Minutes</label>
                         <span class="helper-text" style="color: red">(in Minutes)</span>
                     </div>
-                    <div class="input-field col s12 m4">
+                    <div class="input-field col s12 m6">
                         <select name="status" class="select2 browser-default">
                             <option value="0" disabled selected>Select Status</option>
                             @foreach (json_decode($responseStatus) as $status)

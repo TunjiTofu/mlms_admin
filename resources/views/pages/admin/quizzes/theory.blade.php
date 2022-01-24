@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title', 'Binary Choice Questions')
+@section('title', 'Theory Questions')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -54,7 +54,7 @@
 
                 <!-- App File Content Starts -->
                 <div class="app-file-content">
-                    <h6 class="font-weight-700 mb-1">{{ $quizDetails->title }} (Binary Choice Questions - True/False)</h6>
+                    <h6 class="font-weight-700 mb-1">{{ $quizDetails->title }} Theory Questions</h6>
 
                     <!-- App File - Files Section Starts -->
                     {{-- <label class="app-file-label">Single Choice Questions</label> --}}
@@ -87,51 +87,40 @@
                                                         <table id="page-length-option" class="display">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Binary Choice Questions</th>
+                                                                    <th>Theory Questions</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                @foreach (json_decode($responseQuestionBq) as $key => $bqQuest)
+                                                                @foreach (json_decode($responseQuestionTheory) as $key => $theoryQuest)
                                                                     <tr>
                                                                         <td>
                                                                             <h6>
                                                                                 <u>Question {{ $key + 1 }}.</u>
                                                                             </h6>
-
-
-
-                                                                            {!! $bqQuest->question !!}
-                                                                            <div style="color: green" class="mb-1">
-                                                                               Answer: 
-                                                                               @if ($bqQuest->answer == "true")
-                                                                                   True
-                                                                               @endif 
-                                                                               @if ($bqQuest->answer == "false")
-                                                                               False
-                                                                           @endif 
-                                                                            </div>
-
-                                                                            @if ($bqQuest->status == 'disabled')
+                                                                            {!! $theoryQuest->question !!}
+                                                                            <em><strong>Total Marks:
+                                                                                    {{ $theoryQuest->score }}mks.</strong></em><br>
+                                                                            @if ($theoryQuest->status == 'disabled')
                                                                                 <span class="chip red lighten-5">
                                                                                     <span class="red-text"> Question
                                                                                         Disabled</span>
                                                                                 </span>
                                                                             @endif
-                                                                            @if ($bqQuest->status == 'active')
+                                                                            @if ($theoryQuest->status == 'active')
                                                                                 <span class="chip green lighten-5">
                                                                                     <span class="green-text"> Question
                                                                                         Active</span>
                                                                                 </span>
                                                                             @endif
 
-                                                                            <a href="{{ route('quizzes-bqedit', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
+                                                                            <a href="{{ route('quizzes-theoryedit', ['questId' => $theoryQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
                                                                                 class=" modal-trigger mr-5">
                                                                                 <i class="material-icons">edit</i> Edit
                                                                                 Question
                                                                             </a>
 
-                                                                            <a href="#{{ $bqQuest->id }}"
+                                                                            <a href="#{{ $theoryQuest->id }}"
                                                                                 class=" modal-trigger mr-5">
                                                                                 <i class="material-icons">delete</i> Delete
                                                                                 Question
@@ -142,14 +131,14 @@
                                                                         <td>
                                                                             <div class="row">
                                                                                 <div class="col s12">
-                                                                                    <div id="{{ $bqQuest->id }}"
+                                                                                    <div id="{{ $theoryQuest->id }}"
                                                                                         class="modal">
                                                                                         <div class="modal-content">
-                                                                                            <h6>Delete Binary Choice
+                                                                                            <h6>Delete Theory
                                                                                                 Question</h6>
                                                                                             <p>Are you sure you want to
                                                                                                 delete this question:
-                                                                                                <b>{!! $bqQuest->question !!}</b>
+                                                                                                <b>{!! $theoryQuest->question !!}</b>
                                                                                                 from the pool?
                                                                                             </p>
                                                                                         </div>
@@ -157,7 +146,7 @@
                                                                                             <a href="#"
                                                                                                 class="modal-action modal-close waves-effect waves-red btn-flat ">No,
                                                                                                 Cancel</a>
-                                                                                            <a href="{{ route('quizzes-bqdelete', ['questId' => $bqQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
+                                                                                            <a href="{{ route('quizzes-theorydelete', ['questId' => $theoryQuest->id, 'classId' => $classId, 'quizId' => $quizId]) }}"
                                                                                                 class="modal-action modal-close waves-effect waves-green btn-flat ">Yes,
                                                                                                 Delete</a>
                                                                                         </div>
@@ -171,7 +160,7 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th>Binary Choice Questions</th>
+                                                                    <th>Theory Questions</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </tfoot>
@@ -183,7 +172,7 @@
                                         <div id="test2" class="col s12">
                                             <p class="mt-2 mb-2">
                                             <form class="row mt-1" id="myForm" method="POST"
-                                                action="{{ route('quizzes-storebq') }}">
+                                                action="{{ route('quizzes-storetheory') }}">
                                                 {{ csrf_field() }}
                                                 <div class="row mb-2">
                                                     <div class="col s12">
@@ -308,29 +297,15 @@
                                                 </div>
 
                                                 <div class="row">
-                                                    <div class="col s12">
+                                                    <div class="col s6">
                                                         <div class="input-field col s12">
-                                                            <h6>Correct Answer</h6>
-                                                            <p class="mb-1">
-                                                                <label>
-                                                                    <input class="with-gap" value="true" name="answer" type="radio"/>
-                                                                    <span>True</span>
-                                                                </label>
-                                                            </p>
-                                                            <p class="mb-1">
-                                                                <label>
-                                                                    <input class="with-gap" value="false" name="answer" type="radio" />
-                                                                    <span>False </span>
-                                                                </label>
-                                                            </p>
+                                                            <input id="score" type="number" name="score"
+                                                                class="validate" required>
+                                                            <label for="score">Question Score</label>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col s12">
+                                                    <div class="col s6">
                                                         <div class="input-field col s12">
-                                                            <h>Status</h>
                                                             <select name="status" id="status"
                                                                 class="select2 browser-default">
                                                                 <option value="" disabled selected>Select Status</option>
