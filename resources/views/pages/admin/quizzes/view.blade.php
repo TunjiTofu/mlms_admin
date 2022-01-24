@@ -36,12 +36,41 @@
 
                 <!-- App File Content Starts -->
                 <div class="app-file-content">
-                    <h6 class="font-weight-700 mb-3">{{ $quizDetails->title }}</h6>
-
+                    <h5 class="font-weight-700 mb-3">{{ $quizDetails->title }}</h5>
+                    <h6>Total Questions in Database</h6>
                     <!-- App File - Files Section Starts -->
-                    <label class="app-file-label">Files</label>
                     <div class="row app-file-files">
+                        <div class="row">
+                            <div class="col s12 m6 l3 card-width">
+                                <div class="card border-radius-6">
+                                    <div class="card-content center-align">
+                                        <i class="material-icons green-text small-ico-bg mb-5">radio_button_checked</i>
+                                        <h4 class="m-0"><b>{{ $scqCount->scqSize }}</b></h4>
+                                        <p class="red-text">Single Choice Questions</p>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col s12 m6 l3 card-width">
+                                <div class="card border-radius-6">
+                                    <div class="card-content center-align">
+                                        <i class="material-icons green-text small-ico-bg mb-5">loop</i>
+                                        <h4 class="m-0"><b>{{ $bqCount->bqSize }}</b></h4>
+                                        <p class="red-text">Binary Choice Questions</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col s12 m6 l3 card-width">
+                                <div class="card border-radius-6">
+                                    <div class="card-content center-align">
+                                        <i class="material-icons green-text small-ico-bg mb-5">subject</i>
+                                        <h4 class="m-0"><b>{{ $theoryCount->theorySize }}</b></h4>
+                                        <p class="red-text">Theory Questions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -59,154 +88,7 @@
 
                 <!-- file manager main content end  -->
             </div>
-            <!-- content-right end -->
-            <!-- App File sidebar - Right section Starts -->
-            {{-- <div class="app-file-sidebar-info">
-            <div class="card box-shadow-none m-0 pb-1">
-                <div class="card-header display-flex justify-content-between align-items-center">
-                    <h6 class="m-0">Document.pdf</h6>
-                    <div class="app-file-action-icons display-flex align-items-center">
-                        <i class="material-icons mr-10">delete</i>
-                        <i class="material-icons close-icon">close</i>
-                    </div>
-                </div>
-                <div class="card-content">
-                    <ul class="tabs tabs-fixed-width mb-1">
-                        <li class="tab mr-1 pr-1">
-                            <a class="active display-flex align-items-center" id="details-tab" href="#details">
-                                <i class="material-icons mr-1">content_paste</i>
-                                <span>Details</span>
-                            </a>
-                        </li>
-                        <li class="tab">
-                            <a class="display-flex align-items-center" id="activity-tab" href="#file-activity">
-                                <i class="material-icons mr-1">timeline</i>
-                                <span>Activity</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="details-tab active" id="details">
-                            <div class="display-flex align-items-center flex-column pb-2 pt-4">
-                                <img src="{{ asset('images/icon/pdf.png') }}" alt="PDF" height="42" width="35"
-                                    class="mt-5 mb-5">
-                                <p class="mt-4">15.3mb</p>
-                            </div>
-                            <div class="divider mt-5 mb-5"></div>
-                            <div class="pt-6">
-                                <span class="app-file-label">Setting</span>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>File Sharing</p>
-                                    <div class="switch">
-                                        <label>
-                                            <input type="checkbox" id="customSwitchGlow1">
-                                            <span class="lever"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Synchronization</p>
-                                    <div class="switch">
-                                        <label>
-                                            <input type="checkbox" id="customSwitchGlow2" checked>
-                                            <span class="lever"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6 mb-8">
-                                    <p>Backup</p>
-                                    <div class="switch">
-                                        <label>
-                                            <input type="checkbox" id="customSwitchGlow3">
-                                            <span class="lever"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <span class="app-file-label">Info</span>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Type</p>
-                                    <p class="font-weight-700">PDF</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Size</p>
-                                    <p class="font-weight-700">15.6mb</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Location</p>
-                                    <p class="font-weight-700">Files > Documents</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Owner</p>
-                                    <p class="font-weight-700">Elnora Reese</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Modified</p>
-                                    <p class="font-weight-700">September 4 2019</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Opened</p>
-                                    <p class="font-weight-700">July 8, 2019</p>
-                                </div>
-                                <div class="display-flex justify-content-between align-items-center mt-6">
-                                    <p>Created</p>
-                                    <p class="font-weight-700">July 1, 2019</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="activity-tab" id="file-activity">
-                            <ul class="widget-timeline mb-0">
-                                <li class="timeline-items timeline-icon-green active">
-                                    <div class="timeline-time">Today</div>
-                                    <h6 class="timeline-title">You added an item to</h6>
-                                    <p class="timeline-text">You added an item</p>
-                                    <div class="timeline-content">
-                                        <img src="{{ asset('images/icon/psd.png') }}" alt="PSD" height="30" width="25"
-                                            class="mr-1">Mockup.psd
-                                    </div>
-                                </li>
-                                <li class="timeline-items timeline-icon-cyan active">
-                                    <div class="timeline-time">10 min ago</div>
-                                    <h6 class="timeline-title">You shared 2 times</h6>
-                                    <p class="timeline-text">Emily Bennett edited an item</p>
-                                    <div class="timeline-content">
-                                        <img src="{{ asset('images/icon/sketch.png') }}" alt="Sketch" height="30"
-                                            width="25" class="mr-1">Template_Design.sketch
-                                    </div>
-                                </li>
-                                <li class="timeline-items timeline-icon-red active">
-                                    <div class="timeline-time">Mon 10:20 PM</div>
-                                    <h6 class="timeline-title">You edited an item</h6>
-                                    <p class="timeline-text">You edited an item</p>
-                                    <div class="timeline-content">
-                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
-                                            width="25" class="mr-1">Information.doc
-                                    </div>
-                                </li>
-                                <li class="timeline-items timeline-icon-indigo active">
-                                    <div class="timeline-time">Jul 13 2019</div>
-                                    <h6 class="timeline-title">You edited an item</h6>
-                                    <p class="timeline-text">John Keller edited an item</p>
-                                    <div class="timeline-content">
-                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
-                                            width="25" class="mr-1">Documentation.doc
-                                    </div>
-                                </li>
-                                <li class="timeline-items timeline-icon-orange">
-                                    <div class="timeline-time">Apr 18 2019</div>
-                                    <h6 class="timeline-title">You added an item to</h6>
-                                    <p class="timeline-text">You edited an item</p>
-                                    <div class="timeline-content">
-                                        <img src="{{ asset('images/icon/pdf.png') }}" alt="document" height="30"
-                                            width="25" class="mr-1">Resume.pdf
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-            <!-- App File sidebar - Right section Ends -->
+
         </div>
     @endsection
 

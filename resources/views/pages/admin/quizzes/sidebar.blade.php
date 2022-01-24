@@ -25,13 +25,13 @@
                         <b>CLASS:</b> <br> {{ $classDetails->name }}
                     </span>
                     <div class="collection file-manager-drive mt-3">
-                        <a href="{{ route('quizzes-viewall', ['quizId' => $quizId]) }}"
+                        <a href="{{ route('quizzes-view', ['quizId' => $quizId, 'classId' => $classId]) }}"
                             class="collection-item file-item-action active">
                             <div class="fonticon-wrap display-inline mr-3">
-                                <i class="material-icons">folder_open</i>
+                                <i class="material-icons">pageview</i>
                             </div>
-                            <span>All Files</span>
-                            <span class="chip red lighten-5 float-right red-text">2</span>
+                            <span>View Question Statistics</span>
+                            {{-- <span class="chip red lighten-5 float-right red-text">2</span> --}}
                         </a>
                     </div>
                     <!-- App File Left Sidebar - Drive Content Ends -->

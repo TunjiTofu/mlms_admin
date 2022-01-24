@@ -50,19 +50,35 @@
                                     </div>
 
                                 </div>
-                             
+
                                 <div class="col s12">
                                     <div class="input-field col s12 m4">
-                                        <input id="noq" type="number" name="noq" class="validate" required>
-                                        <label for="noq">Number of Questions</label>
-                                        <span class="helper-text" style="color: red">Number of Questions to Be Answered By Each Student</span>
+                                        <input id="noq" type="number" name="noqScq" class="validate" required>
+                                        <label for="noq">Number of OBJ Questions</label>
+                                        <span class="helper-text" style="color: red">Number of Objective Questions to Be Answered
+                                            By Each Student</span>
                                     </div>
                                     <div class="input-field col s12 m4">
+                                        <input id="noq" type="number" name="noqBq" class="validate" required>
+                                        <label for="noq">Number of Binary Questions</label>
+                                        <span class="helper-text" style="color: red">Number of True/False Questions to Be Answered
+                                            By Each Student</span>
+                                    </div>
+                                    <div class="input-field col s12 m4">
+                                        <input id="noq" type="number" name="noqTheory" class="validate" required>
+                                        <label for="noq">Number of Theory Questions</label>
+                                        <span class="helper-text" style="color: red">Number of Theory Questions to Be Answered
+                                            By Each Student</span>
+                                    </div>
+                                </div>
+
+                                <div class="col s12">
+                                    <div class="input-field col s12 m6">
                                         <input id="duration" type="number" name="duration" class="validate" required>
                                         <label for="duration">Duration in Minutes</label>
                                         <span class="helper-text" style="color: red">(in Minutes)</span>
                                     </div>
-                                    <div class="input-field col s12 m4">
+                                    <div class="input-field col s12 m6">
                                         <select name="status" class="select2 browser-default">
                                             <option value="0" disabled selected>Select Status</option>
                                             @foreach (json_decode($responseStatus) as $status)

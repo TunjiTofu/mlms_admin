@@ -101,7 +101,9 @@ class QuizController extends Controller
             'title' => 'required|min:3|max:255',
             'class' => 'required',
             'duration' => 'required|numeric|min:1',
-            'noq' => 'required|numeric|min:1',
+            'noqScq' => 'required|numeric|min:1',
+            'noqBq' => 'required|numeric|min:1',
+            'noqTheory' => 'required|numeric|min:1',
             'status' => 'required',
         ];
 
@@ -111,9 +113,16 @@ class QuizController extends Controller
             'duration.required' => 'Quiz must have a valid duration',
             'duration.numeric' => 'Quiz must have a numeric value',
             'duration.min' => 'Quiz must have a minimum of 1 minute',
-            'noq.required' => 'Number of Questions is required',
-            'noq.numeric' => 'Number of Questions must have a numeric value',
-            'noq.min' => 'Students must answer a minimum of 1 questions',
+            'noqScq.required' => 'Number of Questions is required',
+            'noqScq.numeric' => 'Number of Questions must have a numeric value',
+            'noqScq.min' => 'Students must answer a minimum of 1 questions',
+            'noqBq.required' => 'Number of Questions is required',
+            'noqBq.numeric' => 'Number of Questions must have a numeric value',
+            'noqBq.min' => 'Students must answer a minimum of 1 questions',
+            'noqTheory.required' => 'Number of Questions is required',
+            'noqTheory.numeric' => 'Number of Questions must have a numeric value',
+            'noqTheory.min' => 'Students must answer a minimum of 1 questions',
+            
             'status.required' => 'Quiz status is required',
         ];
 
@@ -127,8 +136,10 @@ class QuizController extends Controller
         $data = [
             'title' => $request->title,
             'class' => $request->class,
-            'duration' => $request->duration,
-            'noq' => $request->noq,
+            'duration' => +$request->duration,
+            'noqScq' => +$request->noqScq,
+            'noqBq' => +$request->noqBq,
+            'noqTheory' => +$request->noqTheory,
             'status' => $request->status,
             'createdBy' => $user_id,
         ];
@@ -162,11 +173,15 @@ class QuizController extends Controller
      */
     public function show($quizId, $classId)
     {
+        // dd($quizId);
         $id_token = session()->get('id_Token');
         $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/quizzes/' . $quizId);
         $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
+        $scqCount = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsObj/count/' . $quizId);
+        $bqCount = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsBq/count/' . $quizId);
+        $theoryCount = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory/count/' . $quizId);
         // $responseReTypes = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/resourcetypes');
-        // dd($response->json());
+        // dd($bqCount->json());
 
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -174,13 +189,16 @@ class QuizController extends Controller
         if (($response->json() != null && $response->status() == 200)) {
             $quizDetails = json_decode($response);
             $classDetails = json_decode($responseClass);
+            $scqCount = json_decode($scqCount);
+            $bqCount = json_decode($bqCount);
+            $theoryCount = json_decode($theoryCount);
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
             ];
             $pageConfigs = ['pageHeader' => true];
-            return view('pages.admin.quizzes.view', compact(['quizDetails', 'classDetails', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
+            return view('pages.admin.quizzes.view', compact(['quizDetails', 'classDetails', 'scqCount', 'bqCount', 'theoryCount', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
         } else {
             $breadcrumbs = [
                 ['link' => "/", 'name' => "Dashboard"],
@@ -200,7 +218,7 @@ class QuizController extends Controller
         $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
         $responseStatus = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus');
         $responseQuestionScq = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsObj/' . $quizId);
-        // dd($responseQuestionObj->json());
+        // dd($responseQuestionScq->json());
 
         if ($response->status() == 403) {
             return redirect('/login')->with('error', 'Unauthorized - Please login');
@@ -258,6 +276,42 @@ class QuizController extends Controller
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
                 ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+    }
+
+    public function showTheory($quizId, $classId)
+    {
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/quizzes/' . $quizId);
+        $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
+        $responseStatus = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus');
+        $responseQuestionTheory = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory/' . $quizId);
+        // dd($responseQuestionTheory->json());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if (($response->json() != null) && ($response->status() == 200) && ($responseClass->json() != null) && ($responseClass->status() == 200)) {
+            $quizDetails = json_decode($response);
+            $classDetails = json_decode($responseClass);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
+                ['link' => "#", 'name' => "View Theory"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.quizzes.theory', compact(['responseQuestionTheory', 'quizDetails', 'classDetails', 'responseStatus', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Theory"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -400,6 +454,67 @@ class QuizController extends Controller
         }
     }
 
+    public function storeTheory(Request $request)
+    {
+        // dd($request);
+        $rules = [
+            'quizId' => 'required|min:2',
+            'classId' => 'required|min:2',
+            'question' => 'required|min:2',
+            'score' => 'required|numeric|min:1',
+            'status' => 'required',
+
+        ];
+        $custom_messages = [
+            'quizId.required' => 'Quiz ID is required',
+            'quizId.min' => 'Quiz ID must have a minimum of 2 characters',
+            'classId.required' => 'Class ID is required',
+            'classId.min' => 'Class ID must have a minimum of 2 characters',
+            'question.required' => 'Question is required',
+            'question.min' => 'Question must have a minimum of 2 characters',
+            'score.required' => 'Theory score is required',
+            'score.numeric' => 'Theory score must have a numeric value',
+            'score.min' => 'Theory score should be a minimum of 1 questions',
+            'status.required' => 'Question status is required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $custom_messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $user_id = session()->get('user_id');
+
+        $data = [
+            'quizId' => $request->quizId,
+            'question' => $request->question,
+            'score' => +$request->score,
+            'status' => $request->status,
+            'createdBy' => $user_id,
+        ];
+        // dd($data);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->POST('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory', $data);
+        // dd($response->status());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if ($response->status() == 201 && $response->successful() == true) {
+            return redirect("/quizzes/viewtheory/$request->quizId/$request->classId")->with('success', "New Theory Question has been added");
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewtheory/$quizId/$classId", 'name' => "View Thoery Questions"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+    }
+
     public function showSingleScqQuest($questId, $quizId, $classId)
     {
         // dd($classId);
@@ -475,6 +590,47 @@ class QuizController extends Controller
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
                 ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.page404', compact(['breadcrumbs', 'pageConfigs']));
+        }
+    }
+
+    public function showSingleTheoryQuest($questId, $quizId, $classId)
+    {
+        // dd($questId);
+
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory/edittheory/' . $questId);
+        $responseQuizDetails = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/quizzes/' . $quizId);
+        $responseClass = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/adminClasses/' . $classId);
+        $responseStatus = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/defaultstatus');
+        // $responseQuestionScq = Http::withToken($id_token)->GET('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsObj/'.$quizId);
+        // dd($response->json());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+        if (($response->json() != null) && ($response->status() == 200) && ($responseQuizDetails->json() != null) && ($responseQuizDetails->status() == 200)) {
+            $quizDetails = json_decode($responseQuizDetails);
+            $singleTheoryDetails = json_decode($response);
+            $classDetails = json_decode($responseClass);
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewtheory/$quizId/$classId", 'name' => "Therory Question"],
+                ['link' => "#", 'name' => "Edit Binary Choice Questions"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.admin.quizzes.edit-theory', compact(['singleTheoryDetails', 'quizDetails', 'classDetails', 'responseStatus', 'questId', 'quizId', 'classId', 'breadcrumbs', 'pageConfigs']));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "Edit Theory Question"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -628,6 +784,70 @@ class QuizController extends Controller
 
     }
 
+    public function updateSingleTheoryQuest(Request $request, $id)
+    {
+        // dd($request);
+        $rules = [
+            'quizId' => 'required|min:2',
+            'classId' => 'required|min:2',
+            'question' => 'required|min:2',
+            'score' => 'required|numeric|min:1',
+            'status' => 'required',
+
+        ];
+        $custom_messages = [
+            'quizId.required' => 'Quiz ID is required',
+            'quizId.min' => 'Quiz ID must have a minimum of 2 characters',
+            'classId.required' => 'Class ID is required',
+            'classId.min' => 'Class ID must have a minimum of 2 characters',
+            'question.required' => 'Question is required',
+            'question.min' => 'Question must have a minimum of 2 characters',
+            'score.required' => 'Theory score is required',
+            'score.numeric' => 'Theory score must have a numeric value',
+            'score.min' => 'Theory score should be a minimum of 1 questions',
+            'status.required' => 'Question status is required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $custom_messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $user_id = session()->get('user_id');
+
+        $data = [
+            'question' => $request->question,
+            'score' => +$request->score,
+            'status' => $request->status,
+            'updatedBy' => $user_id,
+        ];
+        // dd($data);
+
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->PATCH('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory/' . $id, $data);
+        //  dd($response->status());
+
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->status() == 201 && $response->successful() == true) {
+            // return redirect('/quizzes')->with('success', "Quiz Details has been updated");
+            return redirect("/quizzes/viewtheory/$request->quizId/$request->classId")->with('success', "Selected question has been updated");
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$request->quizId/$request->classId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewtheory/$request->quizId/$request->classId", 'name' => "View Theory"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+
+    }
+
     public function deleteSingleScqQuest($questId, $classId, $quizId)
     {
         // dd($quizId);
@@ -672,7 +892,33 @@ class QuizController extends Controller
                 ['link' => "/", 'name' => "Dashboard"],
                 ['link' => "/quizzes", 'name' => "Quizzes"],
                 ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
-                ['link' => "/quizzes/viewscq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
+                ['link' => "/quizzes/viewbq/$quizId/$classId", 'name' => "View Binary Questions (True/False)"],
+                ['link' => "#", 'name' => "404 Page"],
+            ];
+            $pageConfigs = ['pageHeader' => true];
+            return view('pages.error.unauthorized', compact(['response', 'breadcrumbs', 'pageConfigs']));
+        }
+    }
+  
+    public function deleteSingleTheoryQuest($questId, $classId, $quizId)
+    {
+        // dd($quizId);
+        $id_token = session()->get('id_Token');
+        $response = Http::withToken($id_token)->DELETE('https://us-central1-mlms-ec62a.cloudfunctions.net/questionsTheory/' . $questId);
+        // dd($response);
+        if ($response->status() == 403) {
+            return redirect('/login')->with('error', 'Unauthorized - Please login');
+        }
+
+        if ($response->status() == 200 && $response->successful() == true) {
+            return redirect("/quizzes/viewtheory/$quizId/$classId")->with('success', "Question successfully deleted");
+            // return back()->withSuccess($validator->success("Question successfully deleted"));
+        } else {
+            $breadcrumbs = [
+                ['link' => "/", 'name' => "Dashboard"],
+                ['link' => "/quizzes", 'name' => "Quizzes"],
+                ['link' => "/quizzes/view/$quizId/$classId", 'name' => "View Quiz"],
+                ['link' => "/quizzes/viewtheory/$quizId/$classId", 'name' => "View Theory"],
                 ['link' => "#", 'name' => "404 Page"],
             ];
             $pageConfigs = ['pageHeader' => true];
@@ -680,8 +926,6 @@ class QuizController extends Controller
         }
     }
 
-    public function showTheory($quizId, $classId)
-    {}
 
     public function showAll($quizId)
     {}
@@ -711,7 +955,9 @@ class QuizController extends Controller
             'title' => 'required|min:3|max:255',
             'class' => 'required',
             'duration' => 'required|numeric|min:1',
-            'noq' => 'required|numeric|min:1',
+            'noqScq' => 'required|numeric|min:1',
+            'noqBq' => 'required|numeric|min:1',
+            'noqTheory' => 'required|numeric|min:1',
             'status' => 'required',
         ];
 
@@ -721,9 +967,15 @@ class QuizController extends Controller
             'duration.required' => 'Quiz must have a valid duration',
             'duration.numeric' => 'Quiz must have a numeric value',
             'duration.min' => 'Quiz must have a minimum of 1 minute',
-            'noq.required' => 'Number of Questions is required',
-            'noq.numeric' => 'Number of Questions must have a numeric value',
-            'noq.min' => 'Students must answer a minimum of 1 questions',
+            'noqScq.required' => 'Number of Questions is required',
+            'noqScq.numeric' => 'Number of Questions must have a numeric value',
+            'noqScq.min' => 'Students must answer a minimum of 1 questions',
+            'noqBq.required' => 'Number of Questions is required',
+            'noqBq.numeric' => 'Number of Questions must have a numeric value',
+            'noqBq.min' => 'Students must answer a minimum of 1 questions',
+            'noqTheory.required' => 'Number of Questions is required',
+            'noqTheory.numeric' => 'Number of Questions must have a numeric value',
+            'noqTheory.min' => 'Students must answer a minimum of 1 questions',
             'status.required' => 'Quiz status is required',
         ];
 
@@ -737,8 +989,10 @@ class QuizController extends Controller
         $data = [
             'title' => $request->title,
             'class' => $request->class,
-            'duration' => $request->duration,
-            'noq' => $request->noq,
+            'duration' => +$request->duration,
+            'noqScq' => +$request->noqScq,
+            'noqBq' => +$request->noqBq,
+            'noqTheory' => +$request->noqTheory,
             'status' => $request->status,
             'updatedBy' => $user_id,
         ];
